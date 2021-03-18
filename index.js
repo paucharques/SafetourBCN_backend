@@ -61,6 +61,10 @@ app.post('/register/', (request, response) => {
     var id = post_data.id;
     var username = post_data.username;
     var password = post_data.password;
+
+    console.log(request.body.id);
+    console.log(request.body.username);
+    console.log(request.body.password);
     
     pool.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, username, password], (error, result) => {
         if (error) throw error;
