@@ -4,6 +4,7 @@ const pool = require('./db')
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 
 app.get('/api', (req, res) => res.send('Its working!'));
@@ -67,8 +68,10 @@ app.post('/register/', (request, response) => {
     console.log(request.body.id);
     console.log(request.body.username);
     console.log(request.body.password);
+
+    conn = await pool.getConnection();
     
-    pool.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, username, password], (error, result) => {
+    conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, username, password], (error, result) => {
         if (error) throw error;
  
         response.status(201).send(`User added with ID: ${result.insertId}`);
