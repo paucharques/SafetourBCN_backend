@@ -1,7 +1,9 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const pool = require('./db')
 
 const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.get('/api', (req, res) => res.send('Its working!'));
@@ -56,7 +58,7 @@ app.get('/usuarios/:id', async (req, res) => {
 /**********************POST***********************/
 
 // Add a new user
-app.post('/register/', function (request, response) {
+app.post('/register/', (request, response) => {
     var post_data = request.body;
     var id = post_data.id;
     var username = post_data.username;
@@ -66,11 +68,11 @@ app.post('/register/', function (request, response) {
     console.log(request.body.username);
     console.log(request.body.password);
     
-    /*pool.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, username, password], (error, result) => {
+    pool.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, username, password], (error, result) => {
         if (error) throw error;
  
         response.status(201).send(`User added with ID: ${result.insertId}`);
-    });*/
+    });
 });
 
 
