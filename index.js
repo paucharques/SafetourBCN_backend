@@ -15,7 +15,7 @@ app.get('/usuarios', async (req, res) => {
           console.log(rows); //[ {val: 1}, meta: ... ]
           //Table must have been created before 
           // " CREATE TABLE myTable (id int, val varchar(255)) "
-          return conn.query("INSERT INTO myTable value (?, ?)", [1, "mariadb"]);
+          return conn.query("INSERT INTO usuarios value (?, ?)", [1, "mariadb"]);
         })
         .then((res) => {
           console.log(res); // { affectedRows: 1, insertId: 1, warningStatus: 0 }
