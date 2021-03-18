@@ -3,8 +3,8 @@ var mariadb = require('mariadb');
 
 // create a new connection pool
 const pool = mariadb.createPool({
-    host: 'localhost', 
-    user:'root', 
+    host: '10.4.41.144', 
+    user:'alumne', 
     password: 'safetour2021',
     connectionLimit: 5
 });
