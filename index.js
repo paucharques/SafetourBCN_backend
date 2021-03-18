@@ -59,7 +59,7 @@ app.get('/usuarios/:id', async (req, res) => {
 /**********************POST***********************/
 
 // Add a new user
-app.post('/register/', (request, response) => {
+app.post('/register/', async (request, response) => {
     var post_data = request.body;
     var id = post_data.id;
     var username = post_data.username;
