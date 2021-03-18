@@ -1,35 +1,41 @@
 const express = require('express');
+const pool = require('./db')
 
-//module.exports = router;
-
-// set up our express app
 const app = express();
 
+
 app.get('/api', (req, res) => res.send('Its working!'));
+
+app.get('/people', async (req, res) => {
+    let conn;
+    try {
+        // establish a connection to MariaDB
+        conn = await pool.getConnection();
+
+        // create a new query
+        var query = "SELECT * FROM usuarios";
+
+        // execute the query and set the result to a new variable
+        var rows = await conn.query(query);
+
+        // return the results
+        res.send(rows);
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.release();
+    }
+});
+
+
 
 app.listen(process.env.port || 3000, function(){
     console.log('now listening for requests');
  });
 
+ /** 
 
-// connect to mariadb
-const mariadb = require('mariadb');
-const pool = mariadb.createPool({
-    host: 'localhost', 
-    user:'root', 
-    password: 'safetour2021',
-    connectionLimit: 5
-});
-
-app.get('/users', (request, response) => {
-    pool.query('SELECT * FROM usuarios', (error, result) => {
-        if (error) throw error;
- 
-        response.send(result);
-    });
-});
-
-// Display a single user by ID
+ Display a single user by ID
 app.get('/users/:id', (request, response) => {
     const id = request.params.id;
  
