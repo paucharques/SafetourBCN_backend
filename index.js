@@ -1,5 +1,4 @@
 const express = require('express');
-const mariadb = require('mariadb');
 
 //module.exports = router;
 
