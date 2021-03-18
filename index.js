@@ -6,31 +6,35 @@ const app = express();
 
 app.get('/api', (req, res) => res.send('Its working!'));
 
-app.get('/people', async (req, res) => {
-    let conn;
-    try {
-        console.log('hola');
-        // establish a connection to MariaDB
-        conn = await pool.getConnection();
-
-        // create a new query
-        var query = "SELECT * FROM USUARIOS";
-
-        // execute the query and set the result to a new variable
-        var rows = await conn.query(query);
-
-        // return the results
-        res.send(rows);
-    } catch (err) {
-        throw err;
-    } finally {
-        if (conn) return conn.release();
-    }
+app.get('/usuarios', async (req, res) => {
+    pool.getConnection()
+    .then(conn => {
+    
+      conn.query("SELECT 1 as val")
+        .then((rows) => {
+          console.log(rows); //[ {val: 1}, meta: ... ]
+          //Table must have been created before 
+          // " CREATE TABLE myTable (id int, val varchar(255)) "
+          return conn.query("INSERT INTO myTable value (?, ?)", [1, "mariadb"]);
+        })
+        .then((res) => {
+          console.log(res); // { affectedRows: 1, insertId: 1, warningStatus: 0 }
+          conn.end();
+        })
+        .catch(err => {
+          //handle error
+          console.log(err); 
+          conn.end();
+        })
+        
+    }).catch(err => {
+      //not connected
+    });
 });
 
 
 
-app.listen(process.env.port || 3000, function(){
+app.listen(3000, function(){
     console.log('now listening for requests');
  });
 
