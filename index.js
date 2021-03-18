@@ -57,10 +57,12 @@ app.get('/usuarios/:id', async (req, res) => {
 
 // Add a new user
 app.post('/register/', (request, response) => {
-    let username = request.body.username;
-    let password = request  .body.password;
+    var post_data = request.body;
+    var id = post_data.id;
+    var username = post_data.username;
+    var password = post_data.password;
     
-    pool.query('INSERT INTO USUARIOS VALUES(?,?,?);', [4, username, password], (error, result) => {
+    pool.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, username, password], (error, result) => {
         if (error) throw error;
  
         response.status(201).send(`User added with ID: ${result.insertId}`);
