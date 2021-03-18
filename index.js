@@ -29,14 +29,27 @@ app.get('/usuarios', async (req, res) => {
 
 
 // Display a single user by ID
-app.get('/usuarios/:id', (request, response) => {
-    const id = request.params.id;
- 
-    pool.query('SELECT * FROM usuarios WHERE id = ?', id, (error, result) => {
-        if (error) throw error;
- 
-        response.send(result);
-    });
+app.get('/usuarios/:id', async (req, res) => {
+    let conn;
+    try {
+        // establish a connection to MariaDB
+        conn = await pool.getConnection();
+
+        const id = req.params.id;
+
+        // create a new query
+        var query = "SELECT * FROM usuarios WHERE id = ?";
+
+        // execute the query and set the result to a new variable
+        var rows = await conn.query(query);
+
+        // return the results
+        res.send(rows);
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.release();
+    }
 });
 
 
