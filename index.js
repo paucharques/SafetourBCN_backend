@@ -6,6 +6,13 @@ module.exports = router;
 // set up our express app
 const app = express();
 
+app.get('/api', (req, res) => res.send('Its working!'));
+
+app.listen(process.env.port || 4000, function(){
+    console.log('now listening for requests');
+ });
+
+/**
 // connect to mariadb
 const mariadb = require('mariadb');
 const pool = mariadb.createPool({
@@ -15,7 +22,7 @@ const pool = mariadb.createPool({
     connectionLimit: 5
 });
 
-/**********************GET************************/
+/**********************GET***********************
 
 app.get('/users', (request, response) => {
     pool.query('SELECT * FROM usuarios', (error, result) => {
@@ -37,7 +44,7 @@ app.get('/users/:id', (request, response) => {
 });
 
 
-/**********************POST************************/
+/**********************POST***********************
 
 // Add a new user
 app.post('/users', (request, response) => {
@@ -49,7 +56,7 @@ app.post('/users', (request, response) => {
 });
 
 
-/**********************PUT************************/
+/**********************PUT***********************
 
 // Update an existing user
 app.put('/users/:id', (request, response) => {
@@ -63,7 +70,7 @@ app.put('/users/:id', (request, response) => {
 });
 
 
-/**********************DELETE************************/
+/**********************DELETE***********************
 
 
 // Delete a user
@@ -77,3 +84,4 @@ app.delete('/users/:id', (request, response) => {
     });
 });
 
+*/
