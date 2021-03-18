@@ -4,6 +4,7 @@ var mariadb = require('mariadb');
 // create a new connection pool
 const pool = mariadb.createPool({
     host: 'localhost',
+    database: 'test_db',
     user:'root', 
     password: 'safetour2021',
     connectionLimit: 5,
