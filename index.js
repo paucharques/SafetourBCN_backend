@@ -28,15 +28,8 @@ app.get('/usuarios', async (req, res) => {
 });
 
 
-
-app.listen(3000, function(){
-    console.log('now listening for requests');
- });
-
- /** 
-
- Display a single user by ID
-app.get('/users/:id', (request, response) => {
+// Display a single user by ID
+app.get('/usuarios/:id', (request, response) => {
     const id = request.params.id;
  
     pool.query('SELECT * FROM usuarios WHERE id = ?', id, (error, result) => {
@@ -47,10 +40,10 @@ app.get('/users/:id', (request, response) => {
 });
 
 
-/**********************POST***********************
+/**********************POST***********************/
 
 // Add a new user
-app.post('/users', (request, response) => {
+app.post('/usuarios', (request, response) => {
     pool.query('INSERT INTO usuario SET ?', request.body, (error, result) => {
         if (error) throw error;
  
@@ -59,10 +52,10 @@ app.post('/users', (request, response) => {
 });
 
 
-/**********************PUT***********************
+/**********************PUT***********************/
 
 // Update an existing user
-app.put('/users/:id', (request, response) => {
+app.put('/usuarios/:id', (request, response) => {
     const id = request.params.id;
  
     pool.query('UPDATE users SET ? WHERE id = ?', [request.body, id], (error, result) => {
@@ -73,11 +66,11 @@ app.put('/users/:id', (request, response) => {
 });
 
 
-/**********************DELETE***********************
+/**********************DELETE***********************/
 
 
 // Delete a user
-app.delete('/users/:id', (request, response) => {
+app.delete('/usuarios/:id', (request, response) => {
     const id = request.params.id;
  
     pool.query('DELETE FROM users WHERE id = ?', id, (error, result) => {
@@ -87,4 +80,6 @@ app.delete('/users/:id', (request, response) => {
     });
 });
 
-*/
+app.listen(3000, function(){
+    console.log('now listening for requests');
+ });
