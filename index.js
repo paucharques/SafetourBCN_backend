@@ -1,7 +1,7 @@
 const express = require('express');
 const mariadb = require('mariadb');
 
-module.exports = router;
+//module.exports = router;
 
 // set up our express app
 const app = express();
