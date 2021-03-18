@@ -12,17 +12,15 @@ app.listen(process.env.port || 3000, function(){
     console.log('now listening for requests');
  });
 
-/**
+
 // connect to mariadb
 const mariadb = require('mariadb');
 const pool = mariadb.createPool({
-    host: 'mydb.com', 
-    user:'myUser', 
-    password: 'myPassword',
+    host: 'localhost', 
+    user:'root', 
+    password: 'safetour2021',
     connectionLimit: 5
 });
-
-/**********************GET***********************
 
 app.get('/users', (request, response) => {
     pool.query('SELECT * FROM usuarios', (error, result) => {
