@@ -9,6 +9,7 @@ app.get('/api', (req, res) => res.send('Its working!'));
 app.get('/people', async (req, res) => {
     let conn;
     try {
+        console.log('hola');
         // establish a connection to MariaDB
         conn = await pool.getConnection();
 
