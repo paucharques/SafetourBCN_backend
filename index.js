@@ -31,8 +31,6 @@ app.get('/usuarios', async (req, res) => {
     }
 });
 
-
-// Display a single user by ID
 app.get('/usuarios/:id', async (req, res) => {
     let conn;
     try {
@@ -42,11 +40,8 @@ app.get('/usuarios/:id', async (req, res) => {
         const id = req.params.id;
         console.log(id)
 
-        // create a new query
-        var query = "SELECT * FROM usuarios WHERE ID_USUARIO = 1";
-
         // execute the query and set the result to a new variable
-        var rows = await conn.query(query);
+        var rows = await conn.query("select * from USUARIOS where id = ?", [id]);
 
         // return the results
         res.send(rows);
