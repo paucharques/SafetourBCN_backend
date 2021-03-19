@@ -57,6 +57,7 @@ app.get('/usuarios/:id', async (req, res) => {
 
 // Add a new user
 app.post('/register/', async (request, response) => {
+    let conn;
     try{
         var post_data = request.body;
         var id = post_data.id;
