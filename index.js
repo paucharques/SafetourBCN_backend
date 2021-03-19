@@ -41,7 +41,7 @@ app.get('/usuarios/:id', async (req, res) => {
         console.log(id)
 
         // execute the query and set the result to a new variable
-        var rows = await conn.query("select * from USUARIOS where id = ?", [id]);
+        var rows = await conn.query("select * from USUARIOS where ID_USUARIO = ?", [id]);
 
         // return the results
         res.send(rows);
