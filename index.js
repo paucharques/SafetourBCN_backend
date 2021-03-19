@@ -69,7 +69,6 @@ app.post('/register', async (req, res) => {
         //S'hauria de comprovar que no existeix el username i assginar l'id automaticament
         conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, username, password])
         .then((result) => {
-            console.log("Arriba aqui");
             res.status(201).send('user added');
         })
         .catch(err => {
