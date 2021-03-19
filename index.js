@@ -3,10 +3,14 @@ const bodyParser = require('body-parser');
 const pool = require('./db')
 
 const app = express();
-/*
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json()); */
 
+app.use(
+    express.urlencoded({
+      extended: true
+    })
+  )
+  
+  app.use(express.json())
 
 app.get('/api', (req, res) => res.send('Its working!'));
 
@@ -56,10 +60,10 @@ app.get('/usuarios/:id', async (req, res) => {
 /**********************POST***********************/
 
 // Add a new user
-app.post('/register/', async (request, response) => {
+app.post('/register/', async (req, res) => {
     let conn;
     try{
-        var post_data = request.body;
+        var post_data = req.body;
         var id = post_data.id;
         var username = post_data.username;
         var password = post_data.password;
