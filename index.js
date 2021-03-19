@@ -3,9 +3,8 @@ const bodyParser = require('body-parser');
 const pool = require('./db')
 
 const app = express();
-
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 
 app.get('/api', (req, res) => res.send('Its working!'));
@@ -30,6 +29,7 @@ app.get('/usuarios', async (req, res) => {
         if (conn) return conn.release();
     }
 });
+
 
 app.get('/usuarios/:id', async (req, res) => {
     let conn;
@@ -56,15 +56,15 @@ app.get('/usuarios/:id', async (req, res) => {
 /**********************POST***********************/
 
 // Add a new user
-app.post('/register', async (req, res) => {
+app.post('/register/', async (request, response) => {
     let conn;
     try{
-        conn = await pool.getConnection();
+        var post_data = request.body;
+        var id = post_data.id;
+        var username = post_data.username;
+        var password = post_data.password;
 
-        var id = req.body.id;
-        var username = req.body.username;
-        var password = req.body.password;
-        console.log(id, username, password)
+        conn = await pool.getConnection();
     
         //S'hauria de comprovar que no existeix el username i assginar l'id automaticament
 
