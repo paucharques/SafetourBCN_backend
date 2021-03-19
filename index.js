@@ -56,23 +56,21 @@ app.get('/usuarios/:id', async (req, res) => {
 /**********************POST***********************/
 
 // Add a new user
-app.post('/register/', async (request, response) => {
+app.post('/register', async (request, response) => {
     let conn;
     try{
+        conn = await pool.getConnection();
+
         var post_data = request.body;
         var id = post_data.id;
         var username = post_data.username;
         var password = post_data.password;
-
-        conn = await pool.getConnection();
     
         //S'hauria de comprovar que no existeix el username i assginar l'id automaticament
 
-        conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, username, password], (error, result) => {
-            if (error) throw error;
-        
-            response.status(201).send(`User added with ID: ${result.insertId}`);
-        });
+        var rows = conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, username, password], (error, result));
+
+        res.send(rows);
     }catch(err){
         throw err;
     } finally {
