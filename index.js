@@ -3,8 +3,9 @@ const bodyParser = require('body-parser');
 const pool = require('./db')
 
 const app = express();
+/*
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.json()); */
 
 
 app.get('/api', (req, res) => res.send('Its working!'));
@@ -45,7 +46,7 @@ app.get('/usuarios/:id', async (req, res) => {
         var query = "SELECT * FROM usuarios WHERE ID_USUARIO = 1";
 
         // execute the query and set the result to a new variable
-        var rows = await conn.query(query, id);
+        var rows = await conn.query(query);
 
         // return the results
         res.send(rows);
