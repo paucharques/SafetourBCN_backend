@@ -39,6 +39,7 @@ app.get('/usuarios/:id', async (req, res) => {
         conn = await pool.getConnection();
 
         const id = req.params.id;
+        console.log(id)
 
         // create a new query
         var query = ("SELECT * FROM usuarios WHERE ID_USUARIO = ?", [id]);
