@@ -70,7 +70,7 @@ app.post('/register', async (request, response) => {
         conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, username, password], (error, result) => {
             if (error) throw error;
             
-            res.status(201).send('user added');
+            response.status(201).send('user added');
         });
     }catch(err){
         throw err;
