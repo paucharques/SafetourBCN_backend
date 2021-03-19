@@ -59,12 +59,13 @@ app.get('/usuarios/:id', async (req, res) => {
 app.post('/register', async (request, response) => {
     let conn;
     try{
-        conn = await pool.getConnection();
 
         var post_data = request.body;
         var id = post_data.id;
         var username = post_data.username;
         var password = post_data.password;
+        
+        conn = await pool.getConnection();
     
         //S'hauria de comprovar que no existeix el username i assginar l'id automaticament
 
