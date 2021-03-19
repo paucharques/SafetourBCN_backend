@@ -56,13 +56,12 @@ app.get('/usuarios/:id', async (req, res) => {
 /**********************POST***********************/
 
 // Add a new user
-app.post('/register/', async (req, res) => {
+app.post('/register', async (req, res) => {
     let conn;
     try{
-        var post_data = req.body;
-        var id = post_data.id;
-        var username = post_data.username;
-        var password = post_data.password;
+        var id = req.body.id;
+        var username = req.body.username;
+        var password = req.body.password;
 
         conn = await pool.getConnection();
     
