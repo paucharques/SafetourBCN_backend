@@ -4,8 +4,8 @@ const pool = require('./db')
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 
 app.get('/api', (req, res) => res.send('Its working!'));
@@ -64,6 +64,7 @@ app.post('/register', async (req, res) => {
         var id = req.body.id;
         var username = req.body.username;
         var password = req.body.password;
+        console.log(id, username, password)
     
         //S'hauria de comprovar que no existeix el username i assginar l'id automaticament
 
