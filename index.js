@@ -64,14 +64,14 @@ app.post('/register_individual_user', async (req, res) => {
         conn.query('SELECT COUNT(*) FROM USUARIOS')
         .then((result) =>{
             id = result[0]['COUNT(*)']
+            console.log(typeof(id))
             console.log(id)
         })
         .catch(err =>{
-            console.log(id)
             console.log(err)
         })
 
-        id++;
+        
     
         conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, req.body.username, req.body.password])
         .then((result) => {
