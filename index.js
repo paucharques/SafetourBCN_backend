@@ -60,19 +60,19 @@ app.post('/register_individual_user', async (req, res) => {
     let conn;
     try{
         conn = await pool.getConnection();
-        let id
+        let id1
         conn.query('SELECT COUNT(*) FROM USUARIOS')
         .then((result) =>{
-            id = result[0]['COUNT(*)']
-            console.log(typeof(id))
-            console.log(id)
+            id1 = result[0]['COUNT(*)']
+            console.log('then' + id)
         })
         .catch(err =>{
+            console.log('catch'+ id)
             console.log(err)
         })
-
         
-    
+        let id = 19
+
         conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, req.body.username, req.body.password])
         .then((result) => {
             res.status(201).send('user added');
