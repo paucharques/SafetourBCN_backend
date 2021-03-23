@@ -64,7 +64,7 @@ app.post('/register_individual_user', async (req, res) => {
         conn.query('SELECT COUNT(*) FROM USUARIOS')
         .then((result) =>{
             id = result[0]['COUNT(*)']
-
+            id++
             conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, req.body.username, req.body.password])
             .then((result) => {
                 res.status(201).send('user added');
