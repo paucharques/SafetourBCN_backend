@@ -64,7 +64,7 @@ app.post('/register_individual_user', async (req, res) => {
         var rows = await conn.query("SELECT COUNT(*) FROM USUARIOS");
         rows++;
     
-        conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [rows, req.body.post_data.username, req.body.post_data.password])
+        conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [rows, req.body.username, req.body.password])
         .then((result) => {
             res.status(201).send('user added');
         })
@@ -72,7 +72,7 @@ app.post('/register_individual_user', async (req, res) => {
             throw err
         });
 
-        conn.query('INSERT INTO USUARIOS_INDIVIDUALES VALUES(?,?);', [rows, req.body.post_data.location])
+        conn.query('INSERT INTO USUARIOS_INDIVIDUALES VALUES(?,?);', [rows, req.body.location])
         .then((result) => {
             res.status(201).send('user added');
         })
