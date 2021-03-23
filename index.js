@@ -67,8 +67,6 @@ app.post('/register_individual_user', async (req, res) => {
             id++
             conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, req.body.username, req.body.password])
             .then((result) => {
-                res.status(201).send('user added');
-
                 conn.query('INSERT INTO USUARIOS_INDIVIDUALES VALUES(?,?);', [id, req.body.location])
                     .then((result) => {
                         res.status(201).send('user added');
