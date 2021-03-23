@@ -65,7 +65,13 @@ app.post('/register_individual_user', async (req, res) => {
         .then((result) =>{
             id = result.json({'COUNT(*)':rows})
             console.log(id)
-        });
+        })
+        .catch(err =>{
+            console.log(id)
+            console.log(err)
+        })
+
+        id++;
     
         conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, req.body.username, req.body.password])
         .then((result) => {
