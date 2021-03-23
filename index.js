@@ -61,7 +61,7 @@ app.post('/register_individual_user', async (req, res) => {
     try{
         conn = await pool.getConnection();
         var id
-        var rows = await conn.query("SELECT COUNT(*) FROM USUARIOS")
+        var rows = await conn.query('SELECT COUNT(*) FROM USUARIOS')
         .then((result) =>{
             id = result.json({'COUNT(*)':rows})
             console.log(id)
