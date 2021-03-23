@@ -62,7 +62,9 @@ app.post('/register_individual_user', async (req, res) => {
         conn = await pool.getConnection();
 
         var rows = await conn.query("SELECT COUNT(*) FROM USUARIOS");
+        console.log(rows);
         rows++;
+        console.log(rows);
     
         conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [rows, req.body.username, req.body.password])
         .then((result) => {
