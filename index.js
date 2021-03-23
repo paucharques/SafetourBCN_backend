@@ -63,7 +63,7 @@ app.post('/register_individual_user', async (req, res) => {
         let id
         conn.query('SELECT COUNT(*) FROM USUARIOS')
         .then((result) =>{
-            id = result.json({'COUNT(*)':rows})
+            id = result[0]['COUNT(*)']
             console.log(id)
         })
         .catch(err =>{
