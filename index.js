@@ -60,34 +60,30 @@ app.post('/register_individual_user', async (req, res) => {
     let conn;
     try{
         conn = await pool.getConnection();
-        let id1
+        let id
         conn.query('SELECT COUNT(*) FROM USUARIOS')
         .then((result) =>{
-            id1 = result[0]['COUNT(*)']
-            console.log('then' + id)
+            id = result[0]['COUNT(*)']
+
+            conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, req.body.username, req.body.password])
+            .then((result) => {
+                res.status(201).send('user added');
+
+                conn.query('INSERT INTO USUARIOS_INDIVIDUALES VALUES(?,?);', [id, req.body.location])
+                    .then((result) => {
+                        res.status(201).send('user added');
+                    })
+                    .catch(err => {
+                        throw err
+                    });
+            })
+            .catch(err => {
+                throw err
+            });
         })
         .catch(err =>{
-            console.log('catch'+ id)
             console.log(err)
         })
-        
-        let id = 19
-
-        conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, req.body.username, req.body.password])
-        .then((result) => {
-            res.status(201).send('user added');
-        })
-        .catch(err => {
-            throw err
-        });
-
-        conn.query('INSERT INTO USUARIOS_INDIVIDUALES VALUES(?,?);', [id, req.body.location])
-        .then((result) => {
-            res.status(201).send('user added');
-        })
-        .catch(err => {
-            throw err
-        });
 
     }catch(err){
         throw err;
