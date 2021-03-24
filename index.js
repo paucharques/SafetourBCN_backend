@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const pool = require('./db')
+var jwt = require('jsonwebtoken');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -56,37 +57,24 @@ app.get('/users/:id', async (req, res) => {
 /**********************POST***********************/
 
 // Add a new user
-<<<<<<< HEAD
-app.post('/register', async (request, response) => {
-=======
 app.post('/register_individual_user', async (req, res) => {
     let conn;
     try{
         conn = await pool.getConnection();
-        let id
-        conn.query('SELECT COUNT(*) FROM USUARIOS')
-        .then((result) =>{
-            id = result[0]['COUNT(*)']
-            id++
-            conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, req.body.username, req.body.password])
-            .then((result) => {
-                conn.query('INSERT INTO USUARIOS_INDIVIDUALES VALUES(?,?);', [id, req.body.location])
-                    .then((result) => {
-                        res.status(201).send('user added');
-                    })
-                    .catch(err => {
-                        throw err
-                    });
-            })
-            .catch(err => {
-                throw err
-            });
+        conn.query('INSERT INTO USERS VALUES(?,?,?);', [req.body.email, req.body.username, req.body.password])
+        .then((result) => {
+            conn.query('INSERT INTO INDIVIDUAL_USER VALUES(?,?);', [req.body.email])
+                .then((result) => {
+                    res.status(201).send('user added');
+                })
+                .catch(err => {
+                    throw err
+                });
         })
-        .catch(err =>{
-            console.log(err)
-        })
-
-    }catch(err){
+        .catch(err => {
+            throw err
+        });
+    } catch(err){
         throw err;
     } finally {
         if (conn) return conn.release();
@@ -96,7 +84,6 @@ app.post('/register_individual_user', async (req, res) => {
 
 // Add a business
 app.post('/register_buisness', async (req, res) => {
->>>>>>> 09ba6aa789154972c30bda7eac419cb18f51a4b4
     let conn;
     try{
         conn = await pool.getConnection();
@@ -112,6 +99,32 @@ app.post('/register_buisness', async (req, res) => {
             
             res.status(201).send('user added');
         });
+    }catch(err){
+        throw err;
+    } finally {
+        if (conn) return conn.release();
+    }
+
+});
+
+// LOGIN
+app.post('/login', async (req, res) => {
+    let conn;
+    try{
+        conn = await pool.getConnection();
+
+        var email = req.body.username;
+        var password = req.body.password;
+    
+        //S'hauria de comprovar que no existeix el username i assginar l'id automaticament
+        conn.query('SELECT * FROM USERS WHERE EMAIL = ? AND PASSWORD = ?;', [email, password])
+            .then((result) => {
+                var token = jwt.sign({username: email}, 'supersecret');
+                res.send(token)
+            })
+            .catch(err => {
+                throw err
+            });
     }catch(err){
         throw err;
     } finally {
