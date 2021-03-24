@@ -17,7 +17,7 @@ app.get('/users', async (req, res) => {
         conn = await pool.getConnection();
 
         // create a new query
-        var query = "select * from USUARIOS";
+        var query = "select * from USERS";
 
         // execute the query and set the result to a new variable
         var rows = await conn.query(query);
