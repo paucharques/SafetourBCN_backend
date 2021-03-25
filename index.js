@@ -63,7 +63,7 @@ app.post('/register_individual_user', async (req, res) => {
         conn = await pool.getConnection();
         conn.query('INSERT INTO USERS VALUES(?,?,?);', [req.body.email, req.body.username, req.body.password])
         .then((result) => {
-            conn.query('INSERT INTO INDIVIDUAL_USER VALUES(?,?);', [req.body.email])
+            conn.query('INSERT INTO INDIVIDUAL_USER VALUES(?,?);', [req.body.email, req.body.location])
                 .then((result) => {
                     res.status(201).send('user added');
                 })
@@ -79,32 +79,31 @@ app.post('/register_individual_user', async (req, res) => {
     } finally {
         if (conn) return conn.release();
     }
-
 });
 
-// Add a business
-app.post('/register_buisness', async (req, res) => {
+// Add a company
+app.post('/register_company', async (req, res) => {
     let conn;
     try{
         conn = await pool.getConnection();
-
-        var post_data = request.body;
-        var id = post_data.id;
-        var username = post_data.username;
-        var password = post_data.password;
-    
-        //S'hauria de comprovar que no existeix el username i assginar l'id automaticament
-        conn.query('INSERT INTO USUARIOS VALUES(?,?,?);', [id, username, password], (error, result) => {
-            if (error) throw error;
-            
-            res.status(201).send('user added');
+        conn.query('INSERT INTO USERS VALUES(?,?,?);', [req.body.email, req.body.username, req.body.password])
+        .then((result) => {
+            conn.query('INSERT INTO COMPANIES(?,?);', [req.body.email, req.body.description])
+                .then((result) => {
+                    res.status(201).send('company added');
+                })
+                .catch(err => {
+                    throw err
+                });
+        })
+        .catch(err => {
+            throw err
         });
-    }catch(err){
+    } catch(err){
         throw err;
     } finally {
         if (conn) return conn.release();
     }
-
 });
 
 // LOGIN
