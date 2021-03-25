@@ -40,7 +40,7 @@ app.get('/users_email', async (req, res) => {
 
         // execute the query and set the result to a new variable
         var rows = await conn.query("select * from USERS where EMAIL = ?", [req.body.email]);
-
+        console.log(rows)
         // return the results
         res.send(rows);
     } catch (err) {
