@@ -32,7 +32,7 @@ app.get('/users', async (req, res) => {
 });
 
 
-app.get('/users/:email', async (req, res) => {
+app.get('/users_email', async (req, res) => {
     let conn;
     try {
         // establish a connection to MariaDB
