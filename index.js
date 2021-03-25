@@ -32,17 +32,14 @@ app.get('/users', async (req, res) => {
 });
 
 
-app.get('/users/:id', async (req, res) => {
+app.get('/users/:email', async (req, res) => {
     let conn;
     try {
         // establish a connection to MariaDB
         conn = await pool.getConnection();
 
-        const id = req.params.id;
-        console.log(id)
-
         // execute the query and set the result to a new variable
-        var rows = await conn.query("select * from USUARIOS where ID_USUARIO = ?", [id]);
+        var rows = await conn.query("select * from USUERS where EMAIL = ?", [req.params.email]);
 
         // return the results
         res.send(rows);
