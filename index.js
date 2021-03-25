@@ -88,7 +88,7 @@ app.post('/register_company', async (req, res) => {
         conn = await pool.getConnection();
         conn.query('INSERT INTO USERS VALUES(?,?,?);', [req.body.email, req.body.username, req.body.password])
         .then((result) => {
-            conn.query('INSERT INTO COMPANIES(?,?);', [req.body.email, req.body.description])
+            conn.query('INSERT INTO COMPANIES VALUES(?,?);', [req.body.email, req.body.description])
                 .then((result) => {
                     res.status(201).send('company added');
                 })
