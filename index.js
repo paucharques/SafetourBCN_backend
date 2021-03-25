@@ -39,7 +39,7 @@ app.get('/users/:email', async (req, res) => {
         conn = await pool.getConnection();
 
         // execute the query and set the result to a new variable
-        var rows = await conn.query("select * from USUERS where EMAIL = ?", [req.params.email]);
+        var rows = await conn.query("select * from USERS where EMAIL = ?", [req.body.email]);
 
         // return the results
         res.send(rows);
