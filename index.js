@@ -86,7 +86,7 @@ app.post('/registerIndividualUser', async (req, res) => {
         conn = await pool.getConnection();
         conn.query('INSERT INTO USERS VALUES(?,?,?);', [req.body.email, req.body.username, req.body.password])
         .then((result) => {
-            conn.query('INSERT INTO INDIVIDUAL_USER VALUES(?);', [req.body.email])
+            conn.query('INSERT INTO INDIVIDUAL_USER VALUES(?,?);', [req.body.email, null])
                 .then((result) => {
                     res.status(201).send('user added');
                 })
