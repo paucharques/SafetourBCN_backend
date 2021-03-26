@@ -153,11 +153,11 @@ app.delete('/usuarios/:id', async (req, res) => {
         try{
             conn = await pool.getConnection();
             conn.query('DELETE FROM USERS WHERE email = ?', [req.params.email])
-                .then((res) => {
+                .then((result) => {
                     conn.query('DELETE FROM COMPANIES WHERE email = ?', [req.params.email])
-                        .then((res) => {
+                        .then((result) => {
                             conn.query('DELETE FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email])
-                                .then((res) => {
+                                .then((result) => {
                                     res.status(201).send('User deleted');
                                 }.catch(err => {
                                   throw err
@@ -169,14 +169,11 @@ app.delete('/usuarios/:id', async (req, res) => {
                 }.catch(err => {
                     throw err
                     });
-
- 
-
-    }catch(err){
-       throw err;
-         } finally {
-            if (conn) return conn.release();
-            }
+                }catch(err){
+                 throw err;
+                 } finally {
+                 if (conn) return conn.release();
+            });
 });
 
 app.listen(3000, function(){
