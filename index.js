@@ -49,6 +49,33 @@ app.get('/users/:email', async (req, res) => {
     }
 });
 
+// LOGIN
+app.get('/login', async (req, res) => {
+    let conn;
+    try{
+        conn = await pool.getConnection();
+
+        var email = req.body.email;
+        var password = req.body.password;
+    
+        //S'hauria de comprovar que no existeix el username i assginar l'id automaticament
+        conn.query('SELECT * FROM USERS WHERE EMAIL = ? AND PASSWORD = ?;', [email, password])
+            .then((result) => {
+                var token = jwt.sign({username: email}, 'supersecret');
+                res.send(token)
+            })
+            .catch(err => {
+                throw err
+            });
+    }catch(err){
+        throw err;
+    } finally {
+        if (conn) return conn.release();
+    }
+
+});
+
+
 
 /**********************POST***********************/
 
@@ -100,32 +127,6 @@ app.post('/registerCompany', async (req, res) => {
     } finally {
         if (conn) return conn.release();
     }
-});
-
-// LOGIN
-app.post('/login', async (req, res) => {
-    let conn;
-    try{
-        conn = await pool.getConnection();
-
-        var email = req.body.username;
-        var password = req.body.password;
-    
-        //S'hauria de comprovar que no existeix el username i assginar l'id automaticament
-        conn.query('SELECT * FROM USERS WHERE EMAIL = ? AND PASSWORD = ?;', [email, password])
-            .then((result) => {
-                var token = jwt.sign({username: email}, 'supersecret');
-                res.send(token)
-            })
-            .catch(err => {
-                throw err
-            });
-    }catch(err){
-        throw err;
-    } finally {
-        if (conn) return conn.release();
-    }
-
 });
 
 
