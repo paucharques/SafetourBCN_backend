@@ -159,14 +159,14 @@ app.delete('/usuarios/:id', async (req, res) => {
                             conn.query('DELETE FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email])
                                 .then((result) => {
                                     res.status(201).send('User deleted');
-                                }.catch(err => {
+                                }).catch(err => {
                                   throw err
                                   });
 
-                        }.catch(err => {
+                        }).catch(err => {
                           throw err
                           });
-                }.catch(err => {
+                }).catch(err => {
                     throw err
                     });
                 }catch(err){
