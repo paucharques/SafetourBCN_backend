@@ -148,33 +148,52 @@ app.put('/usuarios/:id', (request, response) => {
 
 
 // Delete a user
-app.delete('/users/:email', async (req, res) => {
+app.delete('/IndividualUser/:email', async (req, res) => {
     let conn;
         try{
-            conn = await pool.getConnection();
-            var rows = await conn.query('SELECT * FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email]);
-            if(rows && rows.length)
-            conn = await pool.getConnection();
-            conn.query('DELETE FROM USERS WHERE email = ?', [req.params.email])
-            .then((result) => {
-                if(rows == null) conn.query('DELETE FROM COMPANIES WHERE email = ?', [req.params.email])
-                else conn.query('DELETE FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email])
-                    .then((result) => {
-                        if(rows && rows.length)
-                               res.status(201).send('User deleted');
-                    })
-                    .catch(err => {
-                        throw err
-                    });
-            })
-            .catch(err => {
-                throw err
-            });
-        } catch(err){
-            throw err;
-        } finally {
-            if (conn) return conn.release();
-        }
+                conn = await pool.getConnection();
+                conn.query('DELETE FROM USERS WHERE email = ?', [req.params.email])
+                .then((result) => {
+                    conn.query('DELETE FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email])
+                        .then((result) => {
+                            res.status(201).send('Individual User added');
+                        })
+                        .catch(err => {
+                            throw err
+                        });
+                })
+                .catch(err => {
+                    throw err
+                });
+            } catch(err){
+                throw err;
+            } finally {
+                if (conn) return conn.release();
+            }
+});
+
+app.delete('/Company/:email', async (req, res) => {
+    let conn;
+        try{
+                conn = await pool.getConnection();
+                conn.query('DELETE FROM USERS WHERE email = ?', [req.params.email])
+                .then((result) => {
+                    conn.query('DELETE FROM COMPANIES WHERE email = ?', [req.params.email])
+                        .then((result) => {
+                            res.status(201).send('company added');
+                        })
+                        .catch(err => {
+                            throw err
+                        });
+                })
+                .catch(err => {
+                    throw err
+                });
+            } catch(err){
+                throw err;
+            } finally {
+                if (conn) return conn.release();
+            }
 });
 
 app.listen(3000, function(){
