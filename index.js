@@ -166,15 +166,17 @@ app.delete('/usuarios/:id', async (req, res) => {
                         }.catch(err => {
                           throw err
                           });
-                }catch(err){
-                 throw err;
-                     } finally {
-                        if (conn) return conn.release();
-                     }
+                }.catch(err => {
+                    throw err
+                    });
 
  
 
-    });
+    }catch(err){
+       throw err;
+         } finally {
+            if (conn) return conn.release();
+            }
 });
 
 app.listen(3000, function(){
