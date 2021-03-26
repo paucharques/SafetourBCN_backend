@@ -151,8 +151,8 @@ app.put('/usuarios/:id', (request, response) => {
 app.delete('/users/:email', async (req, res) => {
     let conn;
         try{
-
-        var rows = await conn.query('SELECT * FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email]);
+            conn = await pool.getConnection();
+            var rows = await conn.query('SELECT * FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email]);
             if(rows && rows.length)
             conn = await pool.getConnection();
             conn.query('DELETE FROM USERS WHERE email = ?', [req.params.email])
