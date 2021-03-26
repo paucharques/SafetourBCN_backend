@@ -156,7 +156,7 @@ app.delete('/IndividualUser/:email', async (req, res) => {
                 .then((result) => {
                     conn.query('DELETE FROM USERS WHERE email = ?', [req.params.email])
                         .then((result) => {
-                            res.status(201).send('Individual User added');
+                            res.status(201).send('Individual User deleted');
                         })
                         .catch(err => {
                             throw err
@@ -176,11 +176,11 @@ app.delete('/Company/:email', async (req, res) => {
     let conn;
         try{
                 conn = await pool.getConnection();
-                conn.query('DELETE FROM USERS WHERE email = ?', [req.params.email])
+                conn.query('DELETE FROM COMPANIES WHERE email = ?', [req.params.email])
                 .then((result) => {
-                    conn.query('DELETE FROM COMPANIES WHERE email = ?', [req.params.email])
+                    conn.query('DELETE FROM USERS WHERE email = ?', [req.params.email])
                         .then((result) => {
-                            res.status(201).send('company added');
+                            res.status(201).send('company deleted');
                         })
                         .catch(err => {
                             throw err
