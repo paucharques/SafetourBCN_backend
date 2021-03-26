@@ -53,7 +53,7 @@ app.get('/users/:email', async (req, res) => {
 /**********************POST***********************/
 
 // Add a new user
-app.post('/register_individual_user', async (req, res) => {
+app.post('/registerIndividualUser', async (req, res) => {
     let conn;
     try{
         conn = await pool.getConnection();
@@ -78,7 +78,7 @@ app.post('/register_individual_user', async (req, res) => {
 });
 
 // Add a company
-app.post('/register_company', async (req, res) => {
+app.post('/registerCompany', async (req, res) => {
     let conn;
     try{
         conn = await pool.getConnection();
