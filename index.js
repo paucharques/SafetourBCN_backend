@@ -149,12 +149,31 @@ app.put('/usuarios/:id', (request, response) => {
 
 // Delete a user
 app.delete('/usuarios/:id', (request, response) => {
-    const id = request.params.id;
+     let conn;
+        try{
+            conn = await pool.getConnection();
+            conn.query('DELETE FROM USERS WHERE email = ?', [request.params.email])
+                .then((result) => {
+                    conn.query('DELETE FROM COMPANIES WHERE email = ?', [request.params.email])
+                        .then((result) => {
+                            conn.query('DELETE FROM INDIVIDUAL_USERS WHERE email = ?', [request.params.email])
+                                .then((result) => {
+                                    res.status(201).send('User deleted');
+                                }.catch(err => {
+                                  throw err
+                                  });
+
+                        }.catch(err => {
+                          throw err
+                          });
+                }catch(err){
+                 throw err;
+                     } finally {
+                        if (conn) return conn.release();
+                     }
+
  
-    pool.query('DELETE FROM users WHERE id = ?', id, (error, result) => {
-        if (error) throw error;
- 
-        response.send('User deleted.');
+
     });
 });
 
