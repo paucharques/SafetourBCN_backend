@@ -148,7 +148,7 @@ app.put('/usuarios/:id', (request, response) => {
 
 
 // Delete a user
-app.delete('/usuarios/:id', async (req, res) => {
+app.delete('/usuarios/:email', async (req, res) => {
     let conn;
         try{
 
