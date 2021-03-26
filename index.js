@@ -154,7 +154,7 @@ app.delete('/IndividualUser/:email', async (req, res) => {
                 conn = await pool.getConnection();
                 conn.query('DELETE FROM USERS WHERE email = ?', [req.params.email])
                 .then((result) => {
-                    conn.query('DELETE FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email])
+                    conn.query('DELETE FROM INDIVIDUAL_USER WHERE email = ?', [req.params.email])
                         .then((result) => {
                             res.status(201).send('Individual User added');
                         })
