@@ -157,14 +157,11 @@ app.delete('/users/:email', async (req, res) => {
             conn = await pool.getConnection();
             conn.query('DELETE FROM USERS WHERE email = ?', [req.params.email])
             .then((result) => {
-                if(!(rows && rows.length)) conn.query('DELETE FROM COMPANIES WHERE email = ?', [req.params.email])
+                if(rows == null) conn.query('DELETE FROM COMPANIES WHERE email = ?', [req.params.email])
+                else conn.query('DELETE FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email])
                     .then((result) => {
-                        if(rows && rows.length) conn.query('DELETE FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email])
-                            .then((result) => {
+                        if(rows && rows.length)
                                res.status(201).send('User deleted');
-                            }).catch(err => {
-                                   throw err
-                              });
                     })
                     .catch(err => {
                         throw err
