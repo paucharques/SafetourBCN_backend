@@ -148,16 +148,16 @@ app.put('/usuarios/:id', (request, response) => {
 
 
 // Delete a user
-app.delete('/usuarios/:id', (request, response) => {
+app.delete('/usuarios/:id', async (req, res) => {
      let conn;
         try{
             conn = await pool.getConnection();
-            conn.query('DELETE FROM USERS WHERE email = ?', [request.params.email])
-                .then((result) => {
-                    conn.query('DELETE FROM COMPANIES WHERE email = ?', [request.params.email])
-                        .then((result) => {
-                            conn.query('DELETE FROM INDIVIDUAL_USERS WHERE email = ?', [request.params.email])
-                                .then((result) => {
+            conn.query('DELETE FROM USERS WHERE email = ?', [req.params.email])
+                .then((res) => {
+                    conn.query('DELETE FROM COMPANIES WHERE email = ?', [req.params.email])
+                        .then((res) => {
+                            conn.query('DELETE FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email])
+                                .then((res) => {
                                     res.status(201).send('User deleted');
                                 }.catch(err => {
                                   throw err
