@@ -152,14 +152,14 @@ app.delete('/users/:email', async (req, res) => {
     let conn;
         try{
 
-        var rows = await conn.query('SELECT * FROM INDIVIDUAL_USERS WHERE email = ?', [email, password]);
+        var rows = await conn.query('SELECT * FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email]);
             if(rows && rows.length)
             conn = await pool.getConnection();
             conn.query('DELETE FROM USERS WHERE email = ?', [req.params.email])
             .then((result) => {
-                if(!(rows && rows.length)) {conn.query('DELETE FROM COMPANIES WHERE email = ?', [req.params.email])}
+                if(!(rows && rows.length)) conn.query('DELETE FROM COMPANIES WHERE email = ?', [req.params.email])
                     .then((result) => {
-                        if(rows && rows.length) {conn.query('DELETE FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email])}
+                        if(rows && rows.length) conn.query('DELETE FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email])
                             .then((result) => {
                                res.status(201).send('User deleted');
                             }).catch(err => {
