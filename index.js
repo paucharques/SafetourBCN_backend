@@ -149,33 +149,37 @@ app.put('/usuarios/:id', (request, response) => {
 
 // Delete a user
 app.delete('/usuarios/:id', async (req, res) => {
-     let conn;
+    let conn;
         try{
             conn = await pool.getConnection();
             conn.query('DELETE FROM USERS WHERE email = ?', [req.params.email])
-                .then((result) => {
-                    conn.query('DELETE FROM COMPANIES WHERE email = ?', [req.params.email])
-                        .then((result) => {
-                            conn.query('DELETE FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email])
-                                .then((result) => {
-                                    res.status(201).send('User deleted');
-                                }).catch(err => {
-                                  throw err
-                                  });
-
-                        }).catch(err => {
-                          throw err
-                          });
-                }).catch(err => {
-                    throw err
+            .then((result) => {
+                conn.query('DELETE FROM COMPANIES WHERE email = ?', [req.params.email])
+                    .then((result) => {
+                        conn.query('DELETE FROM INDIVIDUAL_USERS WHERE email = ?', [req.params.email])
+                            .then((result) => {
+                               res.status(201).send('User deleted');
+                            }).catch(err => {
+                                   throw err
+                              });
+                    })
+                    .catch(err => {
+                        throw err
                     });
-                }catch(err){
-                 throw err;
-                 } finally {
-                 if (conn) return conn.release();
+            })
+            .catch(err => {
+                throw err
             });
+        } catch(err){
+            throw err;
+        } finally {
+            if (conn) return conn.release();
+        }
 });
 
 app.listen(3000, function(){
     console.log('now listening for requests');
  });
+
+
+
