@@ -134,14 +134,15 @@ app.post('/registerEstablishment', async (req, res) => {
     let conn;
     try{
         conn = await pool.getConnection();
-        var rows = await conn.query('SELECT * FROM ESTABLISHMENTS;')
+        var rows = await conn.query('SELECT * FROM ESTABLISHMENT;'){
+        if(err) throw err
+        }
         var id_estab = rows.size() + 1;
         conn.query('INSERT INTO ESTABLISHMENT VALUES(?,?,?,?,?,?,?);', [req.body.owner, id_estab, req.body.local_x, req.body.local_y, req.body.description, req.body.max_capacity, req.body.schedule])
 
     } catch(err){
         throw err;
     } finally {
-
         if (conn) return conn.release();
     }
 });
