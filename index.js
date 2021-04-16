@@ -141,7 +141,7 @@ app.post('/registerEstablishment', async (req, res) => {
     } catch(err){
         throw err;
     } finally {
-        response.send('Establishment registered successfully.');
+        res.status(201).send('Establishment registered successfully.');
         if (conn) return conn.release();
     }
 });
@@ -156,7 +156,7 @@ app.put('/usuarios/:id', (request, response) => {
     pool.query('UPDATE users SET ? WHERE id = ?', [request.body, id], (error, result) => {
         if (error) throw error;
  
-        res.status(201).send('User updated successfully.');
+        response.send('User updated successfully.');
     });
 });
 
