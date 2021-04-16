@@ -129,6 +129,20 @@ app.post('/registerCompany', async (req, res) => {
     }
 });
 
+// Add a new establishment
+app.post('/registerEstablishment', async (req, res) => {
+    let conn;
+    try{
+        conn = await pool.getConnection();
+        conn.query('INSERT INTO ESTABLISHMENT VALUES(?,?,?,?,?,?,?);', [req.body.owner, req.body.id, req.body.local_x, req.body.local_y, req.body.description, req.body.max_capacity, req.body.schedule])
+
+    } catch(err){
+        throw err;
+    } finally {
+        if (conn) return conn.release();
+    }
+});
+
 
 /**********************PUT***********************/
 
