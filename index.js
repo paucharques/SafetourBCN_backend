@@ -135,15 +135,11 @@ app.post('/registerEstablishment', async (req, res) => {
     try{
         conn = await pool.getConnection();
         conn.query('INSERT INTO ESTABLISHMENT (OWNER,LOCAL_X,LOCAL_Y,DESCRIPTION,MAX_CAPACITY,SCHEDULE) VALUES(?,?,?,?,?,?);', [req.body.owner, req.body.local_x, req.body.local_y, req.body.description, req.body.max_capacity, req.body.schedule])
-
-    }.then((result) => {
-        res.status(201).send('Establishment registered successfully');
-                       })
-                       .catch(err => {
-                                   throw err
-                               });
-
-    finally {
+        res.status(201).send('establishment added')
+    }
+     catch(err){
+        throw err;
+    } finally {
         if (conn) return conn.release();
     }
 });
