@@ -141,7 +141,7 @@ app.post('/registerEstablishment', async (req, res) => {
     } catch(err){
         throw err;
     } finally {
-        res.status(201).send('Establishment registered successfully.');
+
         if (conn) return conn.release();
     }
 });
