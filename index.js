@@ -156,7 +156,7 @@ app.put('/usuarios/:id', (request, response) => {
     pool.query('UPDATE users SET ? WHERE id = ?', [request.body, id], (error, result) => {
         if (error) throw error;
  
-        response.send('User updated successfully.');
+        res.status(201).send('User updated successfully.');
     });
 });
 
