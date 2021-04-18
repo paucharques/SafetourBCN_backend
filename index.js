@@ -198,7 +198,7 @@ app.put('/usuarios/:email', (request, response) => {
 });
 
 //Update user name
-app.put('/user/name/:email', (req, res) => {
+app.put('/users/:email', (req, res) => {
 
     let conn;
         try {
