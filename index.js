@@ -198,7 +198,7 @@ app.put('/usuarios/:id', (request, response) => {
 });
 
 //Update user name
-app.put('/users/change_name/:email', (req, res) => {
+app.put('/users/change_name/:email', async (req, res) => {
 
     let conn;
         try {
