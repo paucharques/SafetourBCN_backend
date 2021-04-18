@@ -187,10 +187,10 @@ app.post('/registerEstablishment', async (req, res) => {
 /**********************PUT***********************/
 
 // Update an existing user
-app.put('/usuarios/:id', (request, response) => {
+app.put('/usuarios/:email', (request, response) => {
     const id = request.params.id;
  
-    pool.query('UPDATE users SET ? WHERE id = ?', [request.body, id], (error, result) => {
+    pool.query('UPDATE users SET ? WHERE email = ?', [request.body, id], (error, result) => {
         if (error) throw error;
  
         response.send('User updated successfully.');
