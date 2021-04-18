@@ -31,7 +31,43 @@ app.get('/users', async (req, res) => {
     }
 });
 
+//GET user
+app.get('/users/:email', async (req, res) => {
+    let conn;
+    try {
+        // establish a connection to MariaDB
+        conn = await pool.getConnection();
 
+        // execute the query and set the result to a new variable
+        var rows = await conn.query("select * from USERS where EMAIL = ?", [req.params.email]);
+        // return the results
+        res.send(rows);
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.release();
+    }
+});
+
+//GET user individual
+app.get('/individual_user/:email', async (req, res) => {
+    let conn;
+    try {
+        // establish a connection to MariaDB
+        conn = await pool.getConnection();
+
+        // execute the query and set the result to a new variable
+        var rows = await conn.query("select * from USERS INNER JOIN INDIVIDUAL_USER ON USERS.EMAIL = INDIVIDUAL_USER.EMAIL where EMAIL = ?", [req.params.email]);
+        // return the results
+        res.send(rows);
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) return conn.release();
+    }
+});
+
+//GET company
 app.get('/users/:email', async (req, res) => {
     let conn;
     try {
