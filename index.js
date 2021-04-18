@@ -203,7 +203,7 @@ app.put('/users/change_name/:email', async (req, res) => {
     let conn;
         try {
             conn = await pool.getConnection();
-                    conn.query('UPDATE USERS SET NAME = ? WHERE EMAIL = ?', [req.body.name, req.params.email])
+                    conn.query('UPDATE USERS SET ? = ? WHERE EMAIL = ?', [req.body.attribute, req.body.value, req.params.email])
                     .then((result) => {
                         res.status(201).send('name changed');
                         })
