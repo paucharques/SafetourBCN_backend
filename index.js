@@ -197,6 +197,26 @@ app.put('/usuarios/:id', (request, response) => {
     });
 });
 
+//Update user name
+app.put('/users/change_name/:email', (req, res) => {
+
+    let conn;
+        try {
+            conn = await pool.getConnection();
+                    conn.query('UPDATE USERS SET NAME = ? WHERE EMAIL = ?', [req.body.name, req.params.email])
+                    .then((result) => {
+                        res.status(201).send('name changed');
+                        })
+        }
+
+        catch (err) {
+            throw err;
+        } finally {
+            if (conn) return conn.release();
+        }
+    });
+});
+
 
 /**********************DELETE***********************/
 
