@@ -214,7 +214,7 @@ app.put('/users/change_name/:email', async (req, res) => {
         } finally {
             if (conn) return conn.release();
         }
-    });
+ });
 
 
 
