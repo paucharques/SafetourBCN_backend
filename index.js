@@ -198,11 +198,11 @@ app.put('/usuarios/:email', (request, response) => {
 });
 
 //Update user name
-app.put('/users/:email', async (req, res) => {
+app.put('/users/:email', (req, res) => {
 
     let conn;
         try {
-            conn = await pool.getConnection();
+            conn =  pool.getConnection();
                     conn.query('UPDATE USERS SET ? = ? WHERE EMAIL = ?', [req.body.attribute, req.body.value, req.params.email])
                     .then((result) => {
                         res.status(201).send('user changed');
