@@ -68,14 +68,14 @@ app.get('/individual_user/:email', async (req, res) => {
 });
 
 //GET company
-app.get('/users/:email', async (req, res) => {
+app.get('/company/:email', async (req, res) => {
     let conn;
     try {
         // establish a connection to MariaDB
         conn = await pool.getConnection();
 
         // execute the query and set the result to a new variable
-        var rows = await conn.query("select * from USERS where EMAIL = ?", [req.params.email]);
+        var rows = await conn.query("select u.EMAIL,u.NAME,u.PASSWORD,c.DESCRIPTION from USERS u INNER JOIN COMPANIES c ON u.EMAIL = c.EMAIL where u.EMAIL = ?", [req.params.email]);
         // return the results
         res.send(rows);
     } catch (err) {
