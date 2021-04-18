@@ -215,7 +215,7 @@ app.put('/users/change_name/:email', async (req, res) => {
             if (conn) return conn.release();
         }
     });
-});
+
 
 
 /**********************DELETE***********************/
