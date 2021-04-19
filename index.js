@@ -242,14 +242,12 @@ app.put("/users/:email", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-    const attributeAux = req.params.emails.replace(/'/g,'');
         conn
           .query(
-            "UPDATE USERS SET " + attributeAux + " = ? WHERE EMAIL = ?",
+            "UPDATE USERS SET NAME = ? WHERE EMAIL = ?",
             [
-              req.body.attribute,
               req.body.value,
-              req.params.email,
+              req.params.email
             ]
           )
           .then((result) => {
