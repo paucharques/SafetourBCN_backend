@@ -238,7 +238,7 @@ app.put("/usuarios/:email", (request, response) => {
 });
 
 //Update user name
-app.put("/users/:email", async (req, res) => {
+app.put("/users/name/:email", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
