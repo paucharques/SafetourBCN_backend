@@ -253,7 +253,7 @@ app.put("/users/name/:email", async (req, res) => {
             ]
           )
           .then((result) => {
-            res.status(201).send("user updated");
+            res.status(201).send("user name updated");
           });
       } catch (err) {
         throw err;
@@ -276,7 +276,7 @@ app.put("/users/password/:email", async (req, res) => {
             ]
           )
           .then((result) => {
-            res.status(201).send("user updated");
+            res.status(201).send("user password updated");
           });
       } catch (err) {
         throw err;
@@ -285,7 +285,7 @@ app.put("/users/password/:email", async (req, res) => {
       }
 });
 
-//Update user name
+//Update company description
 app.put("/company/description/:email", async (req, res) => {
   let conn;
   try {
@@ -299,7 +299,7 @@ app.put("/company/description/:email", async (req, res) => {
             ]
           )
           .then((result) => {
-            res.status(201).send("user updated");
+            res.status(201).send("company description updated");
           });
       } catch (err) {
         throw err;
