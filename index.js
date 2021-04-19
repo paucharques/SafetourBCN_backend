@@ -385,7 +385,7 @@ app.put("/establishment/capacity/:email", async (req, res) => {
     conn = await pool.getConnection();
         conn
           .query(
-            "UPDATE ESTABLISHMENT SET MAX_CAPACITY = ? WHERE EMAIL = ?",
+            "UPDATE ESTABLISHMENT SET MAX_CAPACITY = ? WHERE ID_ESTABLISHMENT = ?",
             [
               req.body.value,
               req.params.email
