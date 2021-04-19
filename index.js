@@ -307,6 +307,99 @@ app.put("/company/description/:email", async (req, res) => {
         if (conn) return conn.release();
       }
 });
+
+//Update establishment location
+app.put("/company/description/:email", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+        conn
+          .query(
+            "UPDATE COMPANIES SET LOCAL_X = ?, LOCAL_Y = ? WHERE EMAIL = ?",
+            [
+              req.body.value1,
+              req.body.value2,
+              req.params.email
+            ]
+          )
+          .then((result) => {
+            res.status(201).send("company description updated");
+          });
+      } catch (err) {
+        throw err;
+      } finally {
+        if (conn) return conn.release();
+      }
+});
+
+//Update establishment name
+app.put("/company/description/:id", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+        conn
+          .query(
+            "UPDATE ESTABLISHMENT SET NAME = ? WHERE ID_ESTABLISHMENT = ?",
+            [
+              req.body.value,
+              req.params.id
+            ]
+          )
+          .then((result) => {
+            res.status(201).send("Establishment name updated");
+          });
+      } catch (err) {
+        throw err;
+      } finally {
+        if (conn) return conn.release();
+      }
+});
+
+//Update establishment schedule
+app.put("/company/description/:id", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+        conn
+          .query(
+            "UPDATE ESTABLISHMENT SET SCHEDULE = ? WHERE ID_ESTABLISHMENT = ?",
+            [
+              req.body.value,
+              req.params.id
+            ]
+          )
+          .then((result) => {
+            res.status(201).send("Establishment schedule updated");
+          });
+      } catch (err) {
+        throw err;
+      } finally {
+        if (conn) return conn.release();
+      }
+});
+
+//Update company max capacity
+app.put("/company/description/:email", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+        conn
+          .query(
+            "UPDATE COMPANIES SET MAX_CAPACITY = ? WHERE EMAIL = ?",
+            [
+              req.body.value,
+              req.params.email
+            ]
+          )
+          .then((result) => {
+            res.status(201).send("company max_capacity updated");
+          });
+      } catch (err) {
+        throw err;
+      } finally {
+        if (conn) return conn.release();
+      }
+});
 /**********************DELETE***********************/
 
 // Delete a user
