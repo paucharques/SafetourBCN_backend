@@ -254,7 +254,7 @@ app.patch("/users/:email", (req, res) => {
   } catch (err) {
     throw err;
   } finally {
-    if (conn) conn.releaseConnection();
+    conn.releaseConnection();
   }
 });
 
