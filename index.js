@@ -260,29 +260,6 @@ app.put("/users/email/:email", async (req, res) => {
       }
 });
 
-//Update user name
-app.put("/users/name/:email", async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-        conn
-          .query(
-            "UPDATE USERS SET NAME = ? WHERE EMAIL = ?",
-            [
-              req.body.value,
-              req.params.email
-            ]
-          )
-          .then((result) => {
-            res.status(201).send("user updated");
-          });
-      } catch (err) {
-        throw err;
-      } finally {
-        if (conn) return conn.release();
-      }
-});
-
 //Update user password
 app.put("/users/password/:email", async (req, res) => {
   let conn;
