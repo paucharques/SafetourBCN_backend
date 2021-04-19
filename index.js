@@ -238,7 +238,7 @@ app.put("/usuarios/:email", (request, response) => {
 });
 
 //Update user email
-app.put("/users/name/:email", async (req, res) => {
+app.put("/users/email/:email", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -284,7 +284,7 @@ app.put("/users/name/:email", async (req, res) => {
 });
 
 //Update user password
-app.put("/users/name/:email", async (req, res) => {
+app.put("/users/password/:email", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
