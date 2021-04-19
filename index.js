@@ -309,17 +309,17 @@ app.put("/company/description/:email", async (req, res) => {
 });
 
 //Update establishment location
-app.put("/company/description/:email", async (req, res) => {
+app.put("/establishment/location/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
         conn
           .query(
-            "UPDATE COMPANIES SET LOCAL_X = ?, LOCAL_Y = ? WHERE EMAIL = ?",
+            "UPDATE COMPANIES SET LOCAL_X = ?, LOCAL_Y = ? WHERE ID_ESTABLISHMENT = ?",
             [
               req.body.value1,
               req.body.value2,
-              req.params.email
+              req.params.id
             ]
           )
           .then((result) => {
@@ -333,7 +333,7 @@ app.put("/company/description/:email", async (req, res) => {
 });
 
 //Update establishment name
-app.put("/company/description/:id", async (req, res) => {
+app.put("/establishment/name/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -356,7 +356,7 @@ app.put("/company/description/:id", async (req, res) => {
 });
 
 //Update establishment schedule
-app.put("/company/description/:id", async (req, res) => {
+app.put("/establishment/schedule/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -379,7 +379,7 @@ app.put("/company/description/:id", async (req, res) => {
 });
 
 //Update company max capacity
-app.put("/company/description/:email", async (req, res) => {
+app.put("/establishment/capacity/:email", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
