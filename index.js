@@ -315,7 +315,7 @@ app.put("/establishment/location/:id", async (req, res) => {
     conn = await pool.getConnection();
         conn
           .query(
-            "UPDATE COMPANIES SET LOCAL_X = ?, LOCAL_Y = ? WHERE ID_ESTABLISHMENT = ?",
+            "UPDATE ESTABLISHMENT SET LOCAL_X = ?, LOCAL_Y = ? WHERE ID_ESTABLISHMENT = ?",
             [
               req.body.value1,
               req.body.value2,
