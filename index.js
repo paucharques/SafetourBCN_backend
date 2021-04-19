@@ -284,6 +284,29 @@ app.put("/users/password/:email", async (req, res) => {
         if (conn) return conn.release();
       }
 });
+
+//Update user name
+app.put("/company/description/:email", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+        conn
+          .query(
+            "UPDATE COMPANIES SET DESCRIPTION = ? WHERE EMAIL = ?",
+            [
+              req.body.value,
+              req.params.email
+            ]
+          )
+          .then((result) => {
+            res.status(201).send("user updated");
+          });
+      } catch (err) {
+        throw err;
+      } finally {
+        if (conn) return conn.release();
+      }
+});
 /**********************DELETE***********************/
 
 // Delete a user
