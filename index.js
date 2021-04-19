@@ -238,26 +238,28 @@ app.put("/usuarios/:email", (request, response) => {
 });
 
 //Update user name
-app.patch("/users/:email", (req, res) => {
+app.put("/users/:email", async (req, res) => {
   let conn;
   try {
-    conn = pool.getConnection();
-    conn
-      .query("UPDATE USERS SET ? = ? WHERE EMAIL = ?", [
-        req.body.attribute,
-        req.body.value,
-        req.params.email,
-      ])
-      .then((result) => {
-        res.status(201).send("user changed");
-      });
-  } catch (err) {
-    throw err;
-  } finally {
-    conn.release();
-  }
+    conn = await pool.getConnection();
+        conn
+          .query(
+            "UPDATE USERS SET ? = ? WHERE EMAIL = ?",
+            [
+              req.body.attribute,
+              req.body.value,
+              req.params.email,
+            ]
+          )
+          .then((result) => {
+            res.status(201).send("user updated");
+          });
+      } catch (err) {
+        throw err;
+      } finally {
+        if (conn) return conn.release();
+      }
 });
-
 /**********************DELETE***********************/
 
 // Delete a user
