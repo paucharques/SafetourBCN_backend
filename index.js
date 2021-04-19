@@ -245,7 +245,7 @@ app.put("/users/:email", async (req, res) => {
     var attributeAux = req.params.emails.replace(/'/g,'');
         conn
           .query(
-            "UPDATE USERS SET "attributeAux" = ? WHERE EMAIL = ?",
+            "UPDATE USERS SET " + attributeAux + " = ? WHERE EMAIL = ?",
             [
               req.body.attribute,
               req.body.value,
