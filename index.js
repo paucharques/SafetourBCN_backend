@@ -237,6 +237,29 @@ app.put("/usuarios/:email", (request, response) => {
   );
 });
 
+//Update user email
+app.put("/users/name/:email", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+        conn
+          .query(
+            "UPDATE USERS SET EMAIL = ? WHERE EMAIL = ?",
+            [
+              req.body.value,
+              req.params.email
+            ]
+          )
+          .then((result) => {
+            res.status(201).send("user updated");
+          });
+      } catch (err) {
+        throw err;
+      } finally {
+        if (conn) return conn.release();
+      }
+});
+
 //Update user name
 app.put("/users/name/:email", async (req, res) => {
   let conn;
@@ -245,6 +268,29 @@ app.put("/users/name/:email", async (req, res) => {
         conn
           .query(
             "UPDATE USERS SET NAME = ? WHERE EMAIL = ?",
+            [
+              req.body.value,
+              req.params.email
+            ]
+          )
+          .then((result) => {
+            res.status(201).send("user updated");
+          });
+      } catch (err) {
+        throw err;
+      } finally {
+        if (conn) return conn.release();
+      }
+});
+
+//Update user password
+app.put("/users/name/:email", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+        conn
+          .query(
+            "UPDATE USERS SET PASSWORD = ? WHERE EMAIL = ?",
             [
               req.body.value,
               req.params.email
