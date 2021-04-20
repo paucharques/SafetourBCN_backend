@@ -95,7 +95,7 @@ app.get("/company/:email", async (req, res) => {
 });
 
 //GET establishment by id
-app.get("/company/:id", async (req, res) => {
+app.get("/establishment/:id", async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
