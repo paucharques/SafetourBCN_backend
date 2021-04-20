@@ -103,7 +103,7 @@ app.get("/establishment/:id", async (req, res) => {
 
     // execute the query and set the result to a new variable
     var rows = await conn.query(
-      "select * from ESTABLISHMENT where id = ?",
+      "select * from ESTABLISHMENT where ID_ESTABLISHMENT = ?",
       [req.params.id]
     );
     // return the results
