@@ -499,6 +499,30 @@ app.delete("/Company/:email", async (req, res) => {
   }
 });
 
+//Update establishment schedule
+app.delete("/establishment/:id", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+        conn
+          .query(
+            "DELETE FROM ESTABLISHMENT WHERE ID_ESTABLISHMENT = ?",
+            [
+              req.params.id
+            ]
+          )
+          .then((result) => {
+            res.status(201).send("Establishment deleted successfully");
+          });
+      } catch (err) {
+        throw err;
+      } finally {
+        if (conn) return conn.release();
+      }
+});
+
+
+
 app.listen(3000, function () {
   console.log("now listening for requests");
 });
