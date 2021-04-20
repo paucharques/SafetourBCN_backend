@@ -115,6 +115,27 @@ app.get("/establishment/:id", async (req, res) => {
   }
 });
 
+//GET ID of establishments by company EMAIL
+app.get("/establishments/:email", async (req, res) => {
+  let conn;
+  try {
+    // establish a connection to MariaDB
+    conn = await pool.getConnection();
+
+    // execute the query and set the result to a new variable
+    var rows = await conn.query(
+      "select ID_ESTABLISHMENT from ESTABLISHMENT where OWNER = ?",
+      [req.params.email]
+    );
+    // return the results
+    res.send(rows);
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
 
 
 // LOGIN
