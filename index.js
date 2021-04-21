@@ -94,6 +94,26 @@ app.get("/company/:email", async (req, res) => {
   }
 });
 
+//GET all establishments
+app.get("/establishments", async (req, res) => {
+  let conn;
+  try {
+    // establish a connection to MariaDB
+    conn = await pool.getConnection();
+
+    // execute the query and set the result to a new variable
+    var rows = await conn.query("select ID_ESTABLISHMENT from ESTABLISHMENT", [
+      req.params.email,
+    ]);
+    // return the results
+    res.send(rows);
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
 //GET establishment by id
 app.get("/establishment/:id", async (req, res) => {
   let conn;
@@ -135,8 +155,6 @@ app.get("/establishments/:email", async (req, res) => {
     if (conn) return conn.release();
   }
 });
-
-
 
 // LOGIN
 app.get("/login", async (req, res) => {
@@ -281,29 +299,24 @@ app.put("/usuarios/:email", (request, response) => {
   );
 });
 
-
-
 //Update user name
 app.put("/users/name/:email", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-        conn
-          .query(
-            "UPDATE USERS SET NAME = ? WHERE EMAIL = ?",
-            [
-              req.body.value,
-              req.params.email
-            ]
-          )
-          .then((result) => {
-            res.status(201).send("user name updated");
-          });
-      } catch (err) {
-        throw err;
-      } finally {
-        if (conn) return conn.release();
-      }
+    conn
+      .query("UPDATE USERS SET NAME = ? WHERE EMAIL = ?", [
+        req.body.value,
+        req.params.email,
+      ])
+      .then((result) => {
+        res.status(201).send("user name updated");
+      });
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) return conn.release();
+  }
 });
 
 //Update user password
@@ -311,22 +324,19 @@ app.put("/users/password/:email", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-        conn
-          .query(
-            "UPDATE USERS SET PASSWORD = ? WHERE EMAIL = ?",
-            [
-              req.body.value,
-              req.params.email
-            ]
-          )
-          .then((result) => {
-            res.status(201).send("user password updated");
-          });
-      } catch (err) {
-        throw err;
-      } finally {
-        if (conn) return conn.release();
-      }
+    conn
+      .query("UPDATE USERS SET PASSWORD = ? WHERE EMAIL = ?", [
+        req.body.value,
+        req.params.email,
+      ])
+      .then((result) => {
+        res.status(201).send("user password updated");
+      });
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) return conn.release();
+  }
 });
 
 //Update company description
@@ -334,22 +344,19 @@ app.put("/company/description/:email", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-        conn
-          .query(
-            "UPDATE COMPANIES SET DESCRIPTION = ? WHERE EMAIL = ?",
-            [
-              req.body.value,
-              req.params.email
-            ]
-          )
-          .then((result) => {
-            res.status(201).send("company description updated");
-          });
-      } catch (err) {
-        throw err;
-      } finally {
-        if (conn) return conn.release();
-      }
+    conn
+      .query("UPDATE COMPANIES SET DESCRIPTION = ? WHERE EMAIL = ?", [
+        req.body.value,
+        req.params.email,
+      ])
+      .then((result) => {
+        res.status(201).send("company description updated");
+      });
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) return conn.release();
+  }
 });
 
 //Update establishment location
@@ -357,23 +364,19 @@ app.put("/establishment/location/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-        conn
-          .query(
-            "UPDATE ESTABLISHMENT SET LOCAL_X = ?, LOCAL_Y = ? WHERE ID_ESTABLISHMENT = ?",
-            [
-              req.body.value1,
-              req.body.value2,
-              req.params.id
-            ]
-          )
-          .then((result) => {
-            res.status(201).send("Establishment location updated");
-          });
-      } catch (err) {
-        throw err;
-      } finally {
-        if (conn) return conn.release();
-      }
+    conn
+      .query(
+        "UPDATE ESTABLISHMENT SET LOCAL_X = ?, LOCAL_Y = ? WHERE ID_ESTABLISHMENT = ?",
+        [req.body.value1, req.body.value2, req.params.id]
+      )
+      .then((result) => {
+        res.status(201).send("Establishment location updated");
+      });
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) return conn.release();
+  }
 });
 
 //Update establishment name
@@ -381,22 +384,19 @@ app.put("/establishment/name/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-        conn
-          .query(
-            "UPDATE ESTABLISHMENT SET NAME = ? WHERE ID_ESTABLISHMENT = ?",
-            [
-              req.body.value,
-              req.params.id
-            ]
-          )
-          .then((result) => {
-            res.status(201).send("Establishment name updated");
-          });
-      } catch (err) {
-        throw err;
-      } finally {
-        if (conn) return conn.release();
-      }
+    conn
+      .query("UPDATE ESTABLISHMENT SET NAME = ? WHERE ID_ESTABLISHMENT = ?", [
+        req.body.value,
+        req.params.id,
+      ])
+      .then((result) => {
+        res.status(201).send("Establishment name updated");
+      });
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) return conn.release();
+  }
 });
 
 //Update establishment schedule
@@ -404,22 +404,19 @@ app.put("/establishment/schedule/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-        conn
-          .query(
-            "UPDATE ESTABLISHMENT SET SCHEDULE = ? WHERE ID_ESTABLISHMENT = ?",
-            [
-              req.body.value,
-              req.params.id
-            ]
-          )
-          .then((result) => {
-            res.status(201).send("Establishment schedule updated");
-          });
-      } catch (err) {
-        throw err;
-      } finally {
-        if (conn) return conn.release();
-      }
+    conn
+      .query(
+        "UPDATE ESTABLISHMENT SET SCHEDULE = ? WHERE ID_ESTABLISHMENT = ?",
+        [req.body.value, req.params.id]
+      )
+      .then((result) => {
+        res.status(201).send("Establishment schedule updated");
+      });
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) return conn.release();
+  }
 });
 
 //Update company max capacity
@@ -427,22 +424,19 @@ app.put("/establishment/capacity/:email", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-        conn
-          .query(
-            "UPDATE ESTABLISHMENT SET MAX_CAPACITY = ? WHERE ID_ESTABLISHMENT = ?",
-            [
-              req.body.value,
-              req.params.email
-            ]
-          )
-          .then((result) => {
-            res.status(201).send("company max_capacity updated");
-          });
-      } catch (err) {
-        throw err;
-      } finally {
-        if (conn) return conn.release();
-      }
+    conn
+      .query(
+        "UPDATE ESTABLISHMENT SET MAX_CAPACITY = ? WHERE ID_ESTABLISHMENT = ?",
+        [req.body.value, req.params.email]
+      )
+      .then((result) => {
+        res.status(201).send("company max_capacity updated");
+      });
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) return conn.release();
+  }
 });
 /**********************DELETE***********************/
 
@@ -504,24 +498,19 @@ app.delete("/establishment/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-        conn
-          .query(
-            "DELETE FROM ESTABLISHMENT WHERE ID_ESTABLISHMENT = ?",
-            [
-              req.params.id
-            ]
-          )
-          .then((result) => {
-            res.status(201).send("Establishment deleted successfully");
-          });
-      } catch (err) {
-        throw err;
-      } finally {
-        if (conn) return conn.release();
-      }
+    conn
+      .query("DELETE FROM ESTABLISHMENT WHERE ID_ESTABLISHMENT = ?", [
+        req.params.id,
+      ])
+      .then((result) => {
+        res.status(201).send("Establishment deleted successfully");
+      });
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) return conn.release();
+  }
 });
-
-
 
 app.listen(3000, function () {
   console.log("now listening for requests");
