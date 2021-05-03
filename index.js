@@ -213,15 +213,16 @@ app.post("/registerIndividualUser", async (req, res) => {
             null,
           ])
           .then((result) => {
-            res.status(201).send("user added");
+            res.status(201).send("User added");
           })
           .catch((err) => {
             throw err;
           });
       })
       .catch((err) => {
-        throw err;
+        res.status(409).send("User already exist");
       });
+
   } catch (err) {
     throw err;
   } finally {
@@ -257,7 +258,7 @@ app.post("/registerCompany", async (req, res) => {
         throw err;
       });
   } catch (err) {
-    throw err;
+    res.status(500).send("Error connecting db");
   } finally {
     if (conn) return conn.release();
   }
