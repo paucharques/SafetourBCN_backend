@@ -282,10 +282,14 @@ app.post("/registerEstablishment", async (req, res) => {
         ]
       )
       .then((result) => {
-        res.status(201).send("establishment added");
+        res.status(201).send("Establishment added");
+      })
+      .catch((err) => {
+        res.status(409).send("Establishment already exist");
       });
+
   } catch (err) {
-    throw err;
+    res.status(500).send("Error connecting db");
   } finally {
     if (conn) return conn.release();
   }
