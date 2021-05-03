@@ -173,23 +173,22 @@ app.get("/login", async (req, res) => {
     var email = req.body.email;
     var password = req.body.password;
 
-    conn
-      .query("SELECT * FROM USERS WHERE EMAIL = ? AND PASSWORD = ?;", [
-        email,
-        password,
-      ])
-      .then((result) => {
-        var token = jwt.sign({ username: email }, "supersecret");
-        res.send(token);
-      })
-      .catch((err) => {
-        throw err;
-      });
+    rows = conn.query("SELECT * FROM USERS WHERE EMAIL = ? AND PASSWORD = ?;", [email,password,]);
 
-
-  } catch (err) {
+  }catch{
     res.status(500).send("Error connecting db");
-  } finally {
+  }
+  try{
+    if(rows.length != 0){
+      var token = jwt.sign({ username: email }, "supersecret");
+    }else{
+      res.status(404).send("Email or password not correct")
+    }
+  }catch{
+    res.status(500).send("Error creating token");
+  }
+  finally {
+    res.status(200).send(token);
     if (conn) return conn.release();
   }
 });
