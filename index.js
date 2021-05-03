@@ -224,7 +224,7 @@ app.post("/registerIndividualUser", async (req, res) => {
       });
 
   } catch (err) {
-    throw err;
+    res.status(500).send("Error connecting db");
   } finally {
     if (conn) return conn.release();
   }
@@ -248,14 +248,14 @@ app.post("/registerCompany", async (req, res) => {
             req.body.description,
           ])
           .then((result) => {
-            res.status(201).send("company added");
+            res.status(201).send("Company added");
           })
           .catch((err) => {
             throw err;
           });
       })
       .catch((err) => {
-        throw err;
+        res.status(409).send("Company already exist");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
