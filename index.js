@@ -17,20 +17,17 @@ app.get("/users", async (req, res) => {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
 
-    // create a new query
-    var query = "select * from USERS";
-
     // execute the query and set the result to a new variable
-    
-    var rows = await conn.query(query);
+    var rows = await conn.query("select * from USERS");
+
     }catch{
       res.status(500).send("Error connecting db");
     }
     finally {
       // return the results
       res.status(200).send(rows);
-    if (conn) return conn.release();
-  }
+      if (conn) return conn.release();
+    }
 });
 
 //GET user
@@ -39,16 +36,16 @@ app.get("/users/:email", async (req, res) => {
   try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
-
     // execute the query and set the result to a new variable
-    var rows = await conn.query("select * from USERS where EMAIL = ?", [
-      req.params.email,
-    ]);
+    var rows = await conn.query("select * from USERS where EMAIL = ?", [req.params.email]);
+
+  }catch{
+    res.status(500).send("Error connecting db");
+  }
+  finally {
     // return the results
-    res.send(rows);
-  } catch (err) {
-    throw err;
-  } finally {
+    if(rows)  res.status(200).send(rows);
+    else res.status(404).send(rows);
     if (conn) return conn.release();
   }
 });
