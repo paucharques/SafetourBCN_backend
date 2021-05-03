@@ -44,8 +44,8 @@ app.get("/users/:email", async (req, res) => {
   }
   finally {
     // return the results
-    if(rows)  res.status(200).send(rows);
-    else res.status(404).send(rows);
+    if(rows != [])  res.status(200).send(rows);
+    else res.status(404).send("Email not found");
     if (conn) return conn.release();
   }
 });
