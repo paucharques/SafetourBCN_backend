@@ -13,7 +13,7 @@ app.get("/api", (req, res) => res.send("Its working!"));
 
 app.get("/users", async (req, res) => {
   let conn;
-  try {
+    try{
     // establish a connection to MariaDB
     conn = await pool.getConnection();
 
@@ -21,13 +21,14 @@ app.get("/users", async (req, res) => {
     var query = "select * from USERS";
 
     // execute the query and set the result to a new variable
+    
     var rows = await conn.query(query);
-
-    // return the results
-    res.send(rows);
-  } catch (err) {
-    throw err;
-  } finally {
+    }catch{
+      res.status(500).send("Error connecting db");
+    }
+    finally {
+      // return the results
+      res.status(200).send(rows);
     if (conn) return conn.release();
   }
 });
@@ -165,7 +166,6 @@ app.get("/login", async (req, res) => {
     var email = req.body.email;
     var password = req.body.password;
 
-    //S'hauria de comprovar que no existeix el username i assginar l'id automaticament
     conn
       .query("SELECT * FROM USERS WHERE EMAIL = ? AND PASSWORD = ?;", [
         email,
