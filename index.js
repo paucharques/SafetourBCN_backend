@@ -265,6 +265,7 @@ app.post("/registerCompany", async (req, res) => {
 });
 
 // Add a new establishment
+//Hauriem de millorar l'assignació d'id i alguna forma de comprovació per no duplicar establishments
 app.post("/registerEstablishment", async (req, res) => {
   let conn;
   try {
