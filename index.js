@@ -174,7 +174,7 @@ app.get("/login", async (req, res) => {
     var password = req.body.password;
 
     rows = conn.query("SELECT * FROM USERS WHERE EMAIL = ? AND PASSWORD = ?;", [email,password]);
-
+    res.send(rows);
   }catch{
     res.status(500).send("Error connecting db");
   }
