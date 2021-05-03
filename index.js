@@ -269,6 +269,10 @@ app.post("/registerEstablishment", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
+
+    var rows = await conn.query("SELECT * FROM COMPANIES WHERE EMAIL = ?", [req.body.owner]);
+    if(rows.length == 0) res.status(404).send("Owner not exists");
+
     conn
       .query(
         "INSERT INTO ESTABLISHMENT (OWNER,LOCAL_X,LOCAL_Y,DESCRIPTION,MAX_CAPACITY,SCHEDULE) VALUES(?,?,?,?,?,?);",
