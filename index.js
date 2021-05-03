@@ -173,8 +173,8 @@ app.get("/login", async (req, res) => {
     var email = req.body.email;
     var password = req.body.password;
 
-    rows = conn.query("SELECT * FROM USERS WHERE EMAIL = ? AND PASSWORD = ?;", [email,password]);
-    res.send(rows);
+    var rows = conn.query("SELECT * FROM USERS WHERE EMAIL = ? AND PASSWORD = ?;", [email,password]);
+
   }catch{
     res.status(500).send("Error connecting db");
   }
