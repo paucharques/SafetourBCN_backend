@@ -62,11 +62,14 @@ app.get("/individual_user/:email", async (req, res) => {
       "select u.EMAIL,u.NAME,u.PASSWORD,iu.LOCATION  from USERS u INNER JOIN INDIVIDUAL_USER iu ON u.EMAIL = iu.EMAIL where u.EMAIL = ?",
       [req.params.email]
     );
+
+  }catch{
+    res.status(500).send("Error connecting db");
+  }
+  finally {
     // return the results
-    res.send(rows);
-  } catch (err) {
-    throw err;
-  } finally {
+    if(rows.length != 0)  res.status(200).send(rows);
+    else res.status(404).send("Email not found");
     if (conn) return conn.release();
   }
 });
@@ -83,11 +86,14 @@ app.get("/company/:email", async (req, res) => {
       "select u.EMAIL,u.NAME,u.PASSWORD,c.DESCRIPTION from USERS u INNER JOIN COMPANIES c ON u.EMAIL = c.EMAIL where u.EMAIL = ?",
       [req.params.email]
     );
+
+  }catch{
+    res.status(500).send("Error connecting db");
+  }
+  finally {
     // return the results
-    res.send(rows);
-  } catch (err) {
-    throw err;
-  } finally {
+    if(rows.length != 0)  res.status(200).send(rows);
+    else res.status(404).send("Email not found");
     if (conn) return conn.release();
   }
 });
@@ -103,11 +109,11 @@ app.get("/establishments", async (req, res) => {
     var rows = await conn.query("select ID_ESTABLISHMENT from ESTABLISHMENT", [
       req.params.email,
     ]);
-    // return the results
-    res.send(rows);
-  } catch (err) {
-    throw err;
+  }catch{
+    res.status(500).send("Error connecting db");
   } finally {
+    // return the results
+    res.status(200).send(rows);
     if (conn) return conn.release();
   }
 });
@@ -124,11 +130,13 @@ app.get("/establishment/:id", async (req, res) => {
       "select * from ESTABLISHMENT where ID_ESTABLISHMENT = ?",
       [req.params.id]
     );
+  }catch{
+    res.status(500).send("Error connecting db");
+  }
+  finally {
     // return the results
-    res.send(rows);
-  } catch (err) {
-    throw err;
-  } finally {
+    if(rows.length != 0)  res.status(200).send(rows);
+    else res.status(404).send("Id not found");
     if (conn) return conn.release();
   }
 });
@@ -145,11 +153,13 @@ app.get("/establishments/:email", async (req, res) => {
       "select ID_ESTABLISHMENT from ESTABLISHMENT where OWNER = ?",
       [req.params.email]
     );
+  }catch{
+    res.status(500).send("Error connecting db");
+  }
+  finally {
     // return the results
-    res.send(rows);
-  } catch (err) {
-    throw err;
-  } finally {
+    if(rows.length != 0)  res.status(200).send(rows);
+    else res.status(404).send("Email not found");
     if (conn) return conn.release();
   }
 });
@@ -175,8 +185,10 @@ app.get("/login", async (req, res) => {
       .catch((err) => {
         throw err;
       });
+
+
   } catch (err) {
-    throw err;
+    res.status(500).send("Error connecting db");
   } finally {
     if (conn) return conn.release();
   }
