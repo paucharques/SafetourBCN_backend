@@ -306,7 +306,7 @@ app.put("/users/name/:email", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-    conn
+    var rows = await conn
       .query("INSERT INTO USERS (EMAIL) VALUES(?) ON DUPLICATE KEY UPDATE NAME = ? RETURNING *", [
         req.params.email,
         req.body.value
