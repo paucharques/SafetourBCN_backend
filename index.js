@@ -307,9 +307,9 @@ app.put("/users/name/:email", async (req, res) => {
   try {
     conn = await pool.getConnection();
     conn
-      .query("UPDATE USERS SET NAME = ? WHERE EMAIL = ? RETURNING *", [
-        req.body.value,
+      .query("INSERT INTO USERS (EMAIL) VALUES(?) ON DUPLICATE KEY UPDATE EMAIL = ?", [
         req.params.email,
+        req.body.value
       ])
       .then((result) => {
 
