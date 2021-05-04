@@ -301,9 +301,6 @@ app.post("/registerEstablishment", async (req, res) => {
 });
 
 /**********************PUT***********************/
-
-
-
 //Update user name
 app.put("/users/name/:email", async (req, res) => {
   let conn;
@@ -318,7 +315,7 @@ app.put("/users/name/:email", async (req, res) => {
         res.status(201).send("user name updated");
       });
   } catch (err) {
-    throw err;
+    res.status(500).send("Error connecting db");
   } finally {
     if (conn) return conn.release();
   }
@@ -338,7 +335,7 @@ app.put("/users/password/:email", async (req, res) => {
         res.status(201).send("user password updated");
       });
   } catch (err) {
-    throw err;
+    res.status(500).send("Error connecting db");
   } finally {
     if (conn) return conn.release();
   }
@@ -358,7 +355,7 @@ app.put("/company/description/:email", async (req, res) => {
         res.status(201).send("company description updated");
       });
   } catch (err) {
-    throw err;
+    res.status(500).send("Error connecting db");
   } finally {
     if (conn) return conn.release();
   }
@@ -378,7 +375,7 @@ app.put("/establishment/location/:id", async (req, res) => {
         res.status(201).send("Establishment location updated");
       });
   } catch (err) {
-    throw err;
+    res.status(500).send("Error connecting db");
   } finally {
     if (conn) return conn.release();
   }
@@ -398,7 +395,7 @@ app.put("/establishment/name/:id", async (req, res) => {
         res.status(201).send("Establishment name updated");
       });
   } catch (err) {
-    throw err;
+    res.status(500).send("Error connecting db");
   } finally {
     if (conn) return conn.release();
   }
@@ -418,7 +415,7 @@ app.put("/establishment/schedule/:id", async (req, res) => {
         res.status(201).send("Establishment schedule updated");
       });
   } catch (err) {
-    throw err;
+    res.status(500).send("Error connecting db");
   } finally {
     if (conn) return conn.release();
   }
@@ -438,7 +435,7 @@ app.put("/establishment/capacity/:email", async (req, res) => {
         res.status(201).send("company max_capacity updated");
       });
   } catch (err) {
-    throw err;
+    res.status(500).send("Error connecting db");
   } finally {
     if (conn) return conn.release();
   }
