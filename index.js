@@ -485,7 +485,8 @@ app.delete("/Company/:email", async (req, res) => {
     conn
       .query("DELETE FROM COMPANIES WHERE email = ?", [req.params.email])
       .then((result) => {
-        conn
+        if(result.affectedRows == 0) res.status(404).send("Email not found");
+        else conn
           .query("DELETE FROM USERS WHERE email = ?", [req.params.email])
           .then((result) => {
             if(result.affectedRows == 0) res.status(404).send("Email not found");
