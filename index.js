@@ -460,7 +460,8 @@ app.delete("/IndividualUser/:email", async (req, res) => {
         conn
           .query("DELETE FROM USERS WHERE email = ?", [req.params.email])
           .then((result) => {
-            res.status(201).send("Individual User deleted");
+            if(result.affectedRows == 0) res.status(404).send("Email not found");
+            else res.status(201).send("Individual User deleted");
           })
           .catch((err) => {
             throw err;
@@ -486,7 +487,8 @@ app.delete("/Company/:email", async (req, res) => {
         conn
           .query("DELETE FROM USERS WHERE email = ?", [req.params.email])
           .then((result) => {
-            res.status(201).send("company deleted");
+            if(result.affectedRows == 0) res.status(404).send("Email not found");
+            else res.status(201).send("company deleted");
           })
           .catch((err) => {
             throw err;
@@ -512,7 +514,8 @@ app.delete("/establishment/:id", async (req, res) => {
         req.params.id,
       ])
       .then((result) => {
-        res.status(201).send("Establishment deleted successfully");
+        if(result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Establishment deleted successfully");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
