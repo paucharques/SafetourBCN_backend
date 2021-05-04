@@ -306,14 +306,14 @@ app.put("/users/name/:email", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-    var rows = await conn
-      .query("INSERT INTO USERS (EMAIL) VALUES(?) ON DUPLICATE KEY UPDATE NAME = ? RETURNING *", [
+    conn
+      .query("UPDATE USERS SET NAME = ? WHERE EMAIL = ?", [
+        req.body.value,
         req.params.email,
-        req.body.value
       ])
       .then((result) => {
-
-        res.status(201).send("user name updated");
+        if(result.affectedRows == 0) res.status(404).send("no such user exists");
+        else res.status(201).send("user name updated");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
