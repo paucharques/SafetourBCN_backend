@@ -470,7 +470,7 @@ app.delete("/IndividualUser/:email", async (req, res) => {
         throw err;
       });
   } catch (err) {
-    throw err;
+    res.status(500).send("Error connecting db");
   } finally {
     if (conn) return conn.release();
   }
@@ -496,13 +496,13 @@ app.delete("/Company/:email", async (req, res) => {
         throw err;
       });
   } catch (err) {
-    throw err;
+    res.status(500).send("Error connecting db");
   } finally {
     if (conn) return conn.release();
   }
 });
 
-//Update establishment schedule
+//Delete establishment
 app.delete("/establishment/:id", async (req, res) => {
   let conn;
   try {
@@ -515,7 +515,7 @@ app.delete("/establishment/:id", async (req, res) => {
         res.status(201).send("Establishment deleted successfully");
       });
   } catch (err) {
-    throw err;
+    res.status(500).send("Error connecting db");
   } finally {
     if (conn) return conn.release();
   }
