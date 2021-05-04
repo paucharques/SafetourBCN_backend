@@ -312,7 +312,7 @@ app.put("/users/name/:email", async (req, res) => {
         req.params.email,
       ])
       .then((result) => {
-        if(result.affectedRows == 0) res.status(404).send("no such user exists");
+        if(result.affectedRows == 0) res.status(404).send("Email not found");
         else res.status(201).send("user name updated");
       });
   } catch (err) {
@@ -333,7 +333,8 @@ app.put("/users/password/:email", async (req, res) => {
         req.params.email,
       ])
       .then((result) => {
-        res.status(201).send("user password updated");
+        if(result.affectedRows == 0) res.status(404).send("Email not found");
+        else res.status(201).send("user password updated");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
@@ -353,7 +354,8 @@ app.put("/company/description/:email", async (req, res) => {
         req.params.email,
       ])
       .then((result) => {
-        res.status(201).send("company description updated");
+        if(result.affectedRows == 0) res.status(404).send("Email not found");
+        else res.status(201).send("company description updated");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
@@ -373,7 +375,8 @@ app.put("/establishment/location/:id", async (req, res) => {
         [req.body.value1, req.body.value2, req.params.id]
       )
       .then((result) => {
-        res.status(201).send("Establishment location updated");
+        if(result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Establishment location updated");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
@@ -393,7 +396,8 @@ app.put("/establishment/name/:id", async (req, res) => {
         req.params.id,
       ])
       .then((result) => {
-        res.status(201).send("Establishment name updated");
+        if(result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Establishment name updated");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
@@ -413,7 +417,8 @@ app.put("/establishment/schedule/:id", async (req, res) => {
         [req.body.value, req.params.id]
       )
       .then((result) => {
-        res.status(201).send("Establishment schedule updated");
+      if(result.affectedRows == 0) res.status(404).send("Id not found");
+      else res.status(201).send("Establishment schedule updated");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
@@ -433,7 +438,8 @@ app.put("/establishment/capacity/:email", async (req, res) => {
         [req.body.value, req.params.email]
       )
       .then((result) => {
-        res.status(201).send("company max_capacity updated");
+      if(result.affectedRows == 0) res.status(404).send("Email not found");
+      else res.status(201).send("company max_capacity updated");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
