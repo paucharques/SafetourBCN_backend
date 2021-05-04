@@ -481,16 +481,26 @@ app.delete("/IndividualUser/:email", async (req, res) => {
 app.delete("/Company/:email", async (req, res) => {
   let conn;
   try {
+
     conn = await pool.getConnection();
+
     conn
-      .query("DELETE FROM COMPANIES WHERE email = ?", [req.params.email])
+      .query("DELETE FROM ESTABLISHMENT WHERE OWNER = ?", [req.params.email])
       .then((result) => {
-        if(result.affectedRows == 0) res.status(404).send("Email not found");
-        else conn
-          .query("DELETE FROM USERS WHERE email = ?", [req.params.email])
+        conn
+          .query("DELETE FROM COMPANIES WHERE email = ?", [req.params.email])
           .then((result) => {
             if(result.affectedRows == 0) res.status(404).send("Email not found");
-            else res.status(201).send("company deleted");
+            else conn
+                .query("DELETE FROM USERS WHERE email = ?", [req.params.email])
+                .then((result) => {
+                    if(result.affectedRows == 0) res.status(404).send("Email not found");
+                    else res.status(201).send("Company deleted");
+                      })
+                      .catch((err) => {
+                        throw err;
+                      });
+
           })
           .catch((err) => {
             throw err;
@@ -499,6 +509,7 @@ app.delete("/Company/:email", async (req, res) => {
       .catch((err) => {
         throw err;
       });
+
   } catch (err) {
     res.status(500).send("Error connecting db");
   } finally {
