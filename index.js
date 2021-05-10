@@ -13,21 +13,19 @@ app.get("/api", (req, res) => res.send("Its working!"));
 
 app.get("/users", async (req, res) => {
   let conn;
-    try{
+  try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
     var rows = await conn.query("select * from USERS");
-
-    }catch{
-      res.status(500).send("Error connecting db");
-    }
-    finally {
-      // return the results
-      res.status(200).send(rows);
-      if (conn) return conn.release();
-    }
+  } catch {
+    res.status(500).send("Error connecting db");
+  } finally {
+    // return the results
+    res.status(200).send(rows);
+    if (conn) return conn.release();
+  }
 });
 
 //GET user
@@ -37,14 +35,14 @@ app.get("/users/:email", async (req, res) => {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
     // execute the query and set the result to a new variable
-    var rows = await conn.query("select * from USERS where EMAIL = ?", [req.params.email]);
-
-  }catch{
+    var rows = await conn.query("select * from USERS where EMAIL = ?", [
+      req.params.email,
+    ]);
+  } catch {
     res.status(500).send("Error connecting db");
-  }
-  finally {
+  } finally {
     // return the results
-    if(rows.length != 0)  res.status(200).send(rows);
+    if (rows.length != 0) res.status(200).send(rows);
     else res.status(404).send("Email not found");
     if (conn) return conn.release();
   }
@@ -62,13 +60,11 @@ app.get("/individual_user/:email", async (req, res) => {
       "select u.EMAIL,u.NAME,u.PASSWORD,iu.LOCATION  from USERS u INNER JOIN INDIVIDUAL_USER iu ON u.EMAIL = iu.EMAIL where u.EMAIL = ?",
       [req.params.email]
     );
-
-  }catch{
+  } catch {
     res.status(500).send("Error connecting db");
-  }
-  finally {
+  } finally {
     // return the results
-    if(rows.length != 0)  res.status(200).send(rows);
+    if (rows.length != 0) res.status(200).send(rows);
     else res.status(404).send("Email not found");
     if (conn) return conn.release();
   }
@@ -86,13 +82,11 @@ app.get("/company/:email", async (req, res) => {
       "select u.EMAIL,u.NAME,u.PASSWORD,c.DESCRIPTION from USERS u INNER JOIN COMPANIES c ON u.EMAIL = c.EMAIL where u.EMAIL = ?",
       [req.params.email]
     );
-
-  }catch{
+  } catch {
     res.status(500).send("Error connecting db");
-  }
-  finally {
+  } finally {
     // return the results
-    if(rows.length != 0)  res.status(200).send(rows);
+    if (rows.length != 0) res.status(200).send(rows);
     else res.status(404).send("Email not found");
     if (conn) return conn.release();
   }
@@ -109,7 +103,7 @@ app.get("/establishments", async (req, res) => {
     var rows = await conn.query("select * from ESTABLISHMENT", [
       req.params.email,
     ]);
-  }catch{
+  } catch {
     res.status(500).send("Error connecting db");
   } finally {
     // return the results
@@ -119,7 +113,7 @@ app.get("/establishments", async (req, res) => {
 });
 
 //GET establishment by id
-app.get("/establishment/:id", async (req, res) => {
+app.get("/establishments/:id", async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
@@ -130,12 +124,11 @@ app.get("/establishment/:id", async (req, res) => {
       "select * from ESTABLISHMENT where ID_ESTABLISHMENT = ?",
       [req.params.id]
     );
-  }catch{
+  } catch {
     res.status(500).send("Error connecting db");
-  }
-  finally {
+  } finally {
     // return the results
-    if(rows.length != 0)  res.status(200).send(rows);
+    if (rows.length != 0) res.status(200).send(rows);
     else res.status(404).send("Id not found");
     if (conn) return conn.release();
   }
@@ -153,19 +146,18 @@ app.get("/establishments/:email", async (req, res) => {
       "select ID_ESTABLISHMENT from ESTABLISHMENT where OWNER = ?",
       [req.params.email]
     );
-  }catch{
+  } catch {
     res.status(500).send("Error connecting db");
-  }
-  finally {
+  } finally {
     // return the results
-    if(rows.length != 0)  res.status(200).send(rows);
+    if (rows.length != 0) res.status(200).send(rows);
     else res.status(404).send("Email not found");
     if (conn) return conn.release();
   }
 });
 
-// LOGIN
-app.get("/login", async (req, res) => {
+// LOGIN individual users
+app.get("/company/login", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -173,21 +165,52 @@ app.get("/login", async (req, res) => {
     var email = req.body.email;
     var password = req.body.password;
 
-    var rows = await conn.query("SELECT * FROM USERS WHERE EMAIL = ? AND PASSWORD = ?;", [email,password]);
-
-  }catch{
+    var rows = await conn.query(
+      "select * from USERS u INNER JOIN INDIVIDUAL_USERS i ON u.EMAIL = i.EMAIL where u.EMAIL = ? AND u.password = ?",
+      [email, password]
+    );
+  } catch {
     res.status(500).send("Error connecting db");
   }
-  try{
-    if(rows.length != 0){
+  try {
+    if (rows.length != 0) {
       var token = jwt.sign({ username: email }, "supersecret");
-    }else{
-      res.status(404).send("Email or password not correct")
+    } else {
+      res.status(404).send("Email or password not correct");
     }
-  }catch{
+  } catch {
     res.status(500).send("Error creating token");
+  } finally {
+    res.status(200).send(token);
+    if (conn) return conn.release();
   }
-  finally {
+});
+
+// LOGIN COMPANIES
+app.get("/user/login", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+
+    var email = req.body.email;
+    var password = req.body.password;
+
+    var rows = await conn.query(
+      "select * from USERS u INNER JOIN COMPANIES c ON u.EMAIL = c.EMAIL where u.EMAIL = ? AND u.password = ?",
+      [email, password]
+    );
+  } catch {
+    res.status(500).send("Error connecting db");
+  }
+  try {
+    if (rows.length != 0) {
+      var token = jwt.sign({ username: email }, "supersecret");
+    } else {
+      res.status(404).send("Email or password not correct");
+    }
+  } catch {
+    res.status(500).send("Error creating token");
+  } finally {
     res.status(200).send(token);
     if (conn) return conn.release();
   }
@@ -222,7 +245,6 @@ app.post("/registerIndividualUser", async (req, res) => {
       .catch((err) => {
         res.status(409).send("User already exist");
       });
-
   } catch (err) {
     res.status(500).send("Error connecting db");
   } finally {
@@ -271,8 +293,10 @@ app.post("/registerEstablishment", async (req, res) => {
   try {
     conn = await pool.getConnection();
 
-    var rows = await conn.query("SELECT * FROM COMPANIES WHERE EMAIL = ?", [req.body.owner]);
-    if(rows.length == 0) res.status(404).send("Owner not exists");
+    var rows = await conn.query("SELECT * FROM COMPANIES WHERE EMAIL = ?", [
+      req.body.owner,
+    ]);
+    if (rows.length == 0) res.status(404).send("Owner not exists");
 
     conn
       .query(
@@ -292,7 +316,6 @@ app.post("/registerEstablishment", async (req, res) => {
       .catch((err) => {
         res.status(409).send("Establishment already exist");
       });
-
   } catch (err) {
     res.status(500).send("Error connecting db");
   } finally {
@@ -312,7 +335,7 @@ app.put("/users/name/:email", async (req, res) => {
         req.params.email,
       ])
       .then((result) => {
-        if(result.affectedRows == 0) res.status(404).send("Email not found");
+        if (result.affectedRows == 0) res.status(404).send("Email not found");
         else res.status(201).send("user name updated");
       });
   } catch (err) {
@@ -333,7 +356,7 @@ app.put("/users/password/:email", async (req, res) => {
         req.params.email,
       ])
       .then((result) => {
-        if(result.affectedRows == 0) res.status(404).send("Email not found");
+        if (result.affectedRows == 0) res.status(404).send("Email not found");
         else res.status(201).send("user password updated");
       });
   } catch (err) {
@@ -354,7 +377,7 @@ app.put("/company/description/:email", async (req, res) => {
         req.params.email,
       ])
       .then((result) => {
-        if(result.affectedRows == 0) res.status(404).send("Email not found");
+        if (result.affectedRows == 0) res.status(404).send("Email not found");
         else res.status(201).send("company description updated");
       });
   } catch (err) {
@@ -375,7 +398,7 @@ app.put("/establishment/location/:id", async (req, res) => {
         [req.body.value1, req.body.value2, req.params.id]
       )
       .then((result) => {
-        if(result.affectedRows == 0) res.status(404).send("Id not found");
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
         else res.status(201).send("Establishment location updated");
       });
   } catch (err) {
@@ -396,7 +419,7 @@ app.put("/establishment/name/:id", async (req, res) => {
         req.params.id,
       ])
       .then((result) => {
-        if(result.affectedRows == 0) res.status(404).send("Id not found");
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
         else res.status(201).send("Establishment name updated");
       });
   } catch (err) {
@@ -417,8 +440,8 @@ app.put("/establishment/schedule/:id", async (req, res) => {
         [req.body.value, req.params.id]
       )
       .then((result) => {
-      if(result.affectedRows == 0) res.status(404).send("Id not found");
-      else res.status(201).send("Establishment schedule updated");
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Establishment schedule updated");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
@@ -438,8 +461,8 @@ app.put("/establishment/capacity/:email", async (req, res) => {
         [req.body.value, req.params.email]
       )
       .then((result) => {
-      if(result.affectedRows == 0) res.status(404).send("Email not found");
-      else res.status(201).send("company max_capacity updated");
+        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        else res.status(201).send("company max_capacity updated");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
@@ -457,16 +480,18 @@ app.delete("/IndividualUser/:email", async (req, res) => {
     conn
       .query("DELETE FROM INDIVIDUAL_USER WHERE email = ?", [req.params.email])
       .then((result) => {
-       if(result.affectedRows == 0) res.status(404).send("Email not found");
-       else conn
-          .query("DELETE FROM USERS WHERE email = ?", [req.params.email])
-          .then((result) => {
-            if(result.affectedRows == 0) res.status(404).send("Email not found");
-            else res.status(201).send("Individual User deleted");
-          })
-          .catch((err) => {
-            throw err;
-          });
+        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        else
+          conn
+            .query("DELETE FROM USERS WHERE email = ?", [req.params.email])
+            .then((result) => {
+              if (result.affectedRows == 0)
+                res.status(404).send("Email not found");
+              else res.status(201).send("Individual User deleted");
+            })
+            .catch((err) => {
+              throw err;
+            });
       })
       .catch((err) => {
         throw err;
@@ -481,7 +506,6 @@ app.delete("/IndividualUser/:email", async (req, res) => {
 app.delete("/Company/:email", async (req, res) => {
   let conn;
   try {
-
     conn = await pool.getConnection();
 
     conn
@@ -490,17 +514,19 @@ app.delete("/Company/:email", async (req, res) => {
         conn
           .query("DELETE FROM COMPANIES WHERE email = ?", [req.params.email])
           .then((result) => {
-            if(result.affectedRows == 0) res.status(404).send("Email not found");
-            else conn
+            if (result.affectedRows == 0)
+              res.status(404).send("Email not found");
+            else
+              conn
                 .query("DELETE FROM USERS WHERE email = ?", [req.params.email])
                 .then((result) => {
-                    if(result.affectedRows == 0) res.status(404).send("Email not found");
-                    else res.status(201).send("Company deleted");
-                      })
-                      .catch((err) => {
-                        throw err;
-                      });
-
+                  if (result.affectedRows == 0)
+                    res.status(404).send("Email not found");
+                  else res.status(201).send("Company deleted");
+                })
+                .catch((err) => {
+                  throw err;
+                });
           })
           .catch((err) => {
             throw err;
@@ -509,7 +535,6 @@ app.delete("/Company/:email", async (req, res) => {
       .catch((err) => {
         throw err;
       });
-
   } catch (err) {
     res.status(500).send("Error connecting db");
   } finally {
@@ -527,7 +552,7 @@ app.delete("/establishment/:id", async (req, res) => {
         req.params.id,
       ])
       .then((result) => {
-        if(result.affectedRows == 0) res.status(404).send("Id not found");
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
         else res.status(201).send("Establishment deleted successfully");
       });
   } catch (err) {
