@@ -187,16 +187,17 @@ app.get("/user/login", async (req, res) => {
 });
 
 // LOGIN COMPANIES
-app.get("/company/login", async (req, res) => {
+app.get("/login/company", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
 
     var email = req.body.email;
+    var password = req.body.password;
 
     var rows = await conn.query(
-      "select u.EMAIL,u.NAME,u.PASSWORD,c.DESCRIPTION from USERS u INNER JOIN COMPANIES c ON u.EMAIL = c.EMAIL where u.EMAIL = ?",
-      [email]
+      "select u.EMAIL from USERS u INNER JOIN COMPANIES c ON u.EMAIL = c.EMAIL where u.EMAIL = ? and u.PASSWORD = ?",
+      [email, password]
     );
   } catch {
     res.status(500).send("Error connecting db");
