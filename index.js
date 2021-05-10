@@ -166,7 +166,7 @@ app.get("/user/login", async (req, res) => {
     var password = req.body.password;
 
     var rows = await conn.query(
-      "select * from USERS u INNER JOIN INDIVIDUAL_USER iu ON u.EMAIL = iu.EMAIL where u.EMAIL = ?",
+      "select u.EMAIL from USERS u INNER JOIN INDIVIDUAL_USER iu ON u.EMAIL = iu.EMAIL where u.EMAIL = ? and u.PASSWORD = ?",
       [email, password]
     );
   } catch {
@@ -196,7 +196,7 @@ app.get("/company/login", async (req, res) => {
     var password = req.body.password;
 
     var rows = await conn.query(
-      "select * from USERS u INNER JOIN COMPANIES c ON u.EMAIL = c.EMAIL where u.EMAIL = ? AND u.PASSWORD = ?",
+      "select u.EMAIL from USERS u INNER JOIN COMPANIES c ON u.EMAIL = c.EMAIL where u.EMAIL = ? and u.PASSWORD = ?",
       [email, password]
     );
   } catch {
