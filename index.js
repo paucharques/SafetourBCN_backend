@@ -106,7 +106,7 @@ app.get("/establishments", async (req, res) => {
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
-    var rows = await conn.query("select ID_ESTABLISHMENT from ESTABLISHMENT", [
+    var rows = await conn.query("select * from ESTABLISHMENT", [
       req.params.email,
     ]);
   }catch{
