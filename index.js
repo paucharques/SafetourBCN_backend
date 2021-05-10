@@ -192,6 +192,7 @@ app.get("/company/login", async (req, res) => {
   try {
     conn = await pool.getConnection();
 
+    console.log("hei");
     var email = req.body.email;
     var password = req.body.password;
     console.log(email);
