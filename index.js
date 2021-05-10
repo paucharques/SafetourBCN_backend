@@ -165,10 +165,7 @@ app.get("/user/login", async (req, res) => {
     var email = req.body.email;
     var password = req.body.password;
 
-    var rows = await conn.query(
-      "select * from USERS u INNER JOIN INDIVIDUAL_USER iu ON u.EMAIL = iu.EMAIL where u.EMAIL = ? and u.PASSWORD = ?",
-      [email, password]
-    );
+    var rows = await conn.query("select * from USERS", [email, password]);
   } catch {
     res.status(500).send("Error connecting db");
   }
