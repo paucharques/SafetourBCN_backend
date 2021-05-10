@@ -157,7 +157,7 @@ app.get("/establishments/:email", async (req, res) => {
 });
 
 // LOGIN individual users
-app.get("/company/login", async (req, res) => {
+app.get("/user/login", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -187,7 +187,7 @@ app.get("/company/login", async (req, res) => {
 });
 
 // LOGIN COMPANIES
-app.get("/user/login", async (req, res) => {
+app.get("/company/login", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
