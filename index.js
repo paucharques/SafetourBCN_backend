@@ -1,5 +1,5 @@
 const express = require("express");
-const cors = require('cors');
+const cors = require("cors");
 const bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 const pool = require("./db");
@@ -10,7 +10,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
-
 
 app.get("/api", (req, res) => res.send("Its working!"));
 
@@ -190,7 +189,7 @@ app.get("/user/login", async (req, res) => {
 });
 
 // LOGIN COMPANIES
-app.get("/login/company", async (req, res) => {
+app.get("/login/company", async (req, res, next) => {
   let conn;
   try {
     conn = await pool.getConnection();
