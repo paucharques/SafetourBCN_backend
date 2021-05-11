@@ -11,6 +11,25 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
 
+const authenticateJWT = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
+
+    jwt.verify(token, accessTokenSecret, (err, user) => {
+      if (err) {
+        return res.sendStatus(403);
+      }
+
+      req.user = user;
+      next();
+    });
+  } else {
+    res.sendStatus(401);
+  }
+};
+
 app.get("/api", (req, res) => res.send("Its working!"));
 
 app.get("/users", async (req, res) => {
@@ -137,7 +156,7 @@ app.get("/establishments/:id", async (req, res) => {
 });
 
 //GET ID of establishments by company EMAIL
-app.get("/establishments/:email", async (req, res) => {
+app.get("/establishments/:email", authenticateJWT, async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
@@ -189,7 +208,7 @@ app.post("/user/login", async (req, res) => {
 });
 
 // LOGIN COMPANIES
-app.post("/login/company", async (req, res, next) => {
+app.post("/login/company", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -290,7 +309,7 @@ app.post("/registerCompany", async (req, res) => {
 
 // Add a new establishment
 //Hauriem de millorar l'assignació d'id i alguna forma de comprovació per no duplicar establishments
-app.post("/registerEstablishment", async (req, res) => {
+app.post("/registerEstablishment", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
