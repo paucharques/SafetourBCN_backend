@@ -43,7 +43,7 @@ app.get("/users", async (req, res) => {
   } catch {
     res.status(500).send("Error connecting db");
   } finally {
-    // return the results
+    // return the resultsyou
     res.status(200).send(rows);
     if (conn) return conn.release();
   }
