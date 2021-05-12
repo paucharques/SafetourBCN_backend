@@ -5,6 +5,12 @@ var cookieParser = require("cookie-parser");
 const pool = require("./db");
 var jwt = require("jsonwebtoken");
 
+/**
+ * Obtenir els establiments a partir d'un token que us posaré en el header, aquest token es decodifica i obtens el correu
+ *
+ *
+ */
+
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -158,6 +164,7 @@ app.get("/establishments/:id", async (req, res) => {
 //GET ID of establishments by company EMAIL
 app.get("/establishments/:email", authenticateJWT, async (req, res) => {
   let conn;
+
   try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
