@@ -186,7 +186,7 @@ app.get("/company/:email/establishments", async (req, res) => {
 app.get("/myestablishments", authenticateJWT, async (req, res) => {
   let conn;
   var email = jwt.decode(req.headers.authorization);
-
+  console.log(email)
   try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
