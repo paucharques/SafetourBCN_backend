@@ -206,6 +206,28 @@ app.get("/myestablishments", authenticateJWT, async (req, res) => {
   }
 });
 
+//Alternativa que comprova el token pero funciona amb email
+app.get("/establishments/:email", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    // establish a connection to MariaDB
+    conn = await pool.getConnection();
+    
+    // execute the query and set the result to a new variable
+    var rows = await conn.query(
+      "select ID_ESTABLISHMENT from ESTABLISHMENT where OWNER = ?",
+      [req.params.email]
+    );
+  } catch {
+    res.status(500).send("Error connecting db");
+  } finally {
+    // return the results
+    if (rows.length != 0) res.status(200).send(rows);
+    else res.status(404).send(email);
+    if (conn) return conn.release();
+  }
+});
+
 // LOGIN individual users
 app.post("/user/login", async (req, res) => {
   let conn;
