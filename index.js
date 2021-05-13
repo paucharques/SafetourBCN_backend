@@ -166,7 +166,8 @@ app.get("/myestablishments",  async (req, res) => {
   let conn;
   const authHeader = req.headers.Authorization;
   var dd = jwt.decode(authHeader)
-  var email = dd.payload
+  console.log(decoded.foo) // bar
+  var email = "dd.payload"
 
   try {
     // establish a connection to MariaDB
