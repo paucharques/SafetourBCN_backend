@@ -160,52 +160,6 @@ app.get("/establishments/:id", async (req, res) => {
   }
 });
 
-
-//GET establishment by name
-app.get("/establishments/:name", async (req, res) => {
-  let conn;
-  try {
-    // establish a connection to MariaDB
-    conn = await pool.getConnection();
-
-    // execute the query and set the result to a new variable
-    var rows = await conn.query(
-      "select * from ESTABLISHMENT where NAME = ?",
-      [req.params.name]
-    );
-  } catch {
-    res.status(500).send("Error connecting db");
-  } finally {
-    // return the results
-    if (rows.length != 0) res.status(200).send(rows);
-    else res.status(404).send("Name not found");
-    if (conn) return conn.release();
-  }
-});
-
-//GET establishment by address
-app.get("/establishments/:address", async (req, res) => {
-  let conn;
-  try {
-    // establish a connection to MariaDB
-    conn = await pool.getConnection();
-    console.log(req.params.address)
-
-    // execute the query and set the result to a new variable
-    var rows = await conn.query(
-      "select * from ESTABLISHMENT where ADDRESS = ?",
-      [req.params.address]
-    );
-  } catch {
-    res.status(500).send("Error connecting db");
-  } finally {
-    // return the results
-    if (rows.length != 0) res.status(200).send(rows);
-    else res.status(404).send("Address not found");
-    if (conn) return conn.release();
-  }
-});
-
 //una alternativa a usar el bearer token para pasar el email que me parece bastante raro
 app.get("/company/:email/establishments", async (req, res) => {
   let conn;
@@ -554,7 +508,7 @@ app.put("/establishment/schedule/:id", async (req, res) => {
   }
 });
 
-//Update company max capacity
+//Update establishment max capacity
 app.put("/establishment/capacity/:email", async (req, res) => {
   let conn;
   try {
@@ -566,7 +520,7 @@ app.put("/establishment/capacity/:email", async (req, res) => {
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Email not found");
-        else res.status(201).send("company max_capacity updated");
+        else res.status(201).send("Establishment max_capacity updated");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
@@ -574,6 +528,112 @@ app.put("/establishment/capacity/:email", async (req, res) => {
     if (conn) return conn.release();
   }
 });
+
+//Update establishment category
+app.put("/establishment/category/:email", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE ESTABLISHMENT SET CATEGORY = ? WHERE ID_ESTABLISHMENT = ?",
+        [req.body.value, req.params.email]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        else res.status(201).send("Establishment category updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Update establishment price
+app.put("/establishment/price/:email", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE ESTABLISHMENT SET PRICE = ? WHERE ID_ESTABLISHMENT = ?",
+        [req.body.value, req.params.email]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        else res.status(201).send("Establishment price updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Update establishment rating
+app.put("/establishment/rating/:email", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE ESTABLISHMENT SET RATING = ? WHERE ID_ESTABLISHMENT = ?",
+        [req.body.value, req.params.email]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        else res.status(201).send("Establishment rating updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Update establishment discount
+app.put("/establishment/discount/:email", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE ESTABLISHMENT SET DISCOUNT = ? WHERE ID_ESTABLISHMENT = ?",
+        [req.body.value, req.params.email]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        else res.status(201).send("Establishment discount updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Update establishment address
+app.put("/establishment/address/:email", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE ESTABLISHMENT SET ADDRESS = ? WHERE ID_ESTABLISHMENT = ?",
+        [req.body.value, req.params.email]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        else res.status(201).send("Establishment address updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
 /**********************DELETE***********************/
 
 // Delete a user
