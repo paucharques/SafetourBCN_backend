@@ -35,6 +35,7 @@ const authenticateJWT = (req, res, next) => {
     res.sendStatus(401);
   }
   */
+  next();
 };
 
 app.get("/api", (req, res) => res.send("Its working!"));
