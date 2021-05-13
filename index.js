@@ -18,8 +18,9 @@ app.use(cookieParser());
 app.use(cors());
 
 const authenticateJWT = (req, res, next) => {
-  const authHeader = req.headers.authorization;
+
     /*
+     const authHeader = req.headers.authorization;
   if (authHeader) {
     const token = authHeader.split(" ")[1];
 
@@ -166,7 +167,7 @@ app.get("/establishments/:id", async (req, res) => {
 //GET ID of establishments by company EMAIL
 app.get("/myestablishments", authenticateJWT, async (req, res) => {
   let conn;
-  var dd = jwt.decode(authHeader)
+  var dd = jwt.decode(req.headers.authorization)
   var email = dd.payload
 
   try {
