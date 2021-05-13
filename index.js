@@ -328,8 +328,7 @@ app.post("/registerCompany", async (req, res) => {
           });
       })
       .catch((err) => {
-        throw err
-        //res.status(409).send("Company already exist");
+        res.status(409).send("Company already exist");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
