@@ -185,8 +185,7 @@ app.get("/company/:email/establishments", async (req, res) => {
 //GET ID of establishments by company EMAIL in bearer token DOESN'T WORK
 app.get("/myestablishments", authenticateJWT, async (req, res) => {
   let conn;
-  var dd = jwt.decode(req.headers.authorization);
-  var email = dd.payload;
+  var email = jwt.decode(req.headers.authorization);
 
   try {
     // establish a connection to MariaDB
@@ -225,6 +224,7 @@ app.post("/user/login", async (req, res) => {
   }
   try {
     if (rows.length != 0) {
+      console.log(process.env.TOKEN_SECRET);
       var token = jwt.sign({ username: email }, process.env.TOKEN_SECRET);
     } else {
       res.status(404).send("Email or password not correct");
