@@ -160,6 +160,51 @@ app.get("/establishments/:id", async (req, res) => {
   }
 });
 
+
+//GET establishment by name
+app.get("/establishments/:name", async (req, res) => {
+  let conn;
+  try {
+    // establish a connection to MariaDB
+    conn = await pool.getConnection();
+
+    // execute the query and set the result to a new variable
+    var rows = await conn.query(
+      "select * from ESTABLISHMENT where NAME = ?",
+      [req.params.name]
+    );
+  } catch {
+    res.status(500).send("Error connecting db");
+  } finally {
+    // return the results
+    if (rows.length != 0) res.status(200).send(rows);
+    else res.status(404).send("Name not found");
+    if (conn) return conn.release();
+  }
+});
+
+//GET establishment by address
+app.get("/establishments/:address", async (req, res) => {
+  let conn;
+  try {
+    // establish a connection to MariaDB
+    conn = await pool.getConnection();
+
+    // execute the query and set the result to a new variable
+    var rows = await conn.query(
+      "select * from ESTABLISHMENT where ADDRESS = ?",
+      [req.params.address]
+    );
+  } catch {
+    res.status(500).send("Error connecting db");
+  } finally {
+    // return the results
+    if (rows.length != 0) res.status(200).send(rows);
+    else res.status(404).send("Address not found");
+    if (conn) return conn.release();
+  }
+});
+
 //una alternativa a usar el bearer token para pasar el email que me parece bastante raro
 app.get("/company/:email/establishments", async (req, res) => {
   let conn;
