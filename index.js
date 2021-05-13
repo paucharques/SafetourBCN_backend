@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -18,23 +19,20 @@ app.use(cookieParser());
 app.use(cors());
 
 const authenticateJWT = (req, res, next) => {
-     const authHeader = req.headers.authorization;
+  const authHeader = req.headers.authorization;
   if (authHeader) {
     const token = authHeader.split(" ")[1];
 
-    jwt.verify(token, accessTokenSecret, (err, user) => {
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
       if (err) {
         return res.sendStatus(403);
       }
-
       req.user = user;
       next();
     });
   } else {
     res.sendStatus(401);
   }
-
-
 };
 
 app.get("/api", (req, res) => res.send("Its working!"));
@@ -187,8 +185,8 @@ app.get("/company/:email/establishments", async (req, res) => {
 //GET ID of establishments by company EMAIL in bearer token DOESN'T WORK
 app.get("/myestablishments", authenticateJWT, async (req, res) => {
   let conn;
-  var dd = jwt.decode(req.headers.authorization)
-  var email = dd.payload
+  var dd = jwt.decode(req.headers.authorization);
+  var email = dd.payload;
 
   try {
     // establish a connection to MariaDB
@@ -227,7 +225,7 @@ app.post("/user/login", async (req, res) => {
   }
   try {
     if (rows.length != 0) {
-      var token = jwt.sign({ username: email }, "supersecret");
+      var token = jwt.sign({ username: email }, process.env.TOKEN_SECRET);
     } else {
       res.status(404).send("Email or password not correct");
     }
@@ -257,7 +255,7 @@ app.post("/login/company", async (req, res) => {
   }
   try {
     if (rows.length != 0) {
-      var token = jwt.sign({ username: email }, "supersecret");
+      var token = jwt.sign({ username: email }, process.env.TOKEN_SECRET);
     } else {
       res.status(404).send("Email or password not correct");
     }
@@ -342,7 +340,7 @@ app.post("/registerCompany", async (req, res) => {
 // Add a new establishment
 //Hauriem de millorar l'assignació d'id i alguna forma de comprovació per no duplicar establishments
 //re:No hay ningun beneficio de mejorar la asignacion de ids, no causan ningun problema, para no duplicar podemos crear un check de DB
-app.post("/registerEstablishment", authenticateJWT, async (req, res) => {
+app.post("/registerEstablishment", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
