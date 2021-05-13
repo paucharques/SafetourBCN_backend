@@ -186,7 +186,6 @@ app.get("/company/:email/establishments", async (req, res) => {
 app.get("/myestablishments", authenticateJWT, async (req, res) => {
   let conn;
   var email = jwt.decode(req.headers.authorization);
-  console.log(email)
 
   try {
     // establish a connection to MariaDB
@@ -225,7 +224,6 @@ app.post("/user/login", async (req, res) => {
   }
   try {
     if (rows.length != 0) {
-      console.log(process.env.TOKEN_SECRET);
       var token = jwt.sign({ username: email }, process.env.TOKEN_SECRET);
     } else {
       res.status(404).send("Email or password not correct");
