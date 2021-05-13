@@ -509,17 +509,17 @@ app.put("/establishment/schedule/:id", async (req, res) => {
 });
 
 //Update establishment max capacity
-app.put("/establishment/capacity/:email", async (req, res) => {
+app.put("/establishment/capacity/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
         "UPDATE ESTABLISHMENT SET MAX_CAPACITY = ? WHERE ID_ESTABLISHMENT = ?",
-        [req.body.value, req.params.email]
+        [req.body.value, req.params.id]
       )
       .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
         else res.status(201).send("Establishment max_capacity updated");
       });
   } catch (err) {
@@ -530,17 +530,17 @@ app.put("/establishment/capacity/:email", async (req, res) => {
 });
 
 //Update establishment category
-app.put("/establishment/category/:email", async (req, res) => {
+app.put("/establishment/category/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
         "UPDATE ESTABLISHMENT SET CATEGORY = ? WHERE ID_ESTABLISHMENT = ?",
-        [req.body.value, req.params.email]
+        [req.body.value, req.params.id]
       )
       .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
         else res.status(201).send("Establishment category updated");
       });
   } catch (err) {
@@ -551,17 +551,17 @@ app.put("/establishment/category/:email", async (req, res) => {
 });
 
 //Update establishment price
-app.put("/establishment/price/:email", async (req, res) => {
+app.put("/establishment/price/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
         "UPDATE ESTABLISHMENT SET PRICE = ? WHERE ID_ESTABLISHMENT = ?",
-        [req.body.value, req.params.email]
+        [req.body.value, req.params.id]
       )
       .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
         else res.status(201).send("Establishment price updated");
       });
   } catch (err) {
@@ -572,17 +572,17 @@ app.put("/establishment/price/:email", async (req, res) => {
 });
 
 //Update establishment rating
-app.put("/establishment/rating/:email", async (req, res) => {
+app.put("/establishment/rating/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
         "UPDATE ESTABLISHMENT SET RATING = ? WHERE ID_ESTABLISHMENT = ?",
-        [req.body.value, req.params.email]
+        [req.body.value, req.params.id]
       )
       .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
         else res.status(201).send("Establishment rating updated");
       });
   } catch (err) {
@@ -593,17 +593,17 @@ app.put("/establishment/rating/:email", async (req, res) => {
 });
 
 //Update establishment discount
-app.put("/establishment/discount/:email", async (req, res) => {
+app.put("/establishment/discount/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
         "UPDATE ESTABLISHMENT SET DISCOUNT = ? WHERE ID_ESTABLISHMENT = ?",
-        [req.body.value, req.params.email]
+        [req.body.value, req.params.id]
       )
       .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
         else res.status(201).send("Establishment discount updated");
       });
   } catch (err) {
@@ -614,17 +614,17 @@ app.put("/establishment/discount/:email", async (req, res) => {
 });
 
 //Update establishment address
-app.put("/establishment/address/:email", async (req, res) => {
+app.put("/establishment/address/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
         "UPDATE ESTABLISHMENT SET ADDRESS = ? WHERE ID_ESTABLISHMENT = ?",
-        [req.body.value, req.params.email]
+        [req.body.value, req.params.id]
       )
       .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
         else res.status(201).send("Establishment address updated");
       });
   } catch (err) {
