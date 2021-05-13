@@ -18,8 +18,6 @@ app.use(cookieParser());
 app.use(cors());
 
 const authenticateJWT = (req, res, next) => {
-
-    /*
      const authHeader = req.headers.authorization;
   if (authHeader) {
     const token = authHeader.split(" ")[1];
@@ -35,8 +33,8 @@ const authenticateJWT = (req, res, next) => {
   } else {
     res.sendStatus(401);
   }
-  */
-  next();
+
+
 };
 
 app.get("/api", (req, res) => res.send("Its working!"));
