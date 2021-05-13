@@ -166,7 +166,7 @@ app.get("/myestablishments", authenticateJWT async (req, res) => {
   let conn;
   const auth = req.headers.Authorization;
   var dd = jwt.decode(auth)
-  console.log(req.headers.Authorization) // bar
+  console.log(req.Headers.Authorization) // bar
   var email = "dd.payload"
 
   try {
