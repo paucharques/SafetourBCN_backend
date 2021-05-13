@@ -185,8 +185,7 @@ app.get("/company/:email/establishments", async (req, res) => {
 //GET ID of establishments by company EMAIL in bearer token DOESN'T WORK
 app.get("/myestablishments", authenticateJWT, async (req, res) => {
   let conn;
-  var email = jwt.decode(req.headers.authorization);
-  console.log(email)
+  console.log(req.user)
   try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
@@ -195,28 +194,6 @@ app.get("/myestablishments", authenticateJWT, async (req, res) => {
     var rows = await conn.query(
       "select ID_ESTABLISHMENT from ESTABLISHMENT where OWNER = ?",
       [email]
-    );
-  } catch {
-    res.status(500).send("Error connecting db");
-  } finally {
-    // return the results
-    if (rows.length != 0) res.status(200).send(rows);
-    else res.status(404).send(email);
-    if (conn) return conn.release();
-  }
-});
-
-//Alternativa que comprova el token pero funciona amb email
-app.get("/establishments/:email", authenticateJWT, async (req, res) => {
-  let conn;
-  try {
-    // establish a connection to MariaDB
-    conn = await pool.getConnection();
-    
-    // execute the query and set the result to a new variable
-    var rows = await conn.query(
-      "select ID_ESTABLISHMENT from ESTABLISHMENT where OWNER = ?",
-      [req.params.email]
     );
   } catch {
     res.status(500).send("Error connecting db");
