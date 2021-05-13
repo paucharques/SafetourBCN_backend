@@ -352,7 +352,7 @@ app.post("/registerEstablishment", async (req, res) => {
 
     conn
       .query(
-        "INSERT INTO ESTABLISHMENT (OWNER,LOCAL_X,LOCAL_Y,DESCRIPTION,MAX_CAPACITY,SCHEDULE) VALUES(?,?,?,?,?,?,?,?,?,?,?);",
+        "INSERT INTO ESTABLISHMENT (OWNER,LOCAL_X,LOCAL_Y,DESCRIPTION,MAX_CAPACITY,SCHEDULE, NAME, CATEGORY, PRICE, RATING, DISCOUNT, ADDRESS) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);",
         [
           req.body.owner,
           req.body.local_x,
