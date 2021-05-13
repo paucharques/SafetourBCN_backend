@@ -16,7 +16,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
-
+/**
+*
+*
+*
 const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
@@ -35,7 +38,7 @@ const authenticateJWT = (req, res, next) => {
     res.sendStatus(401);
   }
 };
-
+*/
 app.get("/api", (req, res) => res.send("Its working!"));
 
 app.get("/users", async (req, res) => {
