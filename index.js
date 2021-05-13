@@ -182,7 +182,7 @@ app.get("/company/:email/establishments", async (req, res) => {
   }
 });
 
-//GET ID of establishments by company EMAIL in bearer token DOESN'T WORK
+//JA FUNCIONA!!
 app.get("/myestablishments", authenticateJWT, async (req, res) => {
   let conn;
   console.log(req.user)
