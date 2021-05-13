@@ -360,6 +360,7 @@ app.post("/registerEstablishment", async (req, res) => {
           req.body.description,
           req.body.max_capacity,
           req.body.schedule,
+          req.body.name,
           req.body.category,
           req.body.price,
           req.body.rating,
