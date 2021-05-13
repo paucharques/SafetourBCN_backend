@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
-
+/**
 const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
@@ -35,7 +35,7 @@ const authenticateJWT = (req, res, next) => {
     res.sendStatus(401);
   }
 };
-
+*/
 app.get("/api", (req, res) => res.send("Its working!"));
 
 app.get("/users", async (req, res) => {
@@ -162,8 +162,11 @@ app.get("/establishments/:id", async (req, res) => {
 });
 
 //GET ID of establishments by company EMAIL
-app.get("/myestablishments", authenticateJWT, async (req, res) => {
+app.get("/myestablishments",  async (req, res) => {
   let conn;
+  const authHeader = req.headers.authorization;
+  var decoded = jwt.decode(authHeader)
+  var email = decoded.payload
   try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
@@ -171,14 +174,14 @@ app.get("/myestablishments", authenticateJWT, async (req, res) => {
     // execute the query and set the result to a new variable
     var rows = await conn.query(
       "select ID_ESTABLISHMENT from ESTABLISHMENT where OWNER = ?",
-      [jwt]
+      [email]
     );
   } catch {
     res.status(500).send("Error connecting db");
   } finally {
     // return the results
     if (rows.length != 0) res.status(200).send(rows);
-    else res.status(404).send("Email not found");
+    else res.status(404).send(email);
     if (conn) return conn.release();
   }
 });
