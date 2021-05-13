@@ -200,7 +200,7 @@ app.get("/myestablishments", authenticateJWT, async (req, res) => {
   } finally {
     // return the results
     if (rows.length != 0) res.status(200).send(rows);
-    else res.status(404).send(email);
+    else res.status(404).send(req.user.username);
     if (conn) return conn.release();
   }
 });
