@@ -185,8 +185,7 @@ app.get("/company/:email/establishments", async (req, res) => {
 //GET ID of establishments by company EMAIL in bearer token DOESN'T WORK
 app.get("/myestablishments", authenticateJWT, async (req, res) => {
   let conn;
-  var obj = JSON.parse(req.user);
-  var email = obj.email
+  console.log(req.user)
   try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
