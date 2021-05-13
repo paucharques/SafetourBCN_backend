@@ -164,7 +164,7 @@ app.get("/establishments/:id", async (req, res) => {
 //GET ID of establishments by company EMAIL
 app.get("/myestablishments",  async (req, res) => {
   let conn;
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers.Authorization;
   var decoded = jwt.decode(authHeader)
   var email = decoded.payload
   try {
