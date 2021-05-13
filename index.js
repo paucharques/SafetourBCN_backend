@@ -166,7 +166,7 @@ app.get("/myestablishments",  async (req, res) => {
   let conn;
   const auth = req.headers.Authorization;
   var dd = jwt.decode(auth)
-  console.log(req.Headers.Authorization) // bar
+  console.log(req.headers.Authorization) // bar
   var email = "dd.payload"
 
   try {
@@ -320,6 +320,7 @@ app.post("/registerCompany", async (req, res) => {
 
 // Add a new establishment
 //Hauriem de millorar l'assignació d'id i alguna forma de comprovació per no duplicar establishments
+//re:No hay ningun beneficio de mejorar la asignacion de ids, no causan ningun problema, para no duplicar podemos crear un check de DB
 app.post("/registerEstablishment", authenticateJWT, async (req, res) => {
   let conn;
   try {
