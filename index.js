@@ -189,6 +189,7 @@ app.get("/establishments/:address", async (req, res) => {
   try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
+    console.log(req.params.address)
 
     // execute the query and set the result to a new variable
     var rows = await conn.query(
