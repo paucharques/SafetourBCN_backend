@@ -139,7 +139,7 @@ app.get("/establishments", async (req, res) => {
 });
 
 //GET establishment by id
-app.get("/establishments/:id", async (req, res) => {  
+app.get("/establishments/:id", async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
@@ -188,7 +188,7 @@ app.get("/myEstablishments", authenticateJWT, async (req, res) => {
   try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
-    
+
     // execute the query and set the result to a new variable
     var rows = await conn.query(
       "select ID_ESTABLISHMENT from ESTABLISHMENT where OWNER = ?",
@@ -198,7 +198,7 @@ app.get("/myEstablishments", authenticateJWT, async (req, res) => {
     res.status(500).send("Error connecting db");
   } finally {
     // return the results
-    res.status(200).send(rows);
+    res.status(200).json(rows);
     if (conn) return conn.release();
   }
 });
@@ -362,7 +362,7 @@ app.post("/registerEstablishment", async (req, res) => {
           req.body.price,
           req.body.rating,
           req.body.discount,
-          req.body.address
+          req.body.address,
         ]
       )
       .then((result) => {
@@ -553,10 +553,10 @@ app.put("/establishment/price/:id", async (req, res) => {
   try {
     conn = await pool.getConnection();
     conn
-      .query(
-        "UPDATE ESTABLISHMENT SET PRICE = ? WHERE ID_ESTABLISHMENT = ?",
-        [req.body.value, req.params.id]
-      )
+      .query("UPDATE ESTABLISHMENT SET PRICE = ? WHERE ID_ESTABLISHMENT = ?", [
+        req.body.value,
+        req.params.id,
+      ])
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
         else res.status(201).send("Establishment price updated");
@@ -574,10 +574,10 @@ app.put("/establishment/rating/:id", async (req, res) => {
   try {
     conn = await pool.getConnection();
     conn
-      .query(
-        "UPDATE ESTABLISHMENT SET RATING = ? WHERE ID_ESTABLISHMENT = ?",
-        [req.body.value, req.params.id]
-      )
+      .query("UPDATE ESTABLISHMENT SET RATING = ? WHERE ID_ESTABLISHMENT = ?", [
+        req.body.value,
+        req.params.id,
+      ])
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
         else res.status(201).send("Establishment rating updated");
