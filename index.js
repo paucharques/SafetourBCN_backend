@@ -161,7 +161,7 @@ app.get("/establishments/:id", async (req, res) => {
 });
 
 //una alternativa a usar el bearer token para pasar el email que me parece bastante raro
-app.get("/company/:email/establishments", async (req, res) => {
+/*app.get("/company/:email/establishments", async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
@@ -180,12 +180,11 @@ app.get("/company/:email/establishments", async (req, res) => {
     else res.status(404).send("No establishments found");
     if (conn) return conn.release();
   }
-});
+});*/
 
 //JA FUNCIONA!!
 app.get("/myEstablishments", authenticateJWT, async (req, res) => {
   let conn;
-  console.log(req.user)
   try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
@@ -203,6 +202,8 @@ app.get("/myEstablishments", authenticateJWT, async (req, res) => {
     if (conn) return conn.release();
   }
 });
+
+/**********************POST***********************/
 
 // LOGIN individual users
 app.post("/user/login", async (req, res) => {
@@ -264,8 +265,6 @@ app.post("/login/company", async (req, res) => {
     if (conn) return conn.release();
   }
 });
-
-/**********************POST***********************/
 
 // COMPROVAR QUE FUNCIONA BE!!
 // Add a new user
