@@ -190,10 +190,9 @@ app.get("/myEstablishments", authenticateJWT, async (req, res) => {
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
-    var rows = await conn.query(
-      "select ID_ESTABLISHMENT from ESTABLISHMENT where OWNER = ?",
-      [req.user.username]
-    );
+    var rows = await conn.query("select * from ESTABLISHMENT where OWNER = ?", [
+      req.user.username,
+    ]);
   } catch {
     res.status(500).send("Error connecting db");
   } finally {
