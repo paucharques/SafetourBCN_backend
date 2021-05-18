@@ -1,0 +1,1391 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: SafeTourBCN
+  description: El proyecto (SafeTourBCN) se basará en el desarrollo de una aplicación
+    móvil enfocada al sector turístico de Barcelona, que permitirá a los usuarios
+    ver el estado y disponibilidad de las atracciones turísticas de la ciudad, reservar
+    plaza en tiempo real sobre estas actividades o eventos, dejar opiniones sobre
+    su gestión de la seguridad en referencia a la pandemia, etc.
+servers:
+  - url: 'http://10.4.41.144:3000'
+paths:
+                  
+  /api:
+    get:
+      tags:
+      - users
+      summary: Function to try api is working
+      responses:
+        200:
+          description: Successful operation
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "It's working!"
+                
+  /users:
+    get:
+      tags:
+      - users
+      summary: Shows all users stored in the database
+      responses:
+        200:
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                
+  /users/{email}:
+    get:
+      tags:
+      - users
+      summary: Shows the user with the referenced email
+      parameters:
+      - in: path
+        name: email
+        schema:
+          type: string
+        description: The email of the requested user
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+  /individual_user/{email}:
+    get:
+      tags:
+      - users
+      summary: Shows the individual user with the referenced email
+      parameters:
+      - in: path
+        name: email
+        schema:
+          type: string
+        description: The email of the requested individual user
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /company/{email}:
+    get:
+      tags:
+      - users
+      summary: Shows the company with the referenced email
+      parameters:
+      - in: path
+        name: email
+        schema:
+          type: string
+        description: The email of the requested company
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /user/login:
+    post:
+      tags:
+      - users
+      summary: Login for individual users
+      requestBody:
+        description: Provide the email and the password for the user you want to login
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - email
+              - password
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+        required: true
+      responses:
+        200:
+          description: User logged successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: 'abc123456789'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+  
+  /login/company:
+    post:
+      tags:
+      - users
+      summary: Login for a company
+      requestBody:
+        description: Provide the email and the password for the company you want to login
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - email
+              - password
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+        required: true
+      responses:
+        200:
+          description: Company logged successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: 'abc123456789'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /registerIndividualUser:
+    post:
+      tags:
+      - users
+      summary: Register a new individual user
+      requestBody:
+        description: Provide the email, username and password for the individual user you want to register
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - email
+              - username
+              - password
+              type: object
+              properties:
+                email:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: User registered successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: 'abc123456789'
+        409:
+          description: 'Error: User already exist'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error409'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /registerCompany:
+    post:
+      tags:
+      - users
+      summary: Register a new company
+      requestBody:
+        description: Provide the email, username, password and description for the company you want to register
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - email
+              - username
+              - password
+              - description
+              type: object
+              properties:
+                email:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+                description:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Company registered successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: 'abc123456789'
+        409:
+          description: 'Error: Company already exist'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error409'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /users/name/{email}:
+    put:
+      tags:
+      - users
+      summary: Updates the user name referenced by email
+      parameters:
+      - in: path
+        name: email
+        schema:
+          type: string
+        required: true
+      requestBody:
+        description: Provide the email which references the user and the new name
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: User name updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "user name updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'      
+
+  /users/password/{email}:
+    put:
+      tags:
+      - users
+      summary: Updates the user password referenced by email
+      parameters:
+      - in: path
+        name: email
+        schema:
+          type: string
+        required: true
+      requestBody:
+        description: Provide the email which references the user and the new password
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: User name updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "user password updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'  
+                  
+  /company/description/{email}:
+    put:
+      tags:
+      - users
+      summary: Updates the user description referenced by email
+      parameters:
+      - in: path
+        name: email
+        schema:
+          type: string
+        required: true
+      requestBody:
+        description: Provide the email which references the company and the new description
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: User name updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "company description updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /IndividualUser/{email}:
+    delete:
+      tags:
+        - users
+      summary: Deletes the individual user referenced by email
+      parameters:
+      - in: path
+        name: email
+        schema:
+          type: string
+        required: true
+      responses:
+        201:
+          description: Individual user deleted successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Individual User deleted"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /Company/{email}:
+    delete:
+      tags:
+        - users
+      summary: Deletes the company referenced by email
+      parameters:
+      - in: path
+        name: email
+        schema:
+          type: string
+        required: true
+      responses:
+        201:
+          description: Company deleted successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Company deleted"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /establishments:
+    get:
+      tags:
+      - establishments
+      summary: Shows all the establishments stored in the database
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Establishment'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /establishments/{id}:
+    get:
+      tags:
+      - establishments
+      summary: Shows the establishment with the referenced id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        description: The ud of the requested establishment
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Establishment'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                
+  /myEstablishments:
+    get:
+      tags:
+      - establishments
+      summary: Shows the establishments that owns the user who is requesting it
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Establishment'
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error401'
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error403'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+        
+  /registerEstablishment:
+    post:
+      tags:
+      - establishments
+      summary: Register a new establishment
+      requestBody:
+        description: Provide the attributes for the establishment you want to register
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - owner
+              - local_x
+              - local_y
+              - description
+              - max_capacity
+              - schedule
+              - name
+              - category
+              - price
+              - rating
+              - discount
+              - address
+              type: object
+              properties:
+                owner:
+                  type: string
+                local_x:
+                  type: string
+                local_y:
+                  type: string
+                description:
+                  type: string
+                max_capacity:
+                  type: integer
+                  format: int64
+                schedule:
+                  type: string
+                name:
+                  type: string
+                category:
+                  type: string
+                price:
+                  type: integer
+                  format: int64
+                rating:
+                  type: number
+                discount:
+                  type: integer
+                  format: int64
+                address:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Establishment registered successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: 'abc123456789'
+        409:
+          description: 'Error: Establishment already exist'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error409'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+    
+  /establishment/location/{id}:
+    put:
+      tags:
+      - establishments
+      summary: Updates the establishment location referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the company and the new location
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value1
+              - value2
+              type: object
+              properties:
+                value1:
+                  type: string
+                value2:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Establishment location updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Establishment location updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /establishment/name/{id}:
+    put:
+      tags:
+      - establishments
+      summary: Updates the establishment name referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the company and the new name
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Establishment name updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Establishment name updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /establishment/schedule/{id}:
+    put:
+      tags:
+      - establishments
+      summary: Updates the establishment schedule referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the company and the new schedule
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Establishment schedule updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Establishment schedule updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /establishment/capacity/{id}:
+    put:
+      tags:
+      - establishments
+      summary: Updates the establishment capacity referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the company and the new capacity
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: integer
+                  format: int64
+        required: true
+      responses:
+        201:
+          description: Establishment capacity updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Establishment max_capacity updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /establishment/category/{id}:
+    put:
+      tags:
+      - establishments
+      summary: Updates the establishment category referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the company and the new category
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Establishment category updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Establishment category updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /establishment/price/{id}:
+    put:
+      tags:
+      - establishments
+      summary: Updates the establishment price referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the company and the new price
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: integer
+                  format: int64
+        required: true
+      responses:
+        201:
+          description: Establishment price updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Establishment price updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /establishment/rating/{id}:
+    put:
+      tags:
+      - establishments
+      summary: Updates the establishment rating referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the company and the new rating
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: number
+        required: true
+      responses:
+        201:
+          description: Establishment rating updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Establishment rating updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /establishment/discount/{id}:
+    put:
+      tags:
+      - establishments
+      summary: Updates the establishment discount referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the company and the new discount
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: integer
+                  format: int64
+        required: true
+      responses:
+        201:
+          description: Establishment discount updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Establishment discount updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+  
+  /establishment/address/{id}:
+    put:
+      tags:
+      - establishments
+      summary: Updates the establishment address referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the company and the new address
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Establishment address updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Establishment address updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /establishment/{id}:
+    delete:
+      tags:
+        - establishments
+      summary: Deletes the establishment referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      responses:
+        201:
+          description: Establishment deleted successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Establishment deleted successfully"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        EMAIL:
+            type: string
+            example: example@example.com
+        NAME:
+            type: string
+            example: Jordi
+        PASSWORD:
+            type: string
+            example: 1234
+    Establishment:
+      type: object
+      properties:
+        OWNER:
+            type: string
+            example: example@example.com
+        NAME:
+            type: string
+            example: Teatre Nacional
+        ID_ESTABLISHMENT:
+            type: integer
+            format: int64
+            example: 1
+        LOCAL_X:
+            type: string
+            example: 3
+        LOCAL_Y:
+            type: string
+            example: 2
+        DESCRIPTION:
+            type: string
+            example: Teatre Nacional de Catalunya
+        MAX_CAPACITY:
+            type: integer
+            format: int64
+            example: 500
+        SCHEDULE:
+            type: string
+            example: 8h - 21h
+        CATEGORY:
+            type: string
+            example: Teatre
+        PRICE:
+            type: integer
+            format: int64
+            example: 25
+        RATING:
+            type: number
+            example: 4.5
+        DISCOUNT:
+            type: integer
+            format: int64
+            example: 0
+        ADDRESS:
+            type: string
+            example: Plaça de les Arts, 1, 08013 Barcelona
+    
+    ErrorResult:
+      type: object
+      properties:
+        status:
+          type: integer
+          enum: [401, 403, 404, 409, 500]
+        error: 
+          type: string
+          enum: ["Unauthorized", "Forbidden", "Not Found", "Conflict", "Internal Server Error"]
+        message: 
+          type: string
+          
+  examples:
+    error401:
+      value:
+        status: 401
+        error: "Unauthorized"
+        message: "You provided no Bearer Token "
+    error403:
+      value:
+        status: 403
+        error: "Forbidden"
+        message: "Your Bearer Token is not valid"
+    error404:
+      value:
+        status: 404
+        error: "Not Found"
+        message: "Parameter not found"
+    error409:
+      value:
+        status: 409
+        error: "Conflict"
+        message: "Violation of primary key"
+    error500:
+      value:
+        status: 500
+        error: "Internal Server Errror"
+        message: "Error connecting db"
+        
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
