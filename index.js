@@ -198,7 +198,7 @@ app.get("/myEstablishments", authenticateJWT, async (req, res) => {
     res.status(500).send("Error connecting db");
   } finally {
     // return the results
-    res.status(200).json(rows);
+    res.status(200).send(rows);
     if (conn) return conn.release();
   }
 });
@@ -260,7 +260,7 @@ app.post("/login/company", async (req, res) => {
   } catch {
     res.status(500).send("Error creating token");
   } finally {
-    res.status(200).send(token);
+    res.status(200).json(token);
     if (conn) return conn.release();
   }
 });
