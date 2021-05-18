@@ -139,7 +139,7 @@ app.get("/establishments", async (req, res) => {
 });
 
 //GET establishment by id
-app.get("/establishments/:id", async (req, res) => {
+app.get("/establishments/:id", async (req, res) => {  
   let conn;
   try {
     // establish a connection to MariaDB
@@ -183,7 +183,7 @@ app.get("/company/:email/establishments", async (req, res) => {
 });
 
 //JA FUNCIONA!!
-app.get("/myestablishments", authenticateJWT, async (req, res) => {
+app.get("/myEstablishments", authenticateJWT, async (req, res) => {
   let conn;
   console.log(req.user)
   try {
@@ -199,8 +199,7 @@ app.get("/myestablishments", authenticateJWT, async (req, res) => {
     res.status(500).send("Error connecting db");
   } finally {
     // return the results
-    if (rows.length != 0) res.status(200).send(rows);
-    else res.status(404).send(req.user.username);
+    res.status(200).send(rows);
     if (conn) return conn.release();
   }
 });
@@ -268,6 +267,7 @@ app.post("/login/company", async (req, res) => {
 
 /**********************POST***********************/
 
+// COMPROVAR QUE FUNCIONA BE!!
 // Add a new user
 app.post("/registerIndividualUser", async (req, res) => {
   let conn;
