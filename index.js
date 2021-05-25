@@ -722,6 +722,27 @@ app.delete("/establishment/:id", async (req, res) => {
   }
 });
 
+//Delete user test 2
+app.delete("/user", authenticateJWT, async (req, res) => {
+  let conn;
+
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query("DELETE FROM USERS WHERE EMAIL = ?", [
+        req.user.username,
+      ])
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("User deleted");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
 app.listen(3000, function () {
   console.log("now listening for requests");
 });
