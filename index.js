@@ -377,6 +377,37 @@ app.post("/registerEstablishment", async (req, res) => {
   }
 });
 
+app.post("/Event", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "INSERT INTO EVENTS (VENUE_NAME,VENUE_ADDRESS,VENUE_OWNER,EVENT_DATE,EVENT_TIME,DESCRIPTION,CAPACITY) VALUES(?,?,?,?,?,?,?);",
+        [
+          req.user.username,
+          req.body.venue_name,
+          req.body.venue_address,
+          req.body.venue_owner,
+          req.body.event_date,
+          req.body.event_time,
+          req.body.description,
+          req.body.capacity,
+        ]
+      )
+      .then((result) => {
+        res.status(201).send("Event added");
+      })
+      .catch((err) => {
+        res.status(409).send("Error in creation of the event");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
 /**********************PUT***********************/
 //Update user name
 app.put("/users/name/:email", async (req, res) => {
