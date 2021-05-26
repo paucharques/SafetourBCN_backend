@@ -221,7 +221,7 @@ app.get("/myEvents", authenticateJWT, async (req, res) => {
   }
 });
 
-app.get("/Establishment/Event/:id", authenticateJWT, async (req, res) => {
+app.get("/Establishment/:id/Events", authenticateJWT, async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
