@@ -383,12 +383,13 @@ app.post("/Event", authenticateJWT, async (req, res) => {
     conn = await pool.getConnection();
     conn
       .query(
-        "INSERT INTO EVENTS (VENUE_ID,VENUE_OWNER,EVENT_DATE,EVENT_TIME,DESCRIPTION,CAPACITY) VALUES(?,?,?,?,?,?,?);",
+        "INSERT INTO EVENTS (VENUE_ID,VENUE_OWNER,EVENT_DATE,EVENT_TIME,NAME,DESCRIPTION,CAPACITY) VALUES(?,?,?,?,?,?,?,?);",
         [
           req.body.venue_id,
           req.user.username,
           req.body.event_date,
           req.body.event_time,
+          req.body.name,
           req.body.description,
           req.body.capacity,
         ]
