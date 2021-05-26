@@ -633,6 +633,7 @@ app.put("/establishment/address/:id", async (req, res) => {
 /**********************DELETE***********************/
 
 // Delete a user
+/*
 app.delete("/IndividualUser/:email", async (req, res) => {
   let conn;
   try {
@@ -701,6 +702,7 @@ app.delete("/Company/:email", async (req, res) => {
     if (conn) return conn.release();
   }
 });
+*/
 
 //Delete establishment
 app.delete("/establishment/:id", async (req, res) => {
@@ -722,7 +724,7 @@ app.delete("/establishment/:id", async (req, res) => {
   }
 });
 
-//Delete user test 2
+//Delete user funciona para los dos tipos, necesita el token del usuario
 app.delete("/user", authenticateJWT, async (req, res) => {
   let conn;
 
