@@ -386,7 +386,7 @@ app.post("/Event", authenticateJWT, async (req, res) => {
         "INSERT INTO EVENTS (VENUE_ID,VENUE_OWNER,EVENT_DATE,EVENT_TIME,NAME,DESCRIPTION,CAPACITY) VALUES(?,?,?,?,?,?,?,?);",
         [
           req.body.venue_id,
-          req.user.username,
+          req.body.email,
           req.body.event_date,
           req.body.event_time,
           req.body.name,
