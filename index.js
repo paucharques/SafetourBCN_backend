@@ -202,6 +202,44 @@ app.get("/myEstablishments", authenticateJWT, async (req, res) => {
   }
 });
 
+app.get("/myEvents", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    // establish a connection to MariaDB
+    conn = await pool.getConnection();
+
+    // execute the query and set the result to a new variable
+    var rows = await conn.query("select * from EVENTS where VENUE_OWNER = ?", [
+      req.user.username,
+    ]);
+  } catch {
+    res.status(500).send("Error connecting db");
+  } finally {
+    // return the results
+    res.status(200).send(rows);
+    if (conn) return conn.release();
+  }
+});
+
+app.get("/Establishment/Event/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    // establish a connection to MariaDB
+    conn = await pool.getConnection();
+
+    // execute the query and set the result to a new variable
+    var rows = await conn.query("select * from EVENTS where VENUE_ID = ?", [
+      req.params.id,
+    ]);
+  } catch {
+    res.status(500).send("Error connecting db");
+  } finally {
+    // return the results
+    res.status(200).send(rows);
+    if (conn) return conn.release();
+  }
+});
+
 /**********************POST***********************/
 
 // LOGIN individual users
