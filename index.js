@@ -221,7 +221,7 @@ app.get("/myEvents", authenticateJWT, async (req, res) => {
   }
 });
 
-app.get("/Establishment/:id/Events", authenticateJWT, async (req, res) => {
+app.get("/Establishment/:id/Events", async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
@@ -231,6 +231,23 @@ app.get("/Establishment/:id/Events", authenticateJWT, async (req, res) => {
     var rows = await conn.query("select * from EVENTS where VENUE_ID = ?", [
       req.params.id,
     ]);
+  } catch {
+    res.status(500).send("Error connecting db");
+  } finally {
+    // return the results
+    res.status(200).send(rows);
+    if (conn) return conn.release();
+  }
+});
+
+app.get("/Events", async (req, res) => {
+  let conn;
+  try {
+    // establish a connection to MariaDB
+    conn = await pool.getConnection();
+
+    // execute the query and set the result to a new variable
+    var rows = await conn.query("select * from EVENTS");
   } catch {
     res.status(500).send("Error connecting db");
   } finally {
