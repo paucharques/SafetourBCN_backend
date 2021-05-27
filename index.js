@@ -462,6 +462,34 @@ app.post("/Event", authenticateJWT, async (req, res) => {
   }
 });
 
+app.post("/Review", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "INSERT INTO REVIEW (VALUE,DESCRIPTION,PREVIOUS_BOOKING,ID_AUTHOR,ESTABLISHMENT_ID) VALUES(?,?,?,?,?);",
+        [
+          req.body.value,
+          req.body.description,
+          req.body.previous_booking,
+          req.user.username,
+          req.body.establishment_id
+        ]
+      )
+      .then((result) => {
+        res.status(201).send("Review added");
+      })
+      .catch((err) => {
+        res.status(409).send("Error in creation of the Review");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
 /**********************PUT***********************/
 //Update user name
 app.put("/users/name/:email", async (req, res) => {
