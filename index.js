@@ -481,7 +481,7 @@ app.post("/Review", authenticateJWT, async (req, res) => {
         res.status(201).send("Review added");
       })
       .catch((err) => {
-        res.status(409).send("Error in creation of the Review");
+        res.status(409).send(err);
       });
   } catch (err) {
     res.status(500).send(err);
