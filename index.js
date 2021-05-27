@@ -468,7 +468,7 @@ app.post("/Review", authenticateJWT, async (req, res) => {
     conn = await pool.getConnection();
     conn
       .query(
-        "INSERT INTO REVIEW (VALUE,DESCRIPTION,PREVIOUS_BOOKING,ID_AUTHOR,ESTABLISHMENT_ID) VALUES(?,?,?,?,?);",
+        "INSERT INTO REVIEWS (VALUE,DESCRIPTION,PREVIOUS_BOOKING,ID_AUTHOR,ESTABLISHMENT_ID) VALUES(?,?,?,?,?);",
         [
           req.body.value,
           req.body.description,
