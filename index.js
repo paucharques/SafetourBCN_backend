@@ -257,6 +257,25 @@ app.get("/Events", async (req, res) => {
   }
 });
 
+app.get("/Establishment/:id/Reviews", async (req, res) => {
+  let conn;
+  try {
+    // establish a connection to MariaDB
+    conn = await pool.getConnection();
+
+    // execute the query and set the result to a new variable
+    var rows = await conn.query("select * from REVIEWS where ID_ESTABLISHMENT = ?", [
+      req.params.id,
+    ]);
+  } catch {
+    res.status(500).send(err);
+  } finally {
+    // return the results
+    res.status(200).send(rows);
+    if (conn) return conn.release();
+  }
+});
+
 /**********************POST***********************/
 
 // LOGIN individual users
