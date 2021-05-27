@@ -276,7 +276,7 @@ app.get("/Establishment/:id/Reviews", async (req, res) => {
   }
 });
 
-app.get("/Individual_user/Reviews", authenticateJWT, async (req, res) => {
+app.get("/UserReviews", authenticateJWT, async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
