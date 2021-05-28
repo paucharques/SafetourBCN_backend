@@ -1002,6 +1002,27 @@ app.delete("/establishment/:id", authenticateJWT, async (req, res) => {
   }
 });
 
+//Delete event
+app.delete("/event/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query("DELETE FROM EVENTS WHERE ID_EVENT = ? AND VENUE_OWNER = ? ", [
+        req.params.id,
+        req.user.username
+      ])
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Event deleted successfully");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
 //Delete user funciona para los dos tipos, necesita el token del usuario
 app.delete("/user", authenticateJWT, async (req, res) => {
   let conn;
