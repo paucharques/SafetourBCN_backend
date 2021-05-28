@@ -35,7 +35,7 @@ const authenticateJWT = (req, res, next) => {
   }
 };
 
-app.get("/api", (req, res) => res.send("Its working!"));
+app.get("/api",  (req, res) => res.send("Its working!"));
 
 app.get("/users", async (req, res) => {
   let conn;
@@ -378,7 +378,7 @@ app.post("/login/company", async (req, res) => {
 
 // COMPROVAR QUE FUNCIONA BE!!
 // Add a new user
-app.post("/registerIndividualUser", async (req, res) => {
+app.post("/registerIndividualUser",  async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -448,7 +448,7 @@ app.post("/registerCompany", async (req, res) => {
 // Add a new establishment
 //Hauriem de millorar l'assignació d'id i alguna forma de comprovació per no duplicar establishments
 //re:No hay ningun beneficio de mejorar la asignacion de ids, no causan ningun problema, para no duplicar podemos crear un check de DB
-app.post("/registerEstablishment", async (req, res) => {
+app.post("/registerEstablishment", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -462,7 +462,7 @@ app.post("/registerEstablishment", async (req, res) => {
       .query(
         "INSERT INTO ESTABLISHMENT (OWNER,LOCAL_X,LOCAL_Y,DESCRIPTION,MAX_CAPACITY,SCHEDULE, NAME, CATEGORY, PRICE, RATING, DISCOUNT, ADDRESS) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);",
         [
-          req.body.owner,
+          req.user.username,
           req.body.local_x,
           req.body.local_y,
           req.body.description,
