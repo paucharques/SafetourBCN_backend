@@ -987,8 +987,9 @@ app.delete("/establishment/:id", authenticateJWT, async (req, res) => {
   try {
     conn = await pool.getConnection();
     conn
-      .query("DELETE FROM ESTABLISHMENT WHERE ID_ESTABLISHMENT = ? AND ", [
+      .query("DELETE FROM ESTABLISHMENT WHERE ID_ESTABLISHMENT = ? AND OWNER = ? ", [
         req.params.id,
+        req.user.username
       ])
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
