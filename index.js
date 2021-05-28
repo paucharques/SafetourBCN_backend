@@ -595,7 +595,7 @@ app.post("/Rating", authenticateJWT, async (req, res) => {
         ]
       )
       .then((result) => {
-        res.status(201).send("Review added");
+        res.status(201).send("Rating added");
       })
       .catch((err) => {
         res.status(409).send(err);
