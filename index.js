@@ -257,14 +257,14 @@ app.get("/Events", async (req, res) => {
   }
 });
 
-app.get("/Establishment/:id/Reviews", async (req, res) => {
+app.get("/Establishment/:id/Ratings", async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
-    var rows = await conn.query("select * from REVIEWS where ID_ESTABLISHMENT = ?", [
+    var rows = await conn.query("select * from RATINGS where ID_ESTABLISHMENT = ?", [
       req.params.id,
     ]);
   } catch {
@@ -276,14 +276,14 @@ app.get("/Establishment/:id/Reviews", async (req, res) => {
   }
 });
 
-app.get("/UserReviews", authenticateJWT, async (req, res) => {
+app.get("/UserRatings", authenticateJWT, async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
-    var rows = await conn.query("select * from REVIEWS where ID_AUTHOR = ?", [
+    var rows = await conn.query("select * from RATINGS where ID_AUTHOR = ?", [
       req.user.username,
     ]);
   } catch {
@@ -500,13 +500,13 @@ app.post("/Event", authenticateJWT, async (req, res) => {
   }
 });
 
-app.post("/Review", authenticateJWT, async (req, res) => {
+app.post("/Rating", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "INSERT INTO REVIEWS (VALUE,DESCRIPTION,PREVIOUS_BOOKING,ID_AUTHOR,ID_ESTABLISHMENT) VALUES(?,?,?,?,?);",
+        "INSERT INTO RATINGS (VALUE,DESCRIPTION,PREVIOUS_BOOKING,ID_AUTHOR,ID_ESTABLISHMENT) VALUES(?,?,?,?,?);",
         [
           req.body.value,
           req.body.description,
@@ -856,12 +856,12 @@ app.delete("/Company/:email", async (req, res) => {
 */
 
 //Delete establishment
-app.delete("/establishment/:id", async (req, res) => {
+app.delete("/establishment/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
-      .query("DELETE FROM ESTABLISHMENT WHERE ID_ESTABLISHMENT = ?", [
+      .query("DELETE FROM ESTABLISHMENT WHERE ID_ESTABLISHMENT = ? AND ", [
         req.params.id,
       ])
       .then((result) => {
