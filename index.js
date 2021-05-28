@@ -1050,7 +1050,7 @@ app.delete("/reservation/:id", authenticateJWT, async (req, res) => {
   try {
     conn = await pool.getConnection();
     conn
-      .query("DELETE FROM RATINGS WHERE ID_RESERVATION = ? AND ID_AUTHOR = ? ", [
+      .query("DELETE FROM RESERVATIONS WHERE ID_RESERVATION = ? AND ID_AUTHOR = ? ", [
         req.params.id,
         req.user.username
       ])
