@@ -256,6 +256,25 @@ app.get("/Events", authenticateJWT,  async (req, res) => {
     if (conn) return conn.release();
   }
 });
+//GET an event by its id
+app.get("/Events/:id", authenticateJWT,  async (req, res) => {
+  let conn;
+  try {
+    // establish a connection to MariaDB
+    conn = await pool.getConnection();
+
+    // execute the query and set the result to a new variable
+    var rows = await conn.query("select * from EVENTS where ID_EVENT = ?",[
+      req.params.id
+      ]);
+  } catch {
+    res.status(500).send("Error connecting db");
+  } finally {
+    // return the results
+    res.status(200).send(rows);
+    if (conn) return conn.release();
+  }
+});
 //GET all ratings of and establishment by id
 app.get("/Establishment/:id/Ratings", authenticateJWT, async (req, res) => {
   let conn;
