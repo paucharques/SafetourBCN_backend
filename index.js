@@ -558,7 +558,7 @@ app.post("/Reservation", authenticateJWT, async (req, res) => {
           req.body.id_establishment,
           req.user.username,
           req.body.people_count,
-          req.user.reservation_date,
+          req.body.reservation_date,
           req.body.reservation_hour
         ]
       )
