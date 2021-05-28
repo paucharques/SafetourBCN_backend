@@ -201,7 +201,7 @@ app.get("/myEstablishments", authenticateJWT, async (req, res) => {
     if (conn) return conn.release();
   }
 });
-
+//GET all events of token's user
 app.get("/myEvents", authenticateJWT, async (req, res) => {
   let conn;
   try {
@@ -220,7 +220,7 @@ app.get("/myEvents", authenticateJWT, async (req, res) => {
     if (conn) return conn.release();
   }
 });
-
+//GET all events for an establishment by id
 app.get("/Establishment/:id/Events", authenticateJWT, async (req, res) => {
   let conn;
   try {
@@ -239,7 +239,7 @@ app.get("/Establishment/:id/Events", authenticateJWT, async (req, res) => {
     if (conn) return conn.release();
   }
 });
-
+//GET all events
 app.get("/Events", authenticateJWT,  async (req, res) => {
   let conn;
   try {
@@ -256,7 +256,7 @@ app.get("/Events", authenticateJWT,  async (req, res) => {
     if (conn) return conn.release();
   }
 });
-
+//GET all ratings of and establishment by id
 app.get("/Establishment/:id/Ratings", authenticateJWT, async (req, res) => {
   let conn;
   try {
@@ -275,7 +275,7 @@ app.get("/Establishment/:id/Ratings", authenticateJWT, async (req, res) => {
     if (conn) return conn.release();
   }
 });
-
+//GET and average of ratings of an establishment by id
 app.get("/Establishment/:id/AverageRating", authenticateJWT, async (req, res) => {
   let conn;
   try {
@@ -294,7 +294,7 @@ app.get("/Establishment/:id/AverageRating", authenticateJWT, async (req, res) =>
     if (conn) return conn.release();
   }
 });
-
+//GET all ratings of token's user
 app.get("/UserRatings", authenticateJWT, async (req, res) => {
   let conn;
   try {
