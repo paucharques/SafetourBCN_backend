@@ -333,7 +333,7 @@ app.get("/User/Reservations", authenticateJWT, async (req, res) => {
   }
 });
 //GET all reservations
-app.get("/Events", authenticateJWT,  async (req, res) => {
+app.get("/Reservations", authenticateJWT,  async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
