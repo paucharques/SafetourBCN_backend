@@ -368,7 +368,7 @@ app.get("/Reservations/:id", authenticateJWT, async (req, res) => {
     res.status(500).send("Error connecting db");
   } finally {
     // return the results
-    if (rows.length != 0) res.status(200).send(rows);
+    if (rows.rowCount != 0) res.status(200).send(rows);
     else res.status(404).send("Id not found");
     if (conn) return conn.release();
   }
