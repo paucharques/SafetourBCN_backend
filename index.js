@@ -981,7 +981,7 @@ app.delete("/Company/:email", async (req, res) => {
 });
 */
 
-//Delete establishment
+//Delete establishment by id only if the user is the owner
 app.delete("/establishment/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
@@ -992,7 +992,7 @@ app.delete("/establishment/:id", authenticateJWT, async (req, res) => {
         req.user.username
       ])
       .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        if (result.affectedRows == 0) res.status(404).send("An establishment by this id not found for this user");
         else res.status(201).send("Establishment deleted successfully");
       });
   } catch (err) {
@@ -1002,7 +1002,7 @@ app.delete("/establishment/:id", authenticateJWT, async (req, res) => {
   }
 });
 
-//Delete event
+//Delete event by id but only if the user is the venue owner
 app.delete("/event/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
@@ -1013,8 +1013,50 @@ app.delete("/event/:id", authenticateJWT, async (req, res) => {
         req.user.username
       ])
       .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        if (result.affectedRows == 0) res.status(404).send("An event by this id was not found for this user");
         else res.status(201).send("Event deleted successfully");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Delete rating by id but only if the user is the author
+app.delete("/rating/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query("DELETE FROM RATINGS WHERE ID_RATING = ? AND ID_AUTHOR = ? ", [
+        req.params.id,
+        req.user.username
+      ])
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("A rating by this ID was not found for this user");
+        else res.status(201).send("Rating deleted successfully");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Delete reservation by id but only if the user is the author
+app.delete("/reservation/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query("DELETE FROM RATINGS WHERE ID_RESERVATION = ? AND ID_AUTHOR = ? ", [
+        req.params.id,
+        req.user.username
+      ])
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("A reservation by this ID was not found for this user");
+        else res.status(201).send("Reservation deleted successfully");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
