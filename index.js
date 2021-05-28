@@ -295,7 +295,7 @@ app.get("/Establishment/:id/AverageRating", authenticateJWT, async (req, res) =>
   }
 });
 //GET all ratings of token's user
-app.get("/UserRatings", authenticateJWT, async (req, res) => {
+app.get("/User/Ratings", authenticateJWT, async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
@@ -307,6 +307,42 @@ app.get("/UserRatings", authenticateJWT, async (req, res) => {
     ]);
   } catch {
     res.status(500).send(err);
+  } finally {
+    // return the results
+    res.status(200).send(rows);
+    if (conn) return conn.release();
+  }
+});
+//GET all reservations of token's user
+app.get("/User/Reservations", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    // establish a connection to MariaDB
+    conn = await pool.getConnection();
+
+    // execute the query and set the result to a new variable
+    var rows = await conn.query("select * from RESERVATIONS where ID_AUTHOR = ?", [
+      req.user.username,
+    ]);
+  } catch {
+    res.status(500).send(err);
+  } finally {
+    // return the results
+    res.status(200).send(rows);
+    if (conn) return conn.release();
+  }
+});
+//GET all reservations
+app.get("/Events", authenticateJWT,  async (req, res) => {
+  let conn;
+  try {
+    // establish a connection to MariaDB
+    conn = await pool.getConnection();
+
+    // execute the query and set the result to a new variable
+    var rows = await conn.query("select * from RESERVATIONS");
+  } catch {
+    res.status(500).send("Error connecting db");
   } finally {
     // return the results
     res.status(200).send(rows);
