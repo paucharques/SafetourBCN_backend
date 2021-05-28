@@ -358,7 +358,7 @@ app.get("/Reservations/:id", authenticateJWT, async (req, res) => {
 
     // execute the query and set the result to a new variable
     var rows = await conn.query(
-      "select * from ESTABLISHMENT where ID_RATING = ? AND ID_AUTHOR = ?",
+      "select * from RESERVATIONS where ID_RESERVATION = ? AND ID_AUTHOR = ?",
       [
       req.params.id,
       req.user.username
