@@ -349,7 +349,7 @@ app.get("/Reservations", authenticateJWT,  async (req, res) => {
     if (conn) return conn.release();
   }
 });
-//GET reservation by id
+//GET reservation by id, will only return if the user asks for his own reservation
 app.get("/Reservations/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
@@ -369,7 +369,7 @@ app.get("/Reservations/:id", authenticateJWT, async (req, res) => {
   } finally {
     // return the results
     if (rows.length != 0) res.status(200).send(rows);
-    else res.status(404).send("Id not found");
+    else res.status(404).send("No such reservation for this user");
     if (conn) return conn.release();
   }
 });
