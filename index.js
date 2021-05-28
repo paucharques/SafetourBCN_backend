@@ -547,6 +547,34 @@ app.post("/Rating", authenticateJWT, async (req, res) => {
   }
 });
 
+app.post("/Reservation", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "INSERT INTO RESERVATIONS (ID_ESTABLISHMENT,ID_AUTHOR,PEOPLE_COUNT,RESERVATION_DATE,RESERVATION_HOUR) VALUES(?,?,?,?,?);",
+        [
+          req.body.id_establishment,
+          req.user.username,
+          req.body.people_count,
+          req.user.reservation_date,
+          req.body.reservation_hour
+        ]
+      )
+      .then((result) => {
+        res.status(201).send("Reservation added");
+      })
+      .catch((err) => {
+        res.status(409).send(err);
+      });
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
 /**********************PUT***********************/
 //Update user name
 app.put("/users/name/:email", async (req, res) => {
