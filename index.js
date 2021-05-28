@@ -221,7 +221,7 @@ app.get("/myEvents", authenticateJWT, async (req, res) => {
   }
 });
 
-app.get("/Establishment/:id/Events", async (req, res) => {
+app.get("/Establishment/:id/Events", authenticateJWT, async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
@@ -240,7 +240,7 @@ app.get("/Establishment/:id/Events", async (req, res) => {
   }
 });
 
-app.get("/Events", async (req, res) => {
+app.get("/Events", authenticateJWT,  async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
@@ -257,7 +257,7 @@ app.get("/Events", async (req, res) => {
   }
 });
 
-app.get("/Establishment/:id/Ratings", async (req, res) => {
+app.get("/Establishment/:id/Ratings", authenticateJWT, async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
@@ -276,7 +276,7 @@ app.get("/Establishment/:id/Ratings", async (req, res) => {
   }
 });
 
-app.get("/Establishment/:id/AverageRating", async (req, res) => {
+app.get("/Establishment/:id/AverageRating", authenticateJWT, async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
