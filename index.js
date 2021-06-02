@@ -1021,6 +1021,7 @@ app.put("/establishment/description/:id", authenticateJWT, async (req, res) => {
   }
 });
 
+// TODOS LOS UPDATES DE EVENT NECESITAN TOKEN DEL OWNER
 //Update event date
 app.put("/event/event_date/:id", authenticateJWT, async (req, res) => {
   let conn;
@@ -1146,7 +1147,7 @@ app.put("/event/description/:id", authenticateJWT, async (req, res) => {
   }
 });
 
-//Update event description
+//Update event capacity
 app.put("/event/capacity/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
@@ -1170,6 +1171,84 @@ app.put("/event/capacity/:id", authenticateJWT, async (req, res) => {
     if (conn) return conn.release();
   }
 });
+
+//UPDATES DE RATINGS NECESITAN TOKEN DEL AUTOR
+//Update rating value
+app.put("/rating/value/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE RATINGS SET VALUE = ? WHERE ID_RATING = ? AND ID_AUTHOR = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Rating value updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Update rating description
+app.put("/rating/description/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE RATINGS SET DESCRIPTION = ? WHERE ID_RATING = ? AND ID_AUTHOR = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Rating description updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Update rating previous booking value
+app.put("/rating/description/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE RATINGS SET PREVIOUS_BOOKING = ? WHERE ID_RATING = ? AND ID_AUTHOR = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Rating previous booking value updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+
 
 
 
