@@ -564,7 +564,7 @@ app.post("/registerEstablishment", authenticateJWT, async (req, res) => {
         res.status(409).send("Establishment already exist");
       });
   } catch (err) {
-    res.status(500).send("Error connecting db");
+    res.status(500).send(err);
   } finally {
     if (conn) return conn.release();
   }
