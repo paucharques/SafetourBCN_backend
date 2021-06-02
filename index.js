@@ -576,12 +576,13 @@ app.post("/registerEvent", authenticateJWT, async (req, res) => {
     conn = await pool.getConnection();
     conn
       .query(
-        "INSERT INTO EVENTS (VENUE_ID,VENUE_OWNER,EVENT_DATE,EVENT_TIME,NAME,DESCRIPTION,CAPACITY) VALUES(?,?,?,?,?,?,?);",
+        "INSERT INTO EVENTS (VENUE_ID,VENUE_OWNER,EVENT_DATE,HOURSTART, HOUREND, NAME,DESCRIPTION,CAPACITY) VALUES(?,?,?,?,?,?,?,?);",
         [
           req.body.venue_id,
           req.user.username,
           req.body.event_date,
-          req.body.event_time,
+          req.body.hourstart,
+          req.body.hourend,
           req.body.name,
           req.body.description,
           req.body.capacity,
@@ -990,6 +991,8 @@ app.put("/establishment/description/:id", authenticateJWT, async (req, res) => {
     if (conn) return conn.release();
   }
 });
+
+
 /**********************DELETE***********************/
 
 // Delete a user
