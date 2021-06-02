@@ -260,7 +260,7 @@ app.get("/establishment/:id/reserveSpaceLeft", authenticateJWT, async (req, res)
     res.status(500).send("Error connecting db");
   } finally {
     // return the results
-    if (capacity.length != 0){
+    if (rows.length != 0){
     res.status(200).send(rows);
     }
     else res.status(404).send("Id not found");
