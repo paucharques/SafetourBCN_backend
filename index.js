@@ -258,12 +258,18 @@ app.get("/establishment/:id/reserveSpaceLeft", async (req, res) => {
           [req.params.id]
         );
         } catch{
-        res.status(500).send("Error connecting db")}
+        res.status(500).send("Error connecting db")
+        }
+
   } catch {
     res.status(500).send("Error connecting db");
   } finally {
     // return the results
-    if (capacity.length != 0) res.status(200).send(capacity);
+    if (capacity.length != 0){
+    int cap = capacity.getInt("MAX_CAPACITY");
+    int re = reservations.getInt("COUNT");
+    res.status(200).send(reservations);
+    }
     else res.status(404).send("Id not found");
     if (conn) return conn.release();
   }
