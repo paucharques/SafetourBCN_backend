@@ -721,14 +721,19 @@ app.put("/company/description/:email", async (req, res) => {
 });
 
 //Update establishment location
-app.put("/establishment/location/:id", async (req, res) => {
+app.put("/establishment/location/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENTS SET LOCAL_X = ?, LOCAL_Y = ? WHERE ID_ESTABLISHMENT = ?",
-        [req.body.value1, req.body.value2, req.params.id]
+        "UPDATE ESTABLISHMENTS SET LOCAL_X = ?, LOCAL_Y = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
+        [
+        req.body.value1,
+        req.body.value2,
+        req.params.id,
+        req.user.username,
+        ]
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
@@ -742,14 +747,15 @@ app.put("/establishment/location/:id", async (req, res) => {
 });
 
 //Update establishment name
-app.put("/establishment/name/:id", async (req, res) => {
+app.put("/establishment/name/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
-      .query("UPDATE ESTABLISHMENTS SET NAME = ? WHERE ID_ESTABLISHMENT = ?", [
+      .query("UPDATE ESTABLISHMENTS SET NAME = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?", [
         req.body.value,
         req.params.id,
+        req.user.username,
       ])
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
@@ -763,14 +769,18 @@ app.put("/establishment/name/:id", async (req, res) => {
 });
 
 //Update establishment schedule
-app.put("/establishment/schedule/:id", async (req, res) => {
+app.put("/establishment/schedule/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENTS SET SCHEDULE = ? WHERE ID_ESTABLISHMENT = ?",
-        [req.body.value, req.params.id]
+        "UPDATE ESTABLISHMENTS SET SCHEDULE = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
@@ -784,14 +794,18 @@ app.put("/establishment/schedule/:id", async (req, res) => {
 });
 
 //Update establishment max capacity
-app.put("/establishment/capacity/:id", async (req, res) => {
+app.put("/establishment/capacity/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENTS SET MAX_CAPACITY = ? WHERE ID_ESTABLISHMENT = ?",
-        [req.body.value, req.params.id]
+        "UPDATE ESTABLISHMENTS SET MAX_CAPACITY = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
@@ -805,14 +819,18 @@ app.put("/establishment/capacity/:id", async (req, res) => {
 });
 
 //Update establishment category
-app.put("/establishment/category/:id", async (req, res) => {
+app.put("/establishment/category/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENTS SET CATEGORY = ? WHERE ID_ESTABLISHMENT = ?",
-        [req.body.value, req.params.id]
+        "UPDATE ESTABLISHMENTS SET CATEGORY = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
@@ -826,14 +844,15 @@ app.put("/establishment/category/:id", async (req, res) => {
 });
 
 //Update establishment price
-app.put("/establishment/price/:id", async (req, res) => {
+app.put("/establishment/price/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
-      .query("UPDATE ESTABLISHMENTS SET PRICE = ? WHERE ID_ESTABLISHMENT = ?", [
+      .query("UPDATE ESTABLISHMENTS SET PRICE = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?", [
         req.body.value,
         req.params.id,
+        req.user.username,
       ])
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
@@ -846,36 +865,19 @@ app.put("/establishment/price/:id", async (req, res) => {
   }
 });
 
-//Update establishment rating
-app.put("/establishment/rating/:id", async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    conn
-      .query("UPDATE ESTABLISHMENTS SET RATING = ? WHERE ID_ESTABLISHMENT = ?", [
-        req.body.value,
-        req.params.id,
-      ])
-      .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Establishment rating updated");
-      });
-  } catch (err) {
-    res.status(500).send("Error connecting db");
-  } finally {
-    if (conn) return conn.release();
-  }
-});
-
 //Update establishment discount
-app.put("/establishment/discount/:id", async (req, res) => {
+app.put("/establishment/discount/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENTS SET DISCOUNT = ? WHERE ID_ESTABLISHMENT = ?",
-        [req.body.value, req.params.id]
+        "UPDATE ESTABLISHMENTS SET DISCOUNT = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
@@ -889,14 +891,18 @@ app.put("/establishment/discount/:id", async (req, res) => {
 });
 
 //Update establishment address
-app.put("/establishment/address/:id", async (req, res) => {
+app.put("/establishment/address/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENTS SET ADDRESS = ? WHERE ID_ESTABLISHMENT = ?",
-        [req.body.value, req.params.id]
+        "UPDATE ESTABLISHMENTS SET ADDRESS = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
@@ -909,6 +915,55 @@ app.put("/establishment/address/:id", async (req, res) => {
   }
 });
 
+//Update establishment website
+app.put("/establishment/website/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE ESTABLISHMENTS SET WEBSITE = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Establishment address updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Update establishment website
+app.put("/establishment/instagram/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE ESTABLISHMENTS SET INSTAGRAM = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Establishment address updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
 /**********************DELETE***********************/
 
 // Delete a user
