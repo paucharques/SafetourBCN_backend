@@ -551,7 +551,6 @@ app.post("/registerEstablishment", authenticateJWT, async (req, res) => {
           req.body.name,
           req.body.category,
           req.body.price,
-          req.body.rating,
           req.body.discount,
           req.body.address,
           req.body.website,
