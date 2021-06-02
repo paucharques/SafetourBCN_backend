@@ -571,7 +571,7 @@ app.post("/registerEstablishment", authenticateJWT, async (req, res) => {
   }
 });
 
-app.post("/Event", authenticateJWT, async (req, res) => {
+app.post("/registerEvent", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -601,7 +601,7 @@ app.post("/Event", authenticateJWT, async (req, res) => {
   }
 });
 
-app.post("/Rating", authenticateJWT, async (req, res) => {
+app.post("/registerRating", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -629,7 +629,7 @@ app.post("/Rating", authenticateJWT, async (req, res) => {
   }
 });
 
-app.post("/Reservation", authenticateJWT, async (req, res) => {
+app.post("/registerReservation", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
