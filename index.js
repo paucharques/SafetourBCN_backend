@@ -1021,14 +1021,14 @@ app.put("/establishment/description/:id", authenticateJWT, async (req, res) => {
   }
 });
 
-//Update event venue_id
-app.put("/event/id_venue/:id", authenticateJWT, async (req, res) => {
+//Update event date
+app.put("/event/event_date/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE EVENTS SET ID_VENUE = ? WHERE VENUE = ? AND OWNER = ?",
+        "UPDATE EVENTS SET EVENT_DATE = ? WHERE ID_EVENT = ? AND VENUE_OWNER = ?",
         [
         req.body.value,
         req.params.id,
@@ -1037,7 +1037,7 @@ app.put("/event/id_venue/:id", authenticateJWT, async (req, res) => {
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Establishment description updated");
+        else res.status(201).send("Event date updated");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
@@ -1045,6 +1045,133 @@ app.put("/event/id_venue/:id", authenticateJWT, async (req, res) => {
     if (conn) return conn.release();
   }
 });
+
+//Update event start hour
+app.put("/event/start_hour/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE EVENTS SET HOURSTART = ? WHERE ID_EVENT = ? AND VENUE_OWNER = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Event start hour updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Update event end hour
+app.put("/event/end_hour/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE EVENTS SET HOUREND = ? WHERE ID_EVENT = ? AND VENUE_OWNER = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Event end hour updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Update event name
+app.put("/event/name/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE EVENTS SET NAME = ? WHERE ID_EVENT = ? AND VENUE_OWNER = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Event name updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Update event description
+app.put("/event/description/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE EVENTS SET NAME = ? WHERE ID_EVENT = ? AND VENUE_OWNER = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Event description updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Update event description
+app.put("/event/capacity/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE EVENTS SET CAPACITY = ? WHERE ID_EVENT = ? AND VENUE_OWNER = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Event capacity updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+
 
 
 /**********************DELETE***********************/
