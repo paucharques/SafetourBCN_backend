@@ -547,7 +547,7 @@ app.post("/registerEstablishment", authenticateJWT, async (req, res) => {
           req.body.description,
           req.body.max_capacity,
           req.body.houropen,
-          req.body.hourclose
+          req.body.hourclose,
           req.body.name,
           req.body.category,
           req.body.price,
