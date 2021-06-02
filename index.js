@@ -228,7 +228,7 @@ app.get("/Establishment/:id/Events", authenticateJWT, async (req, res) => {
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
-    var rows = await conn.query("select * from EVENTS where VENUE_ID = ?", [
+    var rows = await conn.query("select * from EVENTS where ID_VENUE = ?", [
       req.params.id,
     ]);
   } catch {
@@ -241,7 +241,7 @@ app.get("/Establishment/:id/Events", authenticateJWT, async (req, res) => {
 });
 
 //Return space available for reservation
-app.get("/establishment/:id/reserveSpaceLeft", authenticateJWT, async (req, res) => {
+app.get("/Establishment/:id/reserveSpaceLeft", authenticateJWT, async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
@@ -605,7 +605,7 @@ app.post("/registerEvent", authenticateJWT, async (req, res) => {
     conn = await pool.getConnection();
     conn
       .query(
-        "INSERT INTO EVENTS (VENUE_ID,VENUE_OWNER,EVENT_DATE,HOURSTART, HOUREND, NAME,DESCRIPTION,CAPACITY) VALUES(?,?,?,?,?,?,?,?);",
+        "INSERT INTO EVENTS (ID_VENUE,VENUE_OWNER,EVENT_DATE,HOURSTART, HOUREND, NAME,DESCRIPTION,CAPACITY) VALUES(?,?,?,?,?,?,?,?);",
         [
           req.body.venue_id,
           req.user.username,
@@ -1004,6 +1004,31 @@ app.put("/establishment/description/:id", authenticateJWT, async (req, res) => {
     conn
       .query(
         "UPDATE ESTABLISHMENTS SET DESCRIPTION = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Establishment description updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Update event venue_id
+app.put("/event/id_venue/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE EVENTS SET ID_VENUE = ? WHERE VENUE = ? AND OWNER = ?",
         [
         req.body.value,
         req.params.id,
