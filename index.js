@@ -239,6 +239,33 @@ app.get("/Establishment/:id/Events", authenticateJWT, async (req, res) => {
     if (conn) return conn.release();
   }
 });
+
+//Return space available for reservation
+app.get("/establishments/:id/reserveSpaceLeft", async (req, res) => {
+  let conn;
+  try {
+    // establish a connection to MariaDB
+    conn = await pool.getConnection();
+
+    // execute the query and set the result to a new variable
+    var capacity = await conn.query(
+      "select MAX_CAPACITY from ESTABLISHMENTS where ID_ESTABLISHMENT = ?",
+      [req.params.id]
+    );
+    var reservations = await conn.query(
+          "select COUNT(*) from RESERVATIONS where ID_ESTABLISHMENT = ?",
+          [req.params.id]
+        );
+  } catch {
+    res.status(500).send("Error connecting db");
+  } finally {
+    // return the results
+    if (capacity.length != 0) res.status(200).send(capacity-reservations);
+    else res.status(404).send("Id not found");
+    if (conn) return conn.release();
+  }
+});
+
 //GET all events
 app.get("/Events", authenticateJWT,  async (req, res) => {
   let conn;
