@@ -35,7 +35,7 @@ const authenticateJWT = (req, res, next) => {
   }
 };
 
-app.get("/api",  (req, res) => res.send("Its working!"));
+app.get("/api", (req, res) => res.send("Its working!"));
 
 app.get("/users", async (req, res) => {
   let conn;
@@ -126,7 +126,7 @@ app.get("/establishments", async (req, res) => {
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
-    var rows = await conn.query("select * from ESTABLISHMENTS", [
+    var rows = await conn.query("select * from ESTABLISHMENT", [
       req.params.email,
     ]);
   } catch {
@@ -147,7 +147,7 @@ app.get("/establishments/:id", async (req, res) => {
 
     // execute the query and set the result to a new variable
     var rows = await conn.query(
-      "select * from ESTABLISHMENTS where ID_ESTABLISHMENT = ?",
+      "select * from ESTABLISHMENT where ID_ESTABLISHMENT = ?",
       [req.params.id]
     );
   } catch {
@@ -190,7 +190,7 @@ app.get("/myEstablishments", authenticateJWT, async (req, res) => {
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
-    var rows = await conn.query("select * from ESTABLISHMENTS where OWNER = ?", [
+    var rows = await conn.query("select * from ESTABLISHMENT where OWNER = ?", [
       req.user.username,
     ]);
   } catch {
@@ -221,14 +221,14 @@ app.get("/myEvents", authenticateJWT, async (req, res) => {
   }
 });
 //GET all events for an establishment by id
-app.get("/Establishment/:id/Events", authenticateJWT, async (req, res) => {
+app.get("/Establishment/:id/Events", async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
-    var rows = await conn.query("select * from EVENTS where ID_VENUE = ?", [
+    var rows = await conn.query("select * from EVENTS where VENUE_ID = ?", [
       req.params.id,
     ]);
   } catch {
@@ -239,37 +239,8 @@ app.get("/Establishment/:id/Events", authenticateJWT, async (req, res) => {
     if (conn) return conn.release();
   }
 });
-
-//Return space available for reservation
-app.get("/Establishment/:id/reserveSpaceLeft", authenticateJWT, async (req, res) => {
-  let conn;
-  try {
-    // establish a connection to MariaDB
-    conn = await pool.getConnection();
-
-    // execute the query and set the result to a new variable
-    var rows = await conn.query(
-      "select e.MAX_CAPACITY-SUM(r.PEOPLE_COUNT) as Space_Left from ESTABLISHMENTS e, RESERVATIONS r where e.ID_ESTABLISHMENT = ? AND r.RESERVATION_DATE = ? AND r.RESERVATION_HOUR = ? AND e.ID_ESTABLISHMENT = r.ID_ESTABLISHMENT ",
-      [
-      req.params.id,
-      req.body.reservation_date,
-      req.body.reservation_hour,
-      ]
-    );
-  } catch {
-    res.status(500).send("Error connecting db");
-  } finally {
-    // return the results
-    if (rows.length != 0){
-    res.status(200).send(rows);
-    }
-    else res.status(404).send("Id not found");
-    if (conn) return conn.release();
-  }
-});
-
 //GET all events
-app.get("/Events", authenticateJWT,  async (req, res) => {
+app.get("/Events", async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
@@ -286,16 +257,16 @@ app.get("/Events", authenticateJWT,  async (req, res) => {
   }
 });
 //GET an event by its id
-app.get("/Events/:id", authenticateJWT,  async (req, res) => {
+app.get("/Events/:id", async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
-    var rows = await conn.query("select * from EVENTS where ID_EVENT = ?",[
-      req.params.id
-      ]);
+    var rows = await conn.query("select * from EVENTS where ID_EVENT = ?", [
+      req.params.id,
+    ]);
   } catch {
     res.status(500).send("Error connecting db");
   } finally {
@@ -305,16 +276,17 @@ app.get("/Events/:id", authenticateJWT,  async (req, res) => {
   }
 });
 //GET all ratings of and establishment by id
-app.get("/Establishment/:id/Ratings", authenticateJWT, async (req, res) => {
+app.get("/Establishment/:id/Ratings", async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
-    var rows = await conn.query("select * from RATINGS where ID_ESTABLISHMENT = ?", [
-      req.params.id,
-    ]);
+    var rows = await conn.query(
+      "select * from RATINGS where ID_ESTABLISHMENT = ?",
+      [req.params.id]
+    );
   } catch {
     res.status(500).send(err);
   } finally {
@@ -324,24 +296,29 @@ app.get("/Establishment/:id/Ratings", authenticateJWT, async (req, res) => {
   }
 });
 //GET and average of ratings of an establishment by id
-app.get("/Establishment/:id/AverageRating", authenticateJWT, async (req, res) => {
-  let conn;
-  try {
-    // establish a connection to MariaDB
-    conn = await pool.getConnection();
+app.get(
+  "/Establishment/:id/AverageRating",
 
-    // execute the query and set the result to a new variable
-    var rows = await conn.query("select AVG(VALUE) from RATINGS where ID_ESTABLISHMENT = ?", [
-      req.params.id,
-    ]);
-  } catch {
-    res.status(500).send(err);
-  } finally {
-    // return the results
-    res.status(200).send(rows);
-    if (conn) return conn.release();
+  async (req, res) => {
+    let conn;
+    try {
+      // establish a connection to MariaDB
+      conn = await pool.getConnection();
+
+      // execute the query and set the result to a new variable
+      var rows = await conn.query(
+        "select AVG(VALUE) from RATINGS where ID_ESTABLISHMENT = ?",
+        [req.params.id]
+      );
+    } catch {
+      res.status(500).send(err);
+    } finally {
+      // return the results
+      res.status(200).send(rows);
+      if (conn) return conn.release();
+    }
   }
-});
+);
 //GET all ratings of token's user
 app.get("/User/Ratings", authenticateJWT, async (req, res) => {
   let conn;
@@ -369,9 +346,10 @@ app.get("/User/Reservations", authenticateJWT, async (req, res) => {
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
-    var rows = await conn.query("select * from RESERVATIONS where ID_AUTHOR = ?", [
-      req.user.username,
-    ]);
+    var rows = await conn.query(
+      "select * from RESERVATIONS where ID_AUTHOR = ?",
+      [req.user.username]
+    );
   } catch {
     res.status(500).send(err);
   } finally {
@@ -381,7 +359,7 @@ app.get("/User/Reservations", authenticateJWT, async (req, res) => {
   }
 });
 //GET all reservations
-app.get("/Reservations", authenticateJWT,  async (req, res) => {
+app.get("/Reservations", async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
@@ -407,10 +385,7 @@ app.get("/Reservations/:id", authenticateJWT, async (req, res) => {
     // execute the query and set the result to a new variable
     var rows = await conn.query(
       "select * from RESERVATIONS where ID_RESERVATION = ? AND ID_AUTHOR = ?",
-      [
-      req.params.id,
-      req.user.username
-      ]
+      [req.params.id, req.user.username]
     );
   } catch {
     res.status(500).send("Error connecting db");
@@ -486,7 +461,7 @@ app.post("/login/company", async (req, res) => {
 
 // COMPROVAR QUE FUNCIONA BE!!
 // Add a new user
-app.post("/registerIndividualUser",  async (req, res) => {
+app.post("/registerIndividualUser", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -562,56 +537,53 @@ app.post("/registerEstablishment", authenticateJWT, async (req, res) => {
     conn = await pool.getConnection();
 
     var rows = await conn.query("SELECT * FROM COMPANIES WHERE EMAIL = ?", [
-      req.user.username,
+      req.body.owner,
     ]);
     if (rows.length == 0) res.status(404).send("Owner not exists");
 
     conn
       .query(
-        "INSERT INTO ESTABLISHMENTS (OWNER,LOCAL_X,LOCAL_Y,DESCRIPTION,MAX_CAPACITY, HOUROPEN, HOURCLOSE, NAME, CATEGORY, PRICE, DISCOUNT, ADDRESS, WEBSITE, INSTAGRAM) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?);",
+        "INSERT INTO ESTABLISHMENT (OWNER,LOCAL_X,LOCAL_Y,DESCRIPTION,MAX_CAPACITY,SCHEDULE, NAME, CATEGORY, PRICE, RATING, DISCOUNT, ADDRESS) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);",
         [
           req.user.username,
           req.body.local_x,
           req.body.local_y,
           req.body.description,
           req.body.max_capacity,
-          req.body.houropen,
-          req.body.hourclose,
+          req.body.schedule,
           req.body.name,
           req.body.category,
           req.body.price,
+          req.body.rating,
           req.body.discount,
           req.body.address,
-          req.body.website,
-          req.body.instagram,
         ]
       )
       .then((result) => {
         res.status(201).send("Establishment added");
       })
       .catch((err) => {
-        res.status(409).send("Establishment already exists");
+        res.status(409).send("Establishment already exist");
       });
   } catch (err) {
-    res.status(500).send("Error connecting to the DB");
+    res.status(500).send("Error connecting db");
   } finally {
     if (conn) return conn.release();
   }
 });
 
-app.post("/registerEvent", authenticateJWT, async (req, res) => {
+app.post("/Event", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "INSERT INTO EVENTS (ID_VENUE,VENUE_OWNER,EVENT_DATE,HOURSTART, HOUREND, NAME,DESCRIPTION,CAPACITY) VALUES(?,?,?,?,?,?,?,?);",
+        "INSERT INTO EVENTS (VENUE_ID,VENUE_OWNER,EVENT_DATE,EVENT_TIME,NAME,DESCRIPTION,CAPACITY) VALUES(?,?,?,?,?,?,?);",
         [
           req.body.venue_id,
           req.user.username,
           req.body.event_date,
-          req.body.hourstart,
-          req.body.hourend,
+          req.body.event_time,
           req.body.name,
           req.body.description,
           req.body.capacity,
@@ -621,7 +593,7 @@ app.post("/registerEvent", authenticateJWT, async (req, res) => {
         res.status(201).send("Event added");
       })
       .catch((err) => {
-        res.status(409).send(err);
+        res.status(409).send("Error in creation of the event");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
@@ -630,7 +602,7 @@ app.post("/registerEvent", authenticateJWT, async (req, res) => {
   }
 });
 
-app.post("/registerRating", authenticateJWT, async (req, res) => {
+app.post("/Rating", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -642,7 +614,7 @@ app.post("/registerRating", authenticateJWT, async (req, res) => {
           req.body.description,
           req.body.previous_booking,
           req.user.username,
-          req.body.establishment_id
+          req.body.establishment_id,
         ]
       )
       .then((result) => {
@@ -658,7 +630,7 @@ app.post("/registerRating", authenticateJWT, async (req, res) => {
   }
 });
 
-app.post("/registerReservation", authenticateJWT, async (req, res) => {
+app.post("/Reservation", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -670,7 +642,7 @@ app.post("/registerReservation", authenticateJWT, async (req, res) => {
           req.user.username,
           req.body.people_count,
           req.body.reservation_date,
-          req.body.reservation_hour
+          req.body.reservation_hour,
         ]
       )
       .then((result) => {
@@ -751,19 +723,14 @@ app.put("/company/description/:email", async (req, res) => {
 });
 
 //Update establishment location
-app.put("/establishment/location/:id", authenticateJWT, async (req, res) => {
+app.put("/establishment/location/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENTS SET LOCAL_X = ?, LOCAL_Y = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
-        [
-        req.body.value1,
-        req.body.value2,
-        req.params.id,
-        req.user.username,
-        ]
+        "UPDATE ESTABLISHMENT SET LOCAL_X = ?, LOCAL_Y = ? WHERE ID_ESTABLISHMENT = ?",
+        [req.body.value1, req.body.value2, req.params.id]
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
@@ -777,15 +744,14 @@ app.put("/establishment/location/:id", authenticateJWT, async (req, res) => {
 });
 
 //Update establishment name
-app.put("/establishment/name/:id", authenticateJWT, async (req, res) => {
+app.put("/establishment/name/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
-      .query("UPDATE ESTABLISHMENTS SET NAME = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?", [
+      .query("UPDATE ESTABLISHMENT SET NAME = ? WHERE ID_ESTABLISHMENT = ?", [
         req.body.value,
         req.params.id,
-        req.user.username,
       ])
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
@@ -799,19 +765,14 @@ app.put("/establishment/name/:id", authenticateJWT, async (req, res) => {
 });
 
 //Update establishment schedule
-app.put("/establishment/houropen/:id", authenticateJWT, async (req, res) => {
+app.put("/establishment/schedule/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENTS SET HOUROPEN = ?, HOURCLOSE = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
-        [
-        req.body.value1,
-        req.body.value2,
-        req.params.id,
-        req.user.username,
-        ]
+        "UPDATE ESTABLISHMENT SET SCHEDULE = ? WHERE ID_ESTABLISHMENT = ?",
+        [req.body.value, req.params.id]
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
@@ -825,18 +786,14 @@ app.put("/establishment/houropen/:id", authenticateJWT, async (req, res) => {
 });
 
 //Update establishment max capacity
-app.put("/establishment/capacity/:id", authenticateJWT, async (req, res) => {
+app.put("/establishment/capacity/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENTS SET MAX_CAPACITY = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
+        "UPDATE ESTABLISHMENT SET MAX_CAPACITY = ? WHERE ID_ESTABLISHMENT = ?",
+        [req.body.value, req.params.id]
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
@@ -850,18 +807,14 @@ app.put("/establishment/capacity/:id", authenticateJWT, async (req, res) => {
 });
 
 //Update establishment category
-app.put("/establishment/category/:id", authenticateJWT, async (req, res) => {
+app.put("/establishment/category/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENTS SET CATEGORY = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
+        "UPDATE ESTABLISHMENT SET CATEGORY = ? WHERE ID_ESTABLISHMENT = ?",
+        [req.body.value, req.params.id]
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
@@ -875,15 +828,14 @@ app.put("/establishment/category/:id", authenticateJWT, async (req, res) => {
 });
 
 //Update establishment price
-app.put("/establishment/price/:id", authenticateJWT, async (req, res) => {
+app.put("/establishment/price/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
-      .query("UPDATE ESTABLISHMENTS SET PRICE = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?", [
+      .query("UPDATE ESTABLISHMENT SET PRICE = ? WHERE ID_ESTABLISHMENT = ?", [
         req.body.value,
         req.params.id,
-        req.user.username,
       ])
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
@@ -896,19 +848,36 @@ app.put("/establishment/price/:id", authenticateJWT, async (req, res) => {
   }
 });
 
+//Update establishment rating
+app.put("/establishment/rating/:id", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query("UPDATE ESTABLISHMENT SET RATING = ? WHERE ID_ESTABLISHMENT = ?", [
+        req.body.value,
+        req.params.id,
+      ])
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Establishment rating updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
 //Update establishment discount
-app.put("/establishment/discount/:id", authenticateJWT, async (req, res) => {
+app.put("/establishment/discount/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENTS SET DISCOUNT = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
+        "UPDATE ESTABLISHMENT SET DISCOUNT = ? WHERE ID_ESTABLISHMENT = ?",
+        [req.body.value, req.params.id]
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
@@ -922,324 +891,18 @@ app.put("/establishment/discount/:id", authenticateJWT, async (req, res) => {
 });
 
 //Update establishment address
-app.put("/establishment/address/:id", authenticateJWT, async (req, res) => {
+app.put("/establishment/address/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENTS SET ADDRESS = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
+        "UPDATE ESTABLISHMENT SET ADDRESS = ? WHERE ID_ESTABLISHMENT = ?",
+        [req.body.value, req.params.id]
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
         else res.status(201).send("Establishment address updated");
-      });
-  } catch (err) {
-    res.status(500).send("Error connecting db");
-  } finally {
-    if (conn) return conn.release();
-  }
-});
-
-//Update establishment website
-app.put("/establishment/website/:id", authenticateJWT, async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    conn
-      .query(
-        "UPDATE ESTABLISHMENTS SET WEBSITE = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
-      )
-      .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Establishment website updated");
-      });
-  } catch (err) {
-    res.status(500).send("Error connecting db");
-  } finally {
-    if (conn) return conn.release();
-  }
-});
-
-//Update establishment instagram
-app.put("/establishment/instagram/:id", authenticateJWT, async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    conn
-      .query(
-        "UPDATE ESTABLISHMENTS SET INSTAGRAM = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
-      )
-      .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Establishment instagram updated");
-      });
-  } catch (err) {
-    res.status(500).send("Error connecting db");
-  } finally {
-    if (conn) return conn.release();
-  }
-});
-
-//Update establishment description
-app.put("/establishment/description/:id", authenticateJWT, async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    conn
-      .query(
-        "UPDATE ESTABLISHMENTS SET DESCRIPTION = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
-      )
-      .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Establishment description updated");
-      });
-  } catch (err) {
-    res.status(500).send("Error connecting db");
-  } finally {
-    if (conn) return conn.release();
-  }
-});
-
-// TODOS LOS UPDATES DE EVENT NECESITAN TOKEN DEL OWNER
-//Update event date
-app.put("/event/event_date/:id", authenticateJWT, async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    conn
-      .query(
-        "UPDATE EVENTS SET EVENT_DATE = ? WHERE ID_EVENT = ? AND VENUE_OWNER = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
-      )
-      .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Event date updated");
-      });
-  } catch (err) {
-    res.status(500).send("Error connecting db");
-  } finally {
-    if (conn) return conn.release();
-  }
-});
-
-//Update event start hour
-app.put("/event/start_hour/:id", authenticateJWT, async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    conn
-      .query(
-        "UPDATE EVENTS SET HOURSTART = ? WHERE ID_EVENT = ? AND VENUE_OWNER = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
-      )
-      .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Event start hour updated");
-      });
-  } catch (err) {
-    res.status(500).send("Error connecting db");
-  } finally {
-    if (conn) return conn.release();
-  }
-});
-
-//Update event end hour
-app.put("/event/end_hour/:id", authenticateJWT, async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    conn
-      .query(
-        "UPDATE EVENTS SET HOUREND = ? WHERE ID_EVENT = ? AND VENUE_OWNER = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
-      )
-      .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Event end hour updated");
-      });
-  } catch (err) {
-    res.status(500).send("Error connecting db");
-  } finally {
-    if (conn) return conn.release();
-  }
-});
-
-//Update event name
-app.put("/event/name/:id", authenticateJWT, async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    conn
-      .query(
-        "UPDATE EVENTS SET NAME = ? WHERE ID_EVENT = ? AND VENUE_OWNER = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
-      )
-      .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Event name updated");
-      });
-  } catch (err) {
-    res.status(500).send("Error connecting db");
-  } finally {
-    if (conn) return conn.release();
-  }
-});
-
-//Update event description
-app.put("/event/description/:id", authenticateJWT, async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    conn
-      .query(
-        "UPDATE EVENTS SET NAME = ? WHERE ID_EVENT = ? AND VENUE_OWNER = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
-      )
-      .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Event description updated");
-      });
-  } catch (err) {
-    res.status(500).send("Error connecting db");
-  } finally {
-    if (conn) return conn.release();
-  }
-});
-
-//Update event capacity
-app.put("/event/capacity/:id", authenticateJWT, async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    conn
-      .query(
-        "UPDATE EVENTS SET CAPACITY = ? WHERE ID_EVENT = ? AND VENUE_OWNER = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
-      )
-      .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Event capacity updated");
-      });
-  } catch (err) {
-    res.status(500).send("Error connecting db");
-  } finally {
-    if (conn) return conn.release();
-  }
-});
-
-//UPDATES DE RATINGS NECESITAN TOKEN DEL AUTOR
-//Update rating value
-app.put("/rating/value/:id", authenticateJWT, async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    conn
-      .query(
-        "UPDATE RATINGS SET VALUE = ? WHERE ID_RATING = ? AND ID_AUTHOR = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
-      )
-      .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Rating value updated");
-      });
-  } catch (err) {
-    res.status(500).send("Error connecting db");
-  } finally {
-    if (conn) return conn.release();
-  }
-});
-
-//Update rating description
-app.put("/rating/description/:id", authenticateJWT, async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    conn
-      .query(
-        "UPDATE RATINGS SET DESCRIPTION = ? WHERE ID_RATING = ? AND ID_AUTHOR = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
-      )
-      .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Rating description updated");
-      });
-  } catch (err) {
-    res.status(500).send("Error connecting db");
-  } finally {
-    if (conn) return conn.release();
-  }
-});
-
-//Update rating previous booking value
-app.put("/rating/description/:id", authenticateJWT, async (req, res) => {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    conn
-      .query(
-        "UPDATE RATINGS SET PREVIOUS_BOOKING = ? WHERE ID_RATING = ? AND ID_AUTHOR = ?",
-        [
-        req.body.value,
-        req.params.id,
-        req.user.username,
-        ]
-      )
-      .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Rating previous booking value updated");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
@@ -1328,12 +991,15 @@ app.delete("/establishment/:id", authenticateJWT, async (req, res) => {
   try {
     conn = await pool.getConnection();
     conn
-      .query("DELETE FROM ESTABLISHMENTS WHERE ID_ESTABLISHMENT = ? AND OWNER = ? ", [
-        req.params.id,
-        req.user.username
-      ])
+      .query(
+        "DELETE FROM ESTABLISHMENT WHERE ID_ESTABLISHMENT = ? AND OWNER = ? ",
+        [req.params.id, req.user.username]
+      )
       .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("An establishment by this id not found for this user");
+        if (result.affectedRows == 0)
+          res
+            .status(404)
+            .send("An establishment by this id not found for this user");
         else res.status(201).send("Establishment deleted successfully");
       });
   } catch (err) {
@@ -1351,10 +1017,13 @@ app.delete("/event/:id", authenticateJWT, async (req, res) => {
     conn
       .query("DELETE FROM EVENTS WHERE ID_EVENT = ? AND VENUE_OWNER = ? ", [
         req.params.id,
-        req.user.username
+        req.user.username,
       ])
       .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("An event by this id was not found for this user");
+        if (result.affectedRows == 0)
+          res
+            .status(404)
+            .send("An event by this id was not found for this user");
         else res.status(201).send("Event deleted successfully");
       });
   } catch (err) {
@@ -1372,10 +1041,13 @@ app.delete("/rating/:id", authenticateJWT, async (req, res) => {
     conn
       .query("DELETE FROM RATINGS WHERE ID_RATING = ? AND ID_AUTHOR = ? ", [
         req.params.id,
-        req.user.username
+        req.user.username,
       ])
       .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("A rating by this ID was not found for this user");
+        if (result.affectedRows == 0)
+          res
+            .status(404)
+            .send("A rating by this ID was not found for this user");
         else res.status(201).send("Rating deleted successfully");
       });
   } catch (err) {
@@ -1391,12 +1063,15 @@ app.delete("/reservation/:id", authenticateJWT, async (req, res) => {
   try {
     conn = await pool.getConnection();
     conn
-      .query("DELETE FROM RESERVATIONS WHERE ID_RESERVATION = ? AND ID_AUTHOR = ? ", [
-        req.params.id,
-        req.user.username
-      ])
+      .query(
+        "DELETE FROM RESERVATIONS WHERE ID_RESERVATION = ? AND ID_AUTHOR = ? ",
+        [req.params.id, req.user.username]
+      )
       .then((result) => {
-        if (result.affectedRows == 0) res.status(404).send("A reservation by this ID was not found for this user");
+        if (result.affectedRows == 0)
+          res
+            .status(404)
+            .send("A reservation by this ID was not found for this user");
         else res.status(201).send("Reservation deleted successfully");
       });
   } catch (err) {
@@ -1413,9 +1088,7 @@ app.delete("/user", authenticateJWT, async (req, res) => {
   try {
     conn = await pool.getConnection();
     conn
-      .query("DELETE FROM USERS WHERE EMAIL = ?", [
-        req.user.username,
-      ])
+      .query("DELETE FROM USERS WHERE EMAIL = ?", [req.user.username])
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
         else res.status(201).send("User deleted");
