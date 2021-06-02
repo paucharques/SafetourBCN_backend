@@ -541,7 +541,7 @@ app.post("/registerEstablishment", authenticateJWT, async (req, res) => {
       .query(
         "INSERT INTO ESTABLISHMENTS (OWNER,LOCAL_X,LOCAL_Y,DESCRIPTION,MAX_CAPACITY, HOUROPEN, HOURCLOSE, NAME, CATEGORY, PRICE, DISCOUNT, ADDRESS, WEBSITE, INSTAGRAM) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?);",
         [
-          req.user.username,
+          req.user.owner,
           req.body.local_x,
           req.body.local_y,
           req.body.description,
