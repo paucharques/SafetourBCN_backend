@@ -621,7 +621,7 @@ app.post("/registerEvent", authenticateJWT, async (req, res) => {
         res.status(201).send("Event added");
       })
       .catch((err) => {
-        res.status(409).send("Error in creation of the event");
+        res.status(409).send(err);
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
