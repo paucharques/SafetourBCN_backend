@@ -539,7 +539,7 @@ app.post("/registerEstablishment", authenticateJWT, async (req, res) => {
 
     conn
       .query(
-        "INSERT INTO ESTABLISHMENTS (OWNER,LOCAL_X,LOCAL_Y,DESCRIPTION,MAX_CAPACITY, HOUROPEN, HOURCLOSE, NAME, CATEGORY, PRICE, RATING, DISCOUNT, ADDRESS, WEBSITE, INSTAGRAM) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);",
+        "INSERT INTO ESTABLISHMENTS (OWNER,LOCAL_X,LOCAL_Y,DESCRIPTION,MAX_CAPACITY, HOUROPEN, HOURCLOSE, NAME, CATEGORY, PRICE, DISCOUNT, ADDRESS, WEBSITE, INSTAGRAM) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);",
         [
           req.user.username,
           req.body.local_x,
@@ -564,7 +564,7 @@ app.post("/registerEstablishment", authenticateJWT, async (req, res) => {
         res.status(409).send("Establishment already exist");
       });
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).send("Error connecting to DB");
   } finally {
     if (conn) return conn.release();
   }
