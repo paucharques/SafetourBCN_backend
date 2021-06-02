@@ -248,7 +248,7 @@ app.get("/establishment/:id/reserveSpaceLeft", authenticateJWT, async (req, res)
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
-    var capacity = await conn.query(
+    var rows = await conn.query(
       "select e.MAX_CAPACITY-COUNT(*) from ESTABLISHMENTS e, RESERVATIONS r where e.ID_ESTABLISHMENT = ? AND r.RESERVATION_DATE = ? AND r.RESERVATION_HOUR = ? AND e.ID_ESTABLISHMENT = r.ID_ESTABLISHMENT ",
       [
       req.params.id,
@@ -261,7 +261,7 @@ app.get("/establishment/:id/reserveSpaceLeft", authenticateJWT, async (req, res)
   } finally {
     // return the results
     if (capacity.length != 0){
-    res.status(200).send(reservations);
+    res.status(200).send(rows);
     }
     else res.status(404).send("Id not found");
     if (conn) return conn.release();
