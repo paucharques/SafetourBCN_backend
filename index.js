@@ -126,7 +126,7 @@ app.get("/establishments", async (req, res) => {
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
-    var rows = await conn.query("select * from ESTABLISHMENT", [
+    var rows = await conn.query("select * from ESTABLISHMENTS", [
       req.params.email,
     ]);
   } catch {
@@ -147,7 +147,7 @@ app.get("/establishments/:id", async (req, res) => {
 
     // execute the query and set the result to a new variable
     var rows = await conn.query(
-      "select * from ESTABLISHMENT where ID_ESTABLISHMENT = ?",
+      "select * from ESTABLISHMENTS where ID_ESTABLISHMENT = ?",
       [req.params.id]
     );
   } catch {
@@ -190,7 +190,7 @@ app.get("/myEstablishments", authenticateJWT, async (req, res) => {
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
-    var rows = await conn.query("select * from ESTABLISHMENT where OWNER = ?", [
+    var rows = await conn.query("select * from ESTABLISHMENTS where OWNER = ?", [
       req.user.username,
     ]);
   } catch {
@@ -539,20 +539,23 @@ app.post("/registerEstablishment", authenticateJWT, async (req, res) => {
 
     conn
       .query(
-        "INSERT INTO ESTABLISHMENT (OWNER,LOCAL_X,LOCAL_Y,DESCRIPTION,MAX_CAPACITY,SCHEDULE, NAME, CATEGORY, PRICE, RATING, DISCOUNT, ADDRESS) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);",
+        "INSERT INTO ESTABLISHMENTS (OWNER,LOCAL_X,LOCAL_Y,DESCRIPTION,MAX_CAPACITY, HOUROPEN, HOURCLOSE, NAME, CATEGORY, PRICE, RATING, DISCOUNT, ADDRESS, WEBSITE, INSTAGRAM) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);",
         [
           req.user.username,
           req.body.local_x,
           req.body.local_y,
           req.body.description,
           req.body.max_capacity,
-          req.body.schedule,
+          req.body.houropen,
+          req.body.hourclose
           req.body.name,
           req.body.category,
           req.body.price,
           req.body.rating,
           req.body.discount,
           req.body.address,
+          req.body.website,
+          req.body.instagram
         ]
       )
       .then((result) => {
@@ -725,7 +728,7 @@ app.put("/establishment/location/:id", async (req, res) => {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENT SET LOCAL_X = ?, LOCAL_Y = ? WHERE ID_ESTABLISHMENT = ?",
+        "UPDATE ESTABLISHMENTS SET LOCAL_X = ?, LOCAL_Y = ? WHERE ID_ESTABLISHMENT = ?",
         [req.body.value1, req.body.value2, req.params.id]
       )
       .then((result) => {
@@ -745,7 +748,7 @@ app.put("/establishment/name/:id", async (req, res) => {
   try {
     conn = await pool.getConnection();
     conn
-      .query("UPDATE ESTABLISHMENT SET NAME = ? WHERE ID_ESTABLISHMENT = ?", [
+      .query("UPDATE ESTABLISHMENTS SET NAME = ? WHERE ID_ESTABLISHMENT = ?", [
         req.body.value,
         req.params.id,
       ])
@@ -767,7 +770,7 @@ app.put("/establishment/schedule/:id", async (req, res) => {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENT SET SCHEDULE = ? WHERE ID_ESTABLISHMENT = ?",
+        "UPDATE ESTABLISHMENTS SET SCHEDULE = ? WHERE ID_ESTABLISHMENT = ?",
         [req.body.value, req.params.id]
       )
       .then((result) => {
@@ -788,7 +791,7 @@ app.put("/establishment/capacity/:id", async (req, res) => {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENT SET MAX_CAPACITY = ? WHERE ID_ESTABLISHMENT = ?",
+        "UPDATE ESTABLISHMENTS SET MAX_CAPACITY = ? WHERE ID_ESTABLISHMENT = ?",
         [req.body.value, req.params.id]
       )
       .then((result) => {
@@ -809,7 +812,7 @@ app.put("/establishment/category/:id", async (req, res) => {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENT SET CATEGORY = ? WHERE ID_ESTABLISHMENT = ?",
+        "UPDATE ESTABLISHMENTS SET CATEGORY = ? WHERE ID_ESTABLISHMENT = ?",
         [req.body.value, req.params.id]
       )
       .then((result) => {
@@ -829,7 +832,7 @@ app.put("/establishment/price/:id", async (req, res) => {
   try {
     conn = await pool.getConnection();
     conn
-      .query("UPDATE ESTABLISHMENT SET PRICE = ? WHERE ID_ESTABLISHMENT = ?", [
+      .query("UPDATE ESTABLISHMENTS SET PRICE = ? WHERE ID_ESTABLISHMENT = ?", [
         req.body.value,
         req.params.id,
       ])
@@ -850,7 +853,7 @@ app.put("/establishment/rating/:id", async (req, res) => {
   try {
     conn = await pool.getConnection();
     conn
-      .query("UPDATE ESTABLISHMENT SET RATING = ? WHERE ID_ESTABLISHMENT = ?", [
+      .query("UPDATE ESTABLISHMENTS SET RATING = ? WHERE ID_ESTABLISHMENT = ?", [
         req.body.value,
         req.params.id,
       ])
@@ -872,7 +875,7 @@ app.put("/establishment/discount/:id", async (req, res) => {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENT SET DISCOUNT = ? WHERE ID_ESTABLISHMENT = ?",
+        "UPDATE ESTABLISHMENTS SET DISCOUNT = ? WHERE ID_ESTABLISHMENT = ?",
         [req.body.value, req.params.id]
       )
       .then((result) => {
@@ -893,7 +896,7 @@ app.put("/establishment/address/:id", async (req, res) => {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENT SET ADDRESS = ? WHERE ID_ESTABLISHMENT = ?",
+        "UPDATE ESTABLISHMENTS SET ADDRESS = ? WHERE ID_ESTABLISHMENT = ?",
         [req.body.value, req.params.id]
       )
       .then((result) => {
@@ -987,7 +990,7 @@ app.delete("/establishment/:id", authenticateJWT, async (req, res) => {
   try {
     conn = await pool.getConnection();
     conn
-      .query("DELETE FROM ESTABLISHMENT WHERE ID_ESTABLISHMENT = ? AND OWNER = ? ", [
+      .query("DELETE FROM ESTABLISHMENTS WHERE ID_ESTABLISHMENT = ? AND OWNER = ? ", [
         req.params.id,
         req.user.username
       ])
