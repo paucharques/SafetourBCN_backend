@@ -249,25 +249,18 @@ app.get("/establishment/:id/reserveSpaceLeft", async (req, res) => {
 
     // execute the query and set the result to a new variable
     var capacity = await conn.query(
-      "select MAX_CAPACITY from ESTABLISHMENTS where ID_ESTABLISHMENT = ?",
-      [req.params.id]
+      "select e.MAX_CAPACITY-COUNT(*) from ESTABLISHMENTS e, RESERVATIONS r where e.ID_ESTABLISHMENT = ? AND r.RESERVATION_DATE = ? AND r.RESERVATION_HOUR = ? AND e.ID_ESTABLISHMENT = r.ID_ESTABLISHMENT ",
+      [
+      req.params.id,
+      req.params.reservation_date,
+      req.params.reservation_hour,
+      ]
     );
-    try{
-    var reservations = await conn.query(
-          "select COUNT(*) from RESERVATIONS where ID_ESTABLISHMENT = ?",
-          [req.params.id]
-        );
-        } catch{
-        res.status(500).send("Error connecting db")
-        }
-
   } catch {
     res.status(500).send("Error connecting db");
   } finally {
     // return the results
     if (capacity.length != 0){
-    var capacitynumber = capacity.getInt("MAX_CAPACITY");
-    var reservationnumber = reservations.getInt("COUNT");
     res.status(200).send(reservations);
     }
     else res.status(404).send("Id not found");
