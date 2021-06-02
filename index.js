@@ -932,7 +932,7 @@ app.put("/establishment/website/:id", authenticateJWT, async (req, res) => {
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Establishment address updated");
+        else res.status(201).send("Establishment website updated");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
@@ -957,7 +957,7 @@ app.put("/establishment/instagram/:id", authenticateJWT, async (req, res) => {
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Establishment address updated");
+        else res.status(201).send("Establishment instagram updated");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
@@ -982,7 +982,7 @@ app.put("/establishment/description/:id", authenticateJWT, async (req, res) => {
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Establishment address updated");
+        else res.status(201).send("Establishment description updated");
       });
   } catch (err) {
     res.status(500).send("Error connecting db");
