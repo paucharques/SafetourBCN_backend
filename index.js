@@ -769,15 +769,16 @@ app.put("/establishment/name/:id", authenticateJWT, async (req, res) => {
 });
 
 //Update establishment schedule
-app.put("/establishment/schedule/:id", authenticateJWT, async (req, res) => {
+app.put("/establishment/houropen/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENTS SET SCHEDULE = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
+        "UPDATE ESTABLISHMENTS SET HOUROPEN = ?, HOURCLOSE = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
         [
-        req.body.value,
+        req.body.value1,
+        req.body.value2,
         req.params.id,
         req.user.username,
         ]
@@ -940,7 +941,7 @@ app.put("/establishment/website/:id", authenticateJWT, async (req, res) => {
   }
 });
 
-//Update establishment website
+//Update establishment instagram
 app.put("/establishment/instagram/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
@@ -948,6 +949,31 @@ app.put("/establishment/instagram/:id", authenticateJWT, async (req, res) => {
     conn
       .query(
         "UPDATE ESTABLISHMENTS SET INSTAGRAM = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Establishment address updated");
+      });
+  } catch (err) {
+    res.status(500).send("Error connecting db");
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Update establishment description
+app.put("/establishment/description/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE ESTABLISHMENTS SET DESCRIPTION = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
         [
         req.body.value,
         req.params.id,
