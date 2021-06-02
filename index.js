@@ -249,7 +249,7 @@ app.get("/Establishment/:id/reserveSpaceLeft", authenticateJWT, async (req, res)
 
     // execute the query and set the result to a new variable
     var rows = await conn.query(
-      "select e.MAX_CAPACITY-SUM(r.PEOPLE_COUNT) from ESTABLISHMENTS e, RESERVATIONS r where e.ID_ESTABLISHMENT = ? AND r.RESERVATION_DATE = ? AND r.RESERVATION_HOUR = ? AND e.ID_ESTABLISHMENT = r.ID_ESTABLISHMENT ",
+      "select e.MAX_CAPACITY-SUM(r.PEOPLE_COUNT) as Space_Left from ESTABLISHMENTS e, RESERVATIONS r where e.ID_ESTABLISHMENT = ? AND r.RESERVATION_DATE = ? AND r.RESERVATION_HOUR = ? AND e.ID_ESTABLISHMENT = r.ID_ESTABLISHMENT ",
       [
       req.params.id,
       req.body.reservation_date,
