@@ -252,10 +252,13 @@ app.get("/establishment/:id/reserveSpaceLeft", async (req, res) => {
       "select MAX_CAPACITY from ESTABLISHMENTS where ID_ESTABLISHMENT = ?",
       [req.params.id]
     );
+    try{
     var reservations = await conn.query(
           "select COUNT(*) from RESERVATIONS where ID_ESTABLISHMENT = ?",
           [req.params.id]
         );
+        } catch{
+        res.status(500).send("Error connecting db")}
   } catch {
     res.status(500).send("Error connecting db");
   } finally {
