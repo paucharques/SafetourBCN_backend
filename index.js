@@ -266,8 +266,8 @@ app.get("/establishment/:id/reserveSpaceLeft", async (req, res) => {
   } finally {
     // return the results
     if (capacity.length != 0){
-    int capacitynumber = capacity.getInt("MAX_CAPACITY");
-    int reservationnumber = reservations.getInt("COUNT");
+    var capacitynumber = capacity.getInt("MAX_CAPACITY");
+    var reservationnumber = reservations.getInt("COUNT");
     res.status(200).send(reservations);
     }
     else res.status(404).send("Id not found");
