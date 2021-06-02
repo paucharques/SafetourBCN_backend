@@ -241,7 +241,7 @@ app.get("/Establishment/:id/Events", authenticateJWT, async (req, res) => {
 });
 
 //Return space available for reservation
-app.get("/establishments/:id/reserveSpaceLeft", async (req, res) => {
+app.get("/establishment/:id/reserveSpaceLeft", async (req, res) => {
   let conn;
   try {
     // establish a connection to MariaDB
