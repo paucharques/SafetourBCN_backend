@@ -253,8 +253,8 @@ app.get("/Establishment/:id/reserveSpaceLeft",  async (req, res) => {
       "select e.MAX_CAPACITY-SUM(r.PEOPLE_COUNT) as Space_Left from ESTABLISHMENTS e, RESERVATIONS r where e.ID_ESTABLISHMENT = ? AND r.RESERVATION_DATE = ? AND r.RESERVATION_HOUR = ? AND e.ID_ESTABLISHMENT = r.ID_ESTABLISHMENT ",
       [
       req.params.id,
-      req.body.reservation_date,
-      req.body.reservation_hour,
+      req.params.reservation_date,
+      req.params.reservation_hour,
       ]
     );
   } catch {
