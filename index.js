@@ -1257,7 +1257,6 @@ app.put("/establishment/:id", authenticateJWT, async (req, res) => {
       .query(
         "UPDATE ESTABLISHMENT SET "+req.body.parameter+ " = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
         [
-        req.body.parameter,
         req.body.value,
         req.params.id,
         req.user.username,
