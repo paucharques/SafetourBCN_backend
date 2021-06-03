@@ -241,7 +241,7 @@ app.get("/Establishment/:id/Events",  async (req, res) => {
 });
 
 //Return space available for reservation
-app.get("/Establishment/reserveSpaceLeft",  async (req, res) => {
+app.get("/Establishment/:id/reserveSpaceLeft",  async (req, res) => {
   let conn;
   var rows;
   try {
@@ -252,7 +252,7 @@ app.get("/Establishment/reserveSpaceLeft",  async (req, res) => {
     rows = await conn.query(
       "select e.MAX_CAPACITY-SUM(r.PEOPLE_COUNT) as Space_Left from ESTABLISHMENTS e, RESERVATIONS r where e.ID_ESTABLISHMENT = ? AND r.RESERVATION_DATE = ? AND r.RESERVATION_HOUR = ? AND e.ID_ESTABLISHMENT = r.ID_ESTABLISHMENT ",
       [
-      req.query.id,
+      req.params.id,
       req.query.reservation_date,
       req.query.reservation_hour,
       ]
