@@ -1248,6 +1248,32 @@ app.put("/rating/description/:id", authenticateJWT, async (req, res) => {
   }
 });
 
+//Update rating previous booking value
+app.put("/establishment/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE ESTABLISHMENT SET ? = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
+        [
+        req.body.parameter,
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Rating previous booking value updated");
+      });
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
 /**********************DELETE***********************/
 
 // Delete a user
