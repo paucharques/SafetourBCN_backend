@@ -252,9 +252,9 @@ app.get("/Establishment/reserveSpaceLeft",  async (req, res) => {
     rows = await conn.query(
       "select e.MAX_CAPACITY-SUM(r.PEOPLE_COUNT) as Space_Left from ESTABLISHMENTS e, RESERVATIONS r where e.ID_ESTABLISHMENT = ? AND r.RESERVATION_DATE = ? AND r.RESERVATION_HOUR = ? AND e.ID_ESTABLISHMENT = r.ID_ESTABLISHMENT ",
       [
-      req.params.id,
-      req.params.reservation_date,
-      req.params.reservation_hour,
+      req.query.id,
+      req.query.reservation_date,
+      req.query.reservation_hour,
       ]
     );
   } catch {
