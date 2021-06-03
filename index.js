@@ -1248,7 +1248,7 @@ app.put("/rating/description/:id", authenticateJWT, async (req, res) => {
   }
 });
 
-//Update rating previous booking value
+//Generic update establishment
 app.put("/establishment/:id", authenticateJWT, async (req, res) => {
   let conn;
   try {
@@ -1264,7 +1264,155 @@ app.put("/establishment/:id", authenticateJWT, async (req, res) => {
       )
       .then((result) => {
         if (result.affectedRows == 0) res.status(404).send("Id not found");
-        else res.status(201).send("Rating previous booking value updated");
+        else res.status(201).send("Establishment updated");
+      });
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Generic update event
+app.put("/event/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE EVENTS SET "+req.body.parameter+ " = ? WHERE ID_EVENT = ? AND VENUE_OWNER = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Event updated");
+      });
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Generic update User
+app.put("/user/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE USERS SET "+req.body.parameter+ " = ? WHERE EMAIL = ?",
+        [
+        req.body.value,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        else res.status(201).send("User updated");
+      });
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+
+//Generic update Companies
+app.put("/company/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE COMPANIES SET "+req.body.parameter+ " = ? WHERE EMAIL = ?",
+        [
+        req.body.value,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        else res.status(201).send("Company updated");
+      });
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Generic update Individual users
+app.put("/individual_user/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE INDIVIDUAL_USER SET "+req.body.parameter+ " = ? WHERE EMAIL = ?",
+        [
+        req.body.value,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Email not found");
+        else res.status(201).send("Individual user updated");
+      });
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Generic update Ratings
+app.put("/rating/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE RATINGS SET "+req.body.parameter+ " = ? WHERE ID_RATING = ? AND ID_AUTHOR = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Rating updated");
+      });
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    if (conn) return conn.release();
+  }
+});
+
+//Generic update Reservations
+app.put("/reservation/:id", authenticateJWT, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn
+      .query(
+        "UPDATE RESERVATIONS SET "+req.body.parameter+ " = ? WHERE ID_RESERVATION = ? AND ID_AUTHOR = ?",
+        [
+        req.body.value,
+        req.params.id,
+        req.user.username,
+        ]
+      )
+      .then((result) => {
+        if (result.affectedRows == 0) res.status(404).send("Id not found");
+        else res.status(201).send("Reservation updated");
       });
   } catch (err) {
     res.status(500).send(err);
