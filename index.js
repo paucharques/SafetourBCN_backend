@@ -243,12 +243,13 @@ app.get("/Establishment/:id/Events",  async (req, res) => {
 //Return space available for reservation
 app.get("/Establishment/:id/reserveSpaceLeft",  async (req, res) => {
   let conn;
+  var rows;
   try {
     // establish a connection to MariaDB
     conn = await pool.getConnection();
 
     // execute the query and set the result to a new variable
-    var rows = await conn.query(
+    rows = await conn.query(
       "select e.MAX_CAPACITY-SUM(r.PEOPLE_COUNT) as Space_Left from ESTABLISHMENTS e, RESERVATIONS r where e.ID_ESTABLISHMENT = ? AND r.RESERVATION_DATE = ? AND r.RESERVATION_HOUR = ? AND e.ID_ESTABLISHMENT = r.ID_ESTABLISHMENT ",
       [
       req.params.id,
