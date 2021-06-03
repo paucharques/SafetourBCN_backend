@@ -1273,7 +1273,7 @@ app.put("/establishment/:id", authenticateJWT, async (req, res) => {
     conn = await pool.getConnection();
     conn
       .query(
-        "UPDATE ESTABLISHMENTS SET "+req.body.parameter+ " = ? WHERE ID_ESTABLISHMENT = ? AND OWNER = ?",
+        "UPDATE ESTABLISHMENTS SET "+req.body.parameter+ " = ? WHERE ID_ESTABLISHMENT = ?",
         [
         req.body.value,
         req.params.id,
