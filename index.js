@@ -422,6 +422,26 @@ app.get("/Reservations/:id", authenticateJWT, async (req, res) => {
   }
 });
 
+//GET all events for an establishment by id
+app.get("/Establishment/:id/Reservations",  async (req, res) => {
+  let conn;
+  try {
+    // establish a connection to MariaDB
+    conn = await pool.getConnection();
+
+    // execute the query and set the result to a new variable
+    var rows = await conn.query("select * from RESERVATIONS where ID_ESTABLISHMENT = ?", [
+      req.params.id,
+    ]);
+  } catch {
+    res.status(500).send("Error connecting db");
+  } finally {
+    // return the results
+    res.status(200).send(rows);
+    if (conn) return conn.release();
+  }
+});
+
 /**********************POST***********************/
 
 // LOGIN individual users
