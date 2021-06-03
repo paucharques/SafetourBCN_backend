@@ -241,7 +241,7 @@ app.get("/Establishment/:id/Events",  async (req, res) => {
 });
 
 //Return space available for reservation
-app.get("/Establishment/:id/reserveSpaceLeft",  async (req, res) => {
+app.get("/Establishment/reserveSpaceLeft",  async (req, res) => {
   let conn;
   var rows;
   try {
