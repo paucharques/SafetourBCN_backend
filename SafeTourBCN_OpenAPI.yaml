@@ -14,7 +14,7 @@ paths:
   /api:
     get:
       tags:
-      - users
+      - Users
       summary: Function to try api is working
       responses:
         200:
@@ -28,7 +28,7 @@ paths:
   /users:
     get:
       tags:
-      - users
+      - Users
       summary: Shows all users stored in the database
       responses:
         200:
@@ -52,7 +52,7 @@ paths:
   /users/{email}:
     get:
       tags:
-      - users
+      - Users
       summary: Shows the user with the referenced email
       parameters:
       - in: path
@@ -91,7 +91,7 @@ paths:
   /individual_user/{email}:
     get:
       tags:
-      - users
+      - Users
       summary: Shows the individual user with the referenced email
       parameters:
       - in: path
@@ -131,7 +131,7 @@ paths:
   /company/{email}:
     get:
       tags:
-      - users
+      - Users
       summary: Shows the company with the referenced email
       parameters:
       - in: path
@@ -171,7 +171,7 @@ paths:
   /user/login:
     post:
       tags:
-      - users
+      - Users
       summary: Login for individual users
       requestBody:
         description: Provide the email and the password for the user you want to login
@@ -218,7 +218,7 @@ paths:
   /login/company:
     post:
       tags:
-      - users
+      - Users
       summary: Login for a company
       requestBody:
         description: Provide the email and the password for the company you want to login
@@ -265,7 +265,7 @@ paths:
   /registerIndividualUser:
     post:
       tags:
-      - users
+      - Users
       summary: Register a new individual user
       requestBody:
         description: Provide the email, username and password for the individual user you want to register
@@ -315,7 +315,7 @@ paths:
   /registerCompany:
     post:
       tags:
-      - users
+      - Users
       summary: Register a new company
       requestBody:
         description: Provide the email, username, password and description for the company you want to register
@@ -368,7 +368,7 @@ paths:
   /users/name/{email}:
     put:
       tags:
-      - users
+      - Users
       summary: Updates the user name referenced by email
       parameters:
       - in: path
@@ -418,7 +418,7 @@ paths:
   /users/password/{email}:
     put:
       tags:
-      - users
+      - Users
       summary: Updates the user password referenced by email
       parameters:
       - in: path
@@ -468,7 +468,7 @@ paths:
   /company/description/{email}:
     put:
       tags:
-      - users
+      - Users
       summary: Updates the user description referenced by email
       parameters:
       - in: path
@@ -515,25 +515,37 @@ paths:
                 errorExample:
                   $ref: '#/components/examples/error500'
                   
-  /IndividualUser/{email}:
-    delete:
+  /user/{id}:
+    put:
       tags:
-        - users
-      summary: Deletes the individual user referenced by email
+      - Users
+      summary: Updates the user referenced by id
       parameters:
       - in: path
-        name: email
+        name: id
         schema:
           type: string
         required: true
+      requestBody:
+        description: Provide the id which references the user
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
       responses:
         201:
-          description: Individual user deleted successfully
+          description: User updated successfully
           content:
             text/html:
               schema:
                 type: string
-                example: "Individual User deleted"
+                example: "User updated"
         404:
           description: 'Error: Not Found'
           content:
@@ -553,25 +565,40 @@ paths:
                 errorExample:
                   $ref: '#/components/examples/error500'
                   
-  /Company/{email}:
-    delete:
+      security:
+        - bearerAuth: []
+  
+  /company/{id}:
+    put:
       tags:
-        - users
-      summary: Deletes the company referenced by email
+      - Users
+      summary: Updates the company referenced by id
       parameters:
       - in: path
-        name: email
+        name: id
         schema:
           type: string
         required: true
+      requestBody:
+        description: Provide the id which references the company
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
       responses:
         201:
-          description: Company deleted successfully
+          description: Company updated successfully
           content:
             text/html:
               schema:
                 type: string
-                example: "Company deleted"
+                example: "Company updated"
         404:
           description: 'Error: Not Found'
           content:
@@ -590,11 +617,101 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error500'
+                  
+      security:
+        - bearerAuth: []
+  
+  /individual_user/{id}:
+    put:
+      tags:
+      - Users
+      summary: Updates the individual user referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      requestBody:
+        description: Provide the id which references the individual user
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Individual user updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Individual user updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+      security:
+        - bearerAuth: []
+                  
+  /user:
+    delete:
+      tags:
+        - Users
+      summary: Deletes the user referenced by the token specified
+      responses:
+        201:
+          description: User deleted successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "User deleted"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
                   
   /establishments:
     get:
       tags:
-      - establishments
+      - Establishments
       summary: Shows all the establishments stored in the database
       responses:
         200:
@@ -618,7 +735,7 @@ paths:
   /establishments/{id}:
     get:
       tags:
-      - establishments
+      - Establishments
       summary: Shows the establishment with the referenced id
       parameters:
       - in: path
@@ -626,7 +743,7 @@ paths:
         schema:
           type: integer
           format: int64
-        description: The ud of the requested establishment
+        description: The id of the requested establishment
         required: true
       responses:
         200:
@@ -659,7 +776,7 @@ paths:
   /myEstablishments:
     get:
       tags:
-      - establishments
+      - Establishments
       summary: Shows the establishments that owns the user who is requesting it
       responses:
         200:
@@ -699,11 +816,145 @@ paths:
                   $ref: '#/components/examples/error500'
       security:
         - bearerAuth: []
-        
+                  
+  /Establishment/{id}/reserveSpaceLeft:
+    get:
+      tags:
+      - Establishments
+      summary: Shows the space left in the establishment with the referenced id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        description: The id of the requested establishment
+        required: true
+      - in: query
+        name: reservation_date
+        schema:
+          type: string
+        description: The date you want to do the reservation
+        required: true
+      - in: query
+        name: reservation_hour
+        schema:
+          type: string
+        description: The hour you want to do the reservation
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Establishment'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /Establishment/{id}/Ratings:
+    get:
+      tags:
+      - Establishments
+      summary: Shows the ratings of the establishment with the referenced id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        description: The id of the requested establishment
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Establishment'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /Establishment/{id}/AverageRating:
+    get:
+      tags:
+      - Establishments
+      summary: Shows the average rating of the establishment with the referenced id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        description: The id of the requested establishment
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Establishment'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'              
   /registerEstablishment:
     post:
       tags:
-      - establishments
+      - Establishments
       summary: Register a new establishment
       requestBody:
         description: Provide the attributes for the establishment you want to register
@@ -716,13 +967,15 @@ paths:
               - local_y
               - description
               - max_capacity
-              - schedule
+              - houropen
+              - hourclose
               - name
               - category
               - price
-              - rating
               - discount
               - address
+              - website
+              - instagram
               type: object
               properties:
                 owner:
@@ -736,7 +989,9 @@ paths:
                 max_capacity:
                   type: integer
                   format: int64
-                schedule:
+                houropen:
+                  type: string
+                hourclose:
                   type: string
                 name:
                   type: string
@@ -745,12 +1000,14 @@ paths:
                 price:
                   type: integer
                   format: int64
-                rating:
-                  type: number
                 discount:
                   type: integer
                   format: int64
                 address:
+                  type: string
+                website:
+                  type: string
+                instagram:
                   type: string
         required: true
       responses:
@@ -783,7 +1040,7 @@ paths:
   /establishment/location/{id}:
     put:
       tags:
-      - establishments
+      - Establishments
       summary: Updates the establishment location referenced by id
       parameters:
       - in: path
@@ -833,11 +1090,12 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error500'
-                  
+      security:
+        - bearerAuth: []            
   /establishment/name/{id}:
     put:
       tags:
-      - establishments
+      - Establishments
       summary: Updates the establishment name referenced by id
       parameters:
       - in: path
@@ -884,11 +1142,12 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error500'
-                  
-  /establishment/schedule/{id}:
+      security:
+        - bearerAuth: []            
+  /establishment/houropen/{id}:
     put:
       tags:
-      - establishments
+      - Establishments
       summary: Updates the establishment schedule referenced by id
       parameters:
       - in: path
@@ -903,10 +1162,13 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               required:
-              - value
+              - value1
+              - value2
               type: object
               properties:
-                value:
+                value1:
+                  type: string
+                value2:
                   type: string
         required: true
       responses:
@@ -935,11 +1197,12 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error500'
-                  
+      security:
+        - bearerAuth: []             
   /establishment/capacity/{id}:
     put:
       tags:
-      - establishments
+      - Establishments
       summary: Updates the establishment capacity referenced by id
       parameters:
       - in: path
@@ -987,11 +1250,12 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error500'
-                  
+      security:
+        - bearerAuth: []            
   /establishment/category/{id}:
     put:
       tags:
-      - establishments
+      - Establishments
       summary: Updates the establishment category referenced by id
       parameters:
       - in: path
@@ -1038,11 +1302,12 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error500'
-                  
+      security:
+        - bearerAuth: []            
   /establishment/price/{id}:
     put:
       tags:
-      - establishments
+      - Establishments
       summary: Updates the establishment price referenced by id
       parameters:
       - in: path
@@ -1090,62 +1355,12 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error500'
-                  
-  /establishment/rating/{id}:
-    put:
-      tags:
-      - establishments
-      summary: Updates the establishment rating referenced by id
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-          format: int64
-        required: true
-      requestBody:
-        description: Provide the id which references the company and the new rating
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              required:
-              - value
-              type: object
-              properties:
-                value:
-                  type: number
-        required: true
-      responses:
-        201:
-          description: Establishment rating updated successfully
-          content:
-            text/html:
-              schema:
-                type: string
-                example: "Establishment rating updated"
-        404:
-          description: 'Error: Not Found'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResult'
-              examples:
-                errorExample:
-                  $ref: '#/components/examples/error404'
-        500:
-          description: 'Error: Internal Server Error'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResult'
-              examples:
-                errorExample:
-                  $ref: '#/components/examples/error500'
-                  
+      security:
+        - bearerAuth: []            
   /establishment/discount/{id}:
     put:
       tags:
-      - establishments
+      - Establishments
       summary: Updates the establishment discount referenced by id
       parameters:
       - in: path
@@ -1193,11 +1408,12 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error500'
-  
+      security:
+        - bearerAuth: []
   /establishment/address/{id}:
     put:
       tags:
-      - establishments
+      - Establishments
       summary: Updates the establishment address referenced by id
       parameters:
       - in: path
@@ -1244,11 +1460,168 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error500'
-                  
+      security:
+        - bearerAuth: []
+  /establishment/website/{id}:
+    put:
+      tags:
+      - Establishments
+      summary: Updates the establishment website referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the company and the new website
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Establishment website updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Establishment website updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+  /establishment/instagram/{id}:
+    put:
+      tags:
+      - Establishments
+      summary: Updates the establishment instagram referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the company and the new instagram
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Establishment instagram updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Establishment instagram updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+  /establishment/description/{id}:
+    put:
+      tags:
+      - Establishments
+      summary: Updates the establishment description referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the company and the new description
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Establishment description updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Establishment description updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
   /establishment/{id}:
     delete:
       tags:
-        - establishments
+        - Establishments
       summary: Deletes the establishment referenced by id
       parameters:
       - in: path
@@ -1283,7 +1656,1280 @@ paths:
               examples:
                 errorExample:
                   $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+  
+  /myEvents:
+    get:
+      tags:
+      - Events
+      summary: Shows the events that owns the user who is requesting it
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error401'
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error403'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+        
+  /Establishment/{id}/Events:
+    get:
+      tags:
+      - Events
+      summary: Shows all events for the establishment with the referenced id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        description: The id of the requested establishment
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
                   
+  /Events:
+    get:
+      tags:
+      - Events
+      summary: Shows all events
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /Events/{id}:
+    get:
+      tags:
+      - Events
+      summary: Shows an event referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        description: The id of the requested event
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /registerEvent:
+    post:
+      tags:
+      - Events
+      summary: Register a new event
+      requestBody:
+        description: Provide the attributes for the event you want to register
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - venue_id
+              - event_date
+              - hourstart
+              - hourend
+              - name
+              - description
+              - capacity
+              type: object
+              properties:
+                venue_id:
+                  type: integer
+                  format: int64
+                event_date:
+                  type: string
+                hourstart:
+                  type: string
+                hourend:
+                  type: string
+                name:
+                  type: string
+                description:
+                  type: string
+                capacity:
+                  type: integer
+                  format: int64
+        required: true
+      responses:
+        201:
+          description: Event registered successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: 'abc123456789'
+        409:
+          description: 'Error: Event already exist'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error409'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+        
+  /event/event_date/{id}:
+    put:
+      tags:
+      - Events
+      summary: Updates the event date referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the event and the new date
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Event date updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Event date updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+        
+  /event/start_hour/{id}:
+    put:
+      tags:
+      - Events
+      summary: Updates the event start_hour referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the event and the new start_hour
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Event start_hour updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Event start_hour updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+  /event/end_hour/{id}:
+    put:
+      tags:
+      - Events
+      summary: Updates the event end_hour referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the event and the new end_hour
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Event end_hour updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Event end_hour updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+  /event/name/{id}:
+    put:
+      tags:
+      - Events
+      summary: Updates the event name referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the event and the new name
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Event name updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Event name updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+  /event/description/{id}:
+    put:
+      tags:
+      - Events
+      summary: Updates the event description referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the event and the new description
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Event description updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Event description updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+  /event/capacity/{id}:
+    put:
+      tags:
+      - Events
+      summary: Updates the event capacity referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the event and the new capacity
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Event capacity updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Event capacity updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+        
+  /event/{id}:
+    put:
+      tags:
+      - Events
+      summary: Updates the event element specified in the body of the event refernced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the event
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Event updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Event updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - Events
+      summary: Deletes the event referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      responses:
+        201:
+          description: Event deleted successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Event deleted successfully"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+                  
+  /User/Ratings:
+    get:
+      tags:
+      - Ratings
+      summary: Shows the ratings made by the user who is requesting it
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Rating'
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error401'
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error403'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+        
+  /registerRating:
+    post:
+      tags:
+      - Ratings
+      summary: Register a new rating
+      requestBody:
+        description: Provide the attributes for the rating you want to register
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              - description
+              - previous_booking
+              - establishment_id
+              type: object
+              properties:
+                value:
+                  type: integer
+                  format: int64
+                description:
+                  type: string
+                previous_booking:
+                  type: integer
+                  format: int64
+                establishment_id:
+                  type: integer
+                  format: int64
+        required: true
+      responses:
+        201:
+          description: Rating registered successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: 'abc123456789'
+        409:
+          description: 'Error: Rating already exist'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error409'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+        
+  /rating/value/{id}:
+    put:
+      tags:
+      - Ratings
+      summary: Updates the rating value referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the rating and the new value
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Rating value updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Rating value updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+  /rating/description/{id}:
+    put:
+      tags:
+      - Ratings
+      summary: Updates the rating description referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the rating and the new description
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Rating description updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Rating description updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+  
+  /rating/{id}:
+    put:
+      tags:
+      - Ratings
+      summary: Updates the rating referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the rating
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Rating updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Rating updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+        
+    delete:
+      tags:
+        - Ratings
+      summary: Deletes the rating referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      responses:
+        201:
+          description: Rating deleted successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Rating deleted successfully"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+        
+  /User/Reservations:
+    get:
+      tags:
+      - Reservations
+      summary: Shows the reservations made by the user who is requesting it
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error401'
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error403'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+        
+  /Reservations:
+    get:
+      tags:
+      - Reservations
+      summary: Shows all reservations
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error401'
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error403'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+        
+  /Reservations/{id}:
+    get:
+      tags:
+      - Reservations
+      summary: Shows the reservations made by the user who is requesting it
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        description: The id of the requested event
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error401'
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error403'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []   
+        
+  /Establishment/{id}/Reservations:
+    get:
+      tags:
+      - Reservations
+      summary: Shows the reservations for the establishment referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        description: The id of the requested establishment
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error401'
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error403'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+                  
+  /registerReservation:
+    post:
+      tags:
+      - Reservations
+      summary: Register a new reservation
+      requestBody:
+        description: Provide the attributes for the reservation you want to register
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - id_establishment
+              - people_count
+              - reservation_date
+              - reservation_hour
+              type: object
+              properties:
+                id_establishment:
+                  type: integer
+                  format: int64
+                people_count:
+                  type: integer
+                  format: int64
+                reservation_date:
+                  type: string
+                reservation_hour:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Reservation registered successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: 'abc123456789'
+        409:
+          description: 'Error: Reservation already exist'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error409'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+  
+  /reservation/{id}:
+    put:
+      tags:
+      - Reservations
+      summary: Updates the reservation referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      requestBody:
+        description: Provide the id which references the reservation
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - value
+              type: object
+              properties:
+                value:
+                  type: string
+        required: true
+      responses:
+        201:
+          description: Reservation updated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Reservation updated"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+        
+    delete:
+      tags:
+        - Reservations
+      summary: Deletes the reservation referenced by id
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        required: true
+      responses:
+        201:
+          description: Reservation deleted successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "Reservation deleted successfully"
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        500:
+          description: 'Error: Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error500'
+      security:
+        - bearerAuth: []
+        
 components:
   schemas:
     User:
@@ -1344,6 +2990,90 @@ components:
         ADDRESS:
             type: string
             example: Plaça de les Arts, 1, 08013 Barcelona
+    Event:
+      type: object
+      properties:
+        ID_EVENT:
+          type: integer
+          format: int64
+          example: 1
+        ID_VENUE:
+          type: integer
+          format: int64
+          example: 1
+        VENUE_OWNER:
+          type: string
+          example: example@example.com
+        EVENT_DATE:
+          type: string
+          example: 2022-02-12T00:00:00.000Z
+        HOURSTART:
+          type: integer
+          format: int64
+          example: 8
+        HOUREND:
+          type: integer
+          format: int64
+          example: 20
+        NAME:
+          type: string
+          example: name
+        DESCRIPTION:
+          type: string
+          example: description
+        CAPACITY:
+          type: integer
+          format: int64
+          example: 30
+    Rating:
+      type: object
+      properties:
+        VALUE:
+          type: integer
+          format: int64
+          example: 1
+        DESCRIPITON:
+          type: string
+          example: description
+        ID_RATING:
+          type: integer
+          format: int64
+          example: 3
+        PREVIOUS_BOOKING:
+          type: integer
+          format: int64
+          example: 1
+        ID_AUTHOR:
+          type: string
+          example: example@example.com
+        ID_ESTABLISHMENT:
+          type: integer
+          format: int64
+          example: 1
+    Reservation:
+      type: object
+      properties:
+        ID_RESERVATION:
+          type: integer
+          format: int64
+          example: 1
+        ID_ESTABLISHMENT:
+          type: integer
+          format: int64
+          example: 1
+        ID_AUTHOR:
+          type: string
+          example: example@example.com
+        PEOPLE_COUNT:
+          type: integer
+          format: int64
+          example: 5
+        RESERVATION_DATE:
+          type: string
+          example: '2021-06-05'
+        RESERVATION_HOUR:
+          type: string
+          example: 9
     
     ErrorResult:
       type: object
