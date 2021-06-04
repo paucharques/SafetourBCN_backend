@@ -654,11 +654,10 @@ app.post("/registerRating", authenticateJWT, async (req, res) => {
     conn = await pool.getConnection();
     conn
       .query(
-        "INSERT INTO RATINGS (VALUE,DESCRIPTION,PREVIOUS_BOOKING,ID_AUTHOR,ID_ESTABLISHMENT,PREVENTIVE_MEASURES) VALUES(?,?,?,?,?,?);",
+        "INSERT INTO RATINGS (VALUE,DESCRIPTION,ID_AUTHOR,ID_ESTABLISHMENT,PREVENTIVE_MEASURES) VALUES(?,?,?,?,?);",
         [
           req.body.value,
           req.body.description,
-          req.body.previous_booking,
           req.user.username,
           req.body.establishment_id,
           req.body.measures
