@@ -608,10 +608,10 @@ app.post("/registerEstablishment", authenticateJWT, async (req, res) => {
         res.status(201).send("Establishment added");
       })
       .catch((err) => {
-        res.status(409).send("Establishment already exists");
+        res.status(409).send(err);
       });
   } catch (err) {
-    res.status(500).send("Error connecting to the DB");
+    res.status(500).send(err);
   } finally {
     if (conn) return conn.release();
   }
